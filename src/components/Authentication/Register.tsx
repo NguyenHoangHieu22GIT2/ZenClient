@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -31,6 +31,7 @@ import {
 import { Button } from "../ui/button";
 
 export const Register = (props: {}) => {
+  const [step, setStep] = useState(1);
   const createUserSchema = z
     .object({
       email: z.string().email({ message: "The Field should be an email" }),
@@ -66,7 +67,14 @@ export const Register = (props: {}) => {
       <CardHeader>
         <CardTitle>Register</CardTitle>
         <CardDescription>
-          Become a user of one of the best Social media{" "}
+          Become a user of one of the best Social media
+        </CardDescription>
+        <CardDescription className="font-semibold flex gap-2">
+          <span className={`${step == 1 ? "text-blue-300 font-bold" : "text-gray-500"}`}>
+            Step 1
+          </span>
+          <span>-{">"}</span>
+          <span>Step 2</span>
         </CardDescription>
         <Separator />
       </CardHeader>
@@ -74,6 +82,7 @@ export const Register = (props: {}) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)}>
             <FormField
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -86,10 +95,11 @@ export const Register = (props: {}) => {
               )}
             />
             <FormField
+              control={form.control}
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input placeholder="username" {...field} />
                   </FormControl>
@@ -98,10 +108,11 @@ export const Register = (props: {}) => {
               )}
             />
             <FormField
+              control={form.control}
               name="gender"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Gender</FormLabel>
                   <FormControl>
                     {/* <Input placeholder="Email" {...field} /> */}
                     <Select onValueChange={field.onChange}>
@@ -122,6 +133,7 @@ export const Register = (props: {}) => {
               )}
             />
             <FormField
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -134,12 +146,17 @@ export const Register = (props: {}) => {
               )}
             />
             <FormField
+              control={form.control}
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>confirm Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="confirm the password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="confirm the password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

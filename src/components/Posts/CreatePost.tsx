@@ -107,7 +107,7 @@ export const CreatePost = (props: {}) => {
     );
   }
   return (
-    <Card className="m-2">
+    <Card className="m-2 sm:mx-auto sm:w-[50vw] max-w-[800px] min-w-[300px]">
       <Container>
         <CardHeader>
           <CardTitle>Express Yourself</CardTitle>

@@ -14,6 +14,12 @@ import { Comment, CommentType } from "./Comments/Comment";
 import { Paragraph } from "../ui/Paragraph";
 import { Heading } from "../ui/Heading";
 import { Comments } from "./Comments/Comments";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
+import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 type props = {
   avatarUrl: string;
   username: string;
@@ -54,14 +60,15 @@ export const Post = (props: props) => {
     );
   }
   return (
-    <Card className="m-2">
+    <Card className="m-2 sm:mx-auto sm:w-[50vw] max-w-[800px] min-w-[300px]">
       <Container>
         <CardHeader className="flex flex-row justify-between px-6 py-3">
           <div className=" flex items-center gap-2">
-            <Avatar>
-              <AvatarImage src={props.avatarUrl} />
-              <AvatarFallback>{props.username}</AvatarFallback>
-            </Avatar>
+            <AvatarHoverCard
+              username={props.username}
+              avatarUrl={props.avatarUrl}
+              yearOfJoined={4}
+            />
             <div>
               <Label className="text-sm">{props.username}</Label>
               <p className="text-gray-500 text-[10px]">8AM yesterday</p>
@@ -118,6 +125,7 @@ export const Post = (props: props) => {
               Share
             </Button>
           </div>
+          <Separator />
           <div className="mt-5">{commentsElement}</div>
           <div></div>
         </CardFooter>
