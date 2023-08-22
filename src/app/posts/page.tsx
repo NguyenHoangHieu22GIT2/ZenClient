@@ -1,14 +1,14 @@
 "use client";
-import { Header } from "@/components/Layout/Header";
-import { Layout } from "@/components/Layout/Layout";
 import { CreatePost } from "@/components/Posts/CreatePost";
 import { Posts } from "@/components/Posts/Posts";
+import { Container } from "@/components/ui/Container";
+import React from "react";
 
-export default function Home() {
+export default function PostsPage() {
   return (
-    <Layout>
+    <Container>
       <CreatePost />
       <Posts />
-    </Layout>
+    </Container>
   );
 }

@@ -25,6 +25,8 @@ import {
 import { Heading } from "../ui/Heading";
 import Link from "next/link";
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
+import { Separator } from "../ui/separator";
+import { SeparatorVertical } from "lucide-react";
 
 export const Login = (props: {}) => {
   const userSchema = z.object({
@@ -80,6 +82,7 @@ export const Login = (props: {}) => {
             Google
           </Button>
         </div>
+        <Separator className="mb-3" />
         <Form {...form}>
           <form
             className="flex flex-col gap-5"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
@@ -15,11 +15,43 @@ import { Paragraph } from "../ui/Paragraph";
 import { Heading } from "../ui/Heading";
 import { Comments } from "./Comments/Comments";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
+import { comment } from "postcss";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { Checkbox } from "../ui/checkbox";
 type props = {
   avatarUrl: string;
   username: string;
@@ -42,9 +74,12 @@ export const Post = (props: props) => {
       username: "Shadcn",
     },
   ]);
-  function postComment(comment: CommentType) {
-    setComments((oldComments) => [comment, ...oldComments]);
-  }
+  const postComment = useCallback(
+    (comment: CommentType) => {
+      setComments((oldComments) => [comment, ...oldComments]);
+    },
+    [setComments],
+  );
   useEffect(() => {
     if (props.isLiked) setIsLiked(true);
   }, [props.isLiked]);
@@ -60,76 +95,127 @@ export const Post = (props: props) => {
     );
   }
   return (
-    <Card className="m-2 sm:mx-auto sm:w-[50vw] max-w-[800px] min-w-[300px]">
-      <Container>
-        <CardHeader className="flex flex-row justify-between px-6 py-3">
-          <div className=" flex items-center gap-2">
-            <AvatarHoverCard
-              username={props.username}
-              avatarUrl={props.avatarUrl}
-              yearOfJoined={4}
-            />
-            <div>
-              <Label className="text-sm">{props.username}</Label>
-              <p className="text-gray-500 text-[10px]">8AM yesterday</p>
-            </div>
-          </div>
+    <Card className="m-2 sm:mx-auto w-full max-w-[800px]">
+      <CardHeader className="flex flex-row justify-between px-6 py-3">
+        <div className=" flex items-center gap-2">
+          <AvatarHoverCard
+            username={props.username}
+            avatarUrl={props.avatarUrl}
+            yearOfJoined={4}
+          />
           <div>
-            <Badge>{props.badge}</Badge>
+            <Label className="text-sm">{props.username}</Label>
+            <p className="text-gray-500 text-[10px]">8AM yesterday</p>
           </div>
-        </CardHeader>
-        <CardContent>
-          <Separator className="my-2" />
-          <Heading>{props.heading}</Heading>
-          <Paragraph>{props.paragraph}</Paragraph>
-        </CardContent>
-        <CardFooter className="block ">
-          <div className="flex gap-2 mb-3">
-            <Eye />
-            {props.numOfViews} views
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              className={`${isLiked && "text-blue-700 hover:text-blue-700"} `}
-              variant={"ghost"}
-              onClick={() => {
-                if (!isLiked)
-                  toast({
-                    title: "Liked a Post",
-                    description: "Friday, February 10, 2023 at 5:57 PM",
-                    action: <ToastAction altText="LOL">Undo</ToastAction>,
-                  });
-                else
-                  toast({
-                    title: "Unliked a Post",
-                    description: "Friday, February 10, 2023 at 5:57 PM",
-                    action: <ToastAction altText="LOL">Undo</ToastAction>,
-                  });
-                setIsLiked((oldBool) => !oldBool);
-              }}
-            >
-              <ThumbsUp className="w-4 h-4 mr-2"></ThumbsUp>
-              Like
-            </Button>
-            <Button
-              variant={"ghost"}
-              onClick={() => {
-                setIsOpenComments((oldBool) => !oldBool);
-              }}
-            >
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Comment
-            </Button>
-            <Button variant={"ghost"}>
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
-            </Button>
-          </div>
-          <Separator />
-          <div className="mt-5">{commentsElement}</div>
-          <div></div>
-        </CardFooter>
-      </Container>
+        </div>
+        <div>
+          <Badge>{props.badge}</Badge>
+          <AlertDialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={"secondary"}>
+                  <BsThreeDotsVertical />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <AlertDialogTrigger asChild>
+                      <span>Report</span>
+                      {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+                    </AlertDialogTrigger>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Hide</span>
+                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Share</span>
+                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                Give us reasons why you reported this post.
+              </AlertDialogHeader>
+              <ul className="flex flex-col gap-2">
+                <li className="flex items-center gap-2">
+                  <Checkbox />
+                  <Label>This post contains violences</Label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Checkbox />
+                  <Label>This post contains content that is NSFW</Label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Checkbox />
+                  <Label>This post spread false information</Label>
+                </li>
+              </ul>
+              <AlertDialogFooter>
+                <AlertDialogTrigger>
+                  <Button variant={"destructive"}>Submit</Button>
+                </AlertDialogTrigger>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Separator className="my-2" />
+        <Heading>{props.heading}</Heading>
+        <Paragraph>{props.paragraph}</Paragraph>
+      </CardContent>
+      <CardFooter className="block ">
+        <div className="flex gap-2 mb-3">
+          <Eye />
+          {props.numOfViews} views
+        </div>
+        <div className="flex items-center gap-3">
+          <Button
+            className={`${isLiked && "text-blue-700 hover:text-blue-700"} `}
+            variant={"ghost"}
+            onClick={() => {
+              if (!isLiked)
+                toast({
+                  title: "Liked a Post",
+                  description: "Friday, February 10, 2023 at 5:57 PM",
+                  action: <ToastAction altText="LOL">Undo</ToastAction>,
+                });
+              else
+                toast({
+                  title: "Unliked a Post",
+                  description: "Friday, February 10, 2023 at 5:57 PM",
+                  action: <ToastAction altText="LOL">Undo</ToastAction>,
+                });
+              setIsLiked((oldBool) => !oldBool);
+            }}
+          >
+            <ThumbsUp className="w-4 h-4 mr-2"></ThumbsUp>
+            Like
+          </Button>
+          <Button
+            variant={"ghost"}
+            onClick={() => {
+              setIsOpenComments((oldBool) => !oldBool);
+            }}
+          >
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Comment
+          </Button>
+          <Button variant={"ghost"}>
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+        </div>
+        <Separator />
+        <div className="mt-5">{commentsElement}</div>
+        <div></div>
+      </CardFooter>
     </Card>
   );
 };

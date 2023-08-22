@@ -7,14 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import { Container } from "../ui/Container";
 
 export const CreatePost = (props: {}) => {
   const [files, setFiles] = useState<File[]>([]);
@@ -61,7 +59,6 @@ export const CreatePost = (props: {}) => {
   if (uploadFile) {
     uploadFileElement = (
       <>
-        {" "}
         <div
           {...getRootProps()}
           className="p-3 border border-slate-400/70 rounded-sm text-slate-400/90"
@@ -107,23 +104,21 @@ export const CreatePost = (props: {}) => {
     );
   }
   return (
-    <Card className="m-2 sm:mx-auto sm:w-[50vw] max-w-[800px] min-w-[300px]">
-      <Container>
-        <CardHeader>
-          <CardTitle>Express Yourself</CardTitle>
-          <CardDescription>Show yourself to the world!</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <Textarea placeholder="John, How do you feel? ☺️" />
-            <div className="mt-4">{uploadFileElement}</div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex gap-3 items-center">
-          {uploadFileButton}
-          <Button>Post</Button>
-        </CardFooter>
-      </Container>
+    <Card className="m-2 mx-auto w-full lg:max-w-[800px]">
+      <CardHeader>
+        <CardTitle>Express Yourself</CardTitle>
+        <CardDescription>Show yourself to the world!</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <Textarea placeholder="John, How do you feel? ☺️" />
+          <div className="mt-4">{uploadFileElement}</div>
+        </form>
+      </CardContent>
+      <CardFooter className="flex gap-3 items-center">
+        {uploadFileButton}
+        <Button>Post</Button>
+      </CardFooter>
     </Card>
   );
 };

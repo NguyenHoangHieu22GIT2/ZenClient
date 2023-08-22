@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { FormEvent, useState } from "react";
 import { CommentType } from "./Comment";
+import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
 
 type props = {
   onAddComment: (comment: CommentType) => void;
@@ -20,6 +21,11 @@ export const PostComment = (props: props) => {
   }
   return (
     <form onSubmit={submit} className="flex gap-2">
+      <AvatarHoverCard
+        avatarUrl="/avatar.jpeg"
+        username="Shadn"
+        yearOfJoined={4}
+      />
       <Input
         onChange={(e) => setValue(e.target.value)}
         type="text"

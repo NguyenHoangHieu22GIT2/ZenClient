@@ -1,11 +1,17 @@
-import React, { Fragment, PropsWithChildren } from "react";
+import React, { Fragment, PropsWithChildren, ReactNode } from "react";
 import { Header } from "./Header";
+import { PropsClassName } from "@/Types/Props";
 
-export const Layout = (props: PropsWithChildren) => {
+interface props extends PropsClassName {
+  children: ReactNode
+
+}
+
+export const Layout = (props: props) => {
   return (
-    <Fragment>
+    <section className={props.className}>
       <Header />
-      <main>{props.children}</main>
-    </Fragment>
+      <main className="">{props.children}</main>
+    </section>
   );
 };

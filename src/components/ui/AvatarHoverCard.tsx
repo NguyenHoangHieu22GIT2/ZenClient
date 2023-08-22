@@ -1,19 +1,20 @@
 import React from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { PropsClassName } from "@/Types/Props";
 
-type props = {
+interface props extends PropsClassName {
   avatarUrl: string;
   username: string;
   yearOfJoined: number;
-};
+}
 
 export const AvatarHoverCard = (props: props) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <Avatar>
-          <AvatarImage src={props.avatarUrl} />
+          <AvatarImage className={props.className} src={props.avatarUrl} />
           <AvatarFallback>{props.username}</AvatarFallback>
         </Avatar>
       </HoverCardTrigger>
