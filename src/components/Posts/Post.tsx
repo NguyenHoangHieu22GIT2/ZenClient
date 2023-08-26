@@ -37,6 +37,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -109,7 +110,7 @@ export const Post = (props: props) => {
           </div>
         </div>
         <div>
-          <Badge>{props.badge}</Badge>
+          <Badge className="mr-3">{props.badge}</Badge>
           <AlertDialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

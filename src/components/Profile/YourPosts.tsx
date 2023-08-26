@@ -9,11 +9,10 @@ import { CreatePost } from "../Posts/CreatePost";
 export const YourPosts = (props: {}) => {
   return (
     <div>
-      <Card className="p-3 flex justify-evenly">
+      <Card className="p-3 flex justify-stretch [&>*]:basis-1/3 gap-3">
         <Button variant={"secondary"}>Posts</Button>
         <Button variant={"secondary"}>Friends</Button>
         <Button variant={"secondary"}>Information</Button>
-        <Button variant={"secondary"}>Group</Button>
       </Card>
       <Separator className="my-5" />
       <CreatePost />
