@@ -27,7 +27,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/_components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -36,7 +36,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/app/_components/ui/dialog";
 
 import {
   AlertDialog,
@@ -48,7 +48,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/app/_components/ui/alert-dialog";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { comment } from "postcss";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -79,7 +79,7 @@ export const Post = (props: props) => {
     (comment: CommentType) => {
       setComments((oldComments) => [comment, ...oldComments]);
     },
-    [setComments],
+    [setComments]
   );
   useEffect(() => {
     if (props.isLiked) setIsLiked(true);

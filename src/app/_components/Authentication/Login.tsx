@@ -2,7 +2,7 @@ import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
 import { Inder } from "next/font/google";
 import {
   Card,
@@ -43,7 +43,7 @@ export const Login = (props: {}) => {
         {
           message:
             "The password should have at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 5 characters",
-        },
+        }
       ),
   });
 

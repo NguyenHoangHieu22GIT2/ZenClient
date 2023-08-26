@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/app/_components/ui/button";
+import { Input } from "@/app/_components/ui/input";
 import React, { FormEvent, useState } from "react";
 import { CommentType } from "./Comment";
-import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
+import { AvatarHoverCard } from "@/app/_components/ui/AvatarHoverCard";
 
 type props = {
   onAddComment: (comment: CommentType) => void;

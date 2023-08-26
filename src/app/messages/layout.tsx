@@ -1,4 +1,4 @@
-import { Layout } from "@/components/Layout/Layout";
+import { Layout } from "@/app/_components/Layout/Layout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

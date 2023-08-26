@@ -5,7 +5,7 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+} from "@/app/_components/ui/context-menu";
 import Link from "next/link";
 export const Group = (props: {}) => {
   return (

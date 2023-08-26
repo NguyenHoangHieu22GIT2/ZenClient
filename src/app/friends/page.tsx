@@ -1,11 +1,11 @@
 "use client";
-import { Friend } from "@/components/Friends/Friend";
-import { Friends } from "@/components/Friends/Friends";
-import { Layout } from "@/components/Layout/Layout";
-import { Heading } from "@/components/ui/Heading";
-import { Container } from "@/components/ui/Container";
+import { Friend } from "@/app/_components/Friends/Friend";
+import { Friends } from "@/app/_components/Friends/Friends";
+import { Layout } from "@/app/_components/Layout/Layout";
+import { Heading } from "@/app/_components/ui/Heading";
+import { Container } from "@/app/_components/ui/Container";
 import React from "react";
-import { FriendFilter } from "@/components/Friends/FriendFilter";
+import { FriendFilter } from "@/app/_components/Friends/FriendFilter";
 
 export default function page() {
   return (

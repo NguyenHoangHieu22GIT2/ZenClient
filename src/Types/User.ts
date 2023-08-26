@@ -3,5 +3,5 @@ export type User = {
   password: string;
   avatar: string | File;
   username: string;
-  gender: "male" | "female"
-}
+  gender: "male" | "female";
+};

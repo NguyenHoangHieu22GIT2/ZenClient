@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/app/_components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
 

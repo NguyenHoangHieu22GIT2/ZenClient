@@ -1,9 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
-import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/Heading";
-import { Paragraph } from "@/components/ui/Paragraph";
-import { Username } from "@/components/ui/Username";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/app/_components/ui/avatar";
+import { AvatarHoverCard } from "@/app/_components/ui/AvatarHoverCard";
+import { Button } from "@/app/_components/ui/button";
+import { Heading } from "@/app/_components/ui/Heading";
+import { Paragraph } from "@/app/_components/ui/Paragraph";
+import { Username } from "@/app/_components/ui/Username";
 import React from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 

@@ -1,5 +1,5 @@
 "use client";
-import { Container } from "@/components/ui/Container";
+import { Container } from "@/app/_components/ui/Container";
 import React from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";

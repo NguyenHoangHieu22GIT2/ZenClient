@@ -15,7 +15,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/_components/ui/tooltip";
 import {
   ContextMenu,
   ContextMenuCheckboxItem,
@@ -30,7 +30,7 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+} from "@/app/_components/ui/context-menu";
 export const YourInfos = (props: {}) => {
   return (
     <Card>
