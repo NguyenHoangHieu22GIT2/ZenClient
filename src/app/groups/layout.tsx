@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Friends",
-  description: "Find all your friends!",
+  title: "Groups",
+  description: "Places where you belong",
 };
-export default function FriendsLayout({
+export default function LoginLayout({
   children,
 }: {
   children: React.ReactNode;
