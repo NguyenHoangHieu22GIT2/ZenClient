@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout/Layout";
 import React from "react";
 
 export default function page() {
+  console.log(process.env.NEXT_PUBLIC_SERVER_URL)
   return (
     <>
       <div className="h-screen relative md:flex [&>*]:basis-1/2">

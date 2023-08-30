@@ -5,7 +5,6 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/Themes/ThemeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Layout } from "@/components/Layout/Layout";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
