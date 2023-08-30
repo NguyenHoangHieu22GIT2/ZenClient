@@ -1,4 +1,4 @@
-import { Layout } from "@/app/_components/Layout/Layout";
+import { Layout } from "@/components/Layout/Layout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,5 +10,5 @@ export default function postsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout>{children}</Layout>;
+  return <section>{children}</section>;
 }
