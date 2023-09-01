@@ -1,10 +1,18 @@
 "use client";
 import { Register } from "@/components/Authentication/Register";
 import { Layout } from "@/components/Layout/Layout";
-import React from "react";
+import { useAuthStore } from "@/lib/storeZustand";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 export default function page() {
-  console.log(process.env.NEXT_PUBLIC_SERVER_URL)
+  const router = useRouter()
+  const access_token = useAuthStore(state => state.access_token)
+  useEffect(() => {
+    if (access_token) {
+      router.replace("/")
+    }
+  }, [access_token])
   return (
     <>
       <div className="h-screen relative md:flex [&>*]:basis-1/2">

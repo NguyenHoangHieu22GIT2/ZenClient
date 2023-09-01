@@ -1,4 +1,5 @@
-import React from "react";
+import { useAuthStore } from "@/lib/storeZustand";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,14 +7,12 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Inder } from "next/font/google";
 import {
   Card,
   CardContent,
@@ -22,13 +21,57 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Heading } from "../ui/Heading";
 import Link from "next/link";
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
 import { Separator } from "../ui/separator";
-import { SeparatorVertical } from "lucide-react";
-
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/lib/axios.api";
+import { User } from "@/Types/User";
+import { AxiosError } from "axios";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useToast } from "../ui/use-toast";
+import { ToastAction } from "../ui/toast";
+import { LoginResponse } from "@/Types/ResponseType";
+import { useRouter } from "next/navigation";
+import { Cookies } from "react-cookie";
 export const Login = (props: {}) => {
+  const cookie = new Cookies();
+  const onChangeAccessToken = useAuthStore((state) => state.changeAccessToken);
+  const router = useRouter();
+  const { toast } = useToast();
+  const LoginUserMutation = useMutation({
+    mutationFn: (existingUser: LoginUser) => {
+      return api.post("users/login", existingUser).then((data) => {
+        return data.data;
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!LoginUserMutation.isLoading && LoginUserMutation.data) {
+      const result = LoginUserMutation.data as LoginResponse<"success">;
+      cookie.set("jwtToken", result.access_token, {
+        // httpOnly: true,
+        // sameSite: "lax",
+        // secure: true,
+        maxAge: 3600000,
+      });
+      onChangeAccessToken(result.access_token);
+      toast({
+        title: "Login Successfully",
+        action: <ToastAction altText="Great!">Great!</ToastAction>,
+      });
+      router.replace("/");
+    }
+    if (!LoginUserMutation.isLoading && LoginUserMutation.error) {
+      const error = LoginUserMutation.error as LoginResponse<"error">;
+      toast({
+        title: error.response.data.message,
+        description: error.response.data.error,
+        action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
+      });
+    }
+  }, [LoginUserMutation.data, LoginUserMutation.isLoading]);
   const userSchema = z.object({
     email: z
       .string({
@@ -58,7 +101,8 @@ export const Login = (props: {}) => {
   // console.log(form.formState.errors);
 
   function onSubmit(values: LoginUser) {
-    console.log(values);
+    //TODO:Send the request
+    LoginUserMutation.mutate(values);
   }
 
   type LoginUser = z.infer<typeof userSchema>;
@@ -95,7 +139,11 @@ export const Login = (props: {}) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
+                    <Input
+                      placeholder="Email"
+                      {...field}
+                      disabled={LoginUserMutation.isLoading ? true : false}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,13 +156,22 @@ export const Login = (props: {}) => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" {...field} />
+                    <Input
+                      placeholder="Password"
+                      {...field}
+                      disabled={LoginUserMutation.isLoading ? true : false}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              disabled={LoginUserMutation.isLoading ? true : false}
+            >
+              Login
+            </Button>
           </form>
         </Form>
       </CardContent>

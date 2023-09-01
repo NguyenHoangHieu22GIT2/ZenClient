@@ -97,7 +97,7 @@ export const Header = React.memo(() => {
               <DropdownMenuContent>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <Link className="text-xl" href="/user/1">
+                    <Link className="text-xl" href="/users/1">
                       Your page
                     </Link>
                   </DropdownMenuItem>
@@ -178,7 +178,7 @@ export const Header = React.memo(() => {
               </DropdownMenuContent>
             </DropdownMenu>
             <NotificationNav />
-            <Link href={"/user/1"}>
+            <Link href={"/users/1"}>
               <AvatarHoverCard
                 username="User"
                 avatarUrl="https://github.com/shadcn.png"
