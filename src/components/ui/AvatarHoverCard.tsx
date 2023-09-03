@@ -27,7 +27,7 @@ export const AvatarHoverCard = (props: props) => {
           <div className="space-y-1">
             <h4 className="font-bold">{props.username}</h4>
             <p className="text-sm text-gray-500">
-              Has joined Poddy 4 years ago
+              Has joined Poddy {props.yearOfJoined} years ago
             </p>
           </div>
         </div>

@@ -30,7 +30,11 @@ import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Input } from "../ui/input";
+import { useAuthStore } from "../../lib/storeZustand";
+import { NavsPhone } from "./NavsPhone";
+import { NavsComputer } from "./NavsComputer";
 export const Header = React.memo(() => {
+  const access_token = useAuthStore((state) => state.access_token);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   return (
@@ -88,45 +92,23 @@ export const Header = React.memo(() => {
               <DropdownMenuTrigger asChild>
                 <Button className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent ">
                   <AvatarHoverCard
-                    username="Shadn"
-                    avatarUrl="/avatar.jpeg"
-                    yearOfJoined={4}
+                    username="User"
+                    avatarUrl={
+                      access_token
+                        ? "https://github.com/shadcn.png"
+                        : "/default-user.jpeg"
+                    }
+                    // avatarUrl="https://github.com/shadcn.png"
+                    yearOfJoined={0}
                   />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/users/1">
-                      Your page
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    {/*TODO:Change this back to a button with functionality*/}
-                    <Button
-                      className="text-xl text-left font-medium p-0"
-                      variant={"link"}
-                      onClick={() =>
-                        setTheme(theme === "light" ? "dark" : "light")
-                      }
-                    >
-                      Theme
-                    </Button>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/settings">
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/logout">
-                      Logout
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
+                <NavsComputer
+                  theme={theme}
+                  setTheme={setTheme}
+                  hasAccessToken={access_token.length > 0}
+                />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -144,45 +126,20 @@ export const Header = React.memo(() => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/">
-                      Home
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/friends">
-                      Friends
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/messages">
-                      Messages
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/login">
-                      Login
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link className="text-xl" href="/groups">
-                      Groups
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
+                <NavsPhone hasAccessToken={access_token.length > 0} />
               </DropdownMenuContent>
             </DropdownMenu>
             <NotificationNav />
-            <Link href={"/users/1"}>
+            <Link href={access_token ? "/users/1" : "/login"}>
               <AvatarHoverCard
                 username="User"
-                avatarUrl="https://github.com/shadcn.png"
-                yearOfJoined={4}
+                avatarUrl={
+                  access_token
+                    ? "https://github.com/shadcn.png"
+                    : "/default-user.jpeg"
+                }
+                // avatarUrl="https://github.com/shadcn.png"
+                yearOfJoined={0}
               />
             </Link>
           </div>

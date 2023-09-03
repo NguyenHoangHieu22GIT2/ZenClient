@@ -4,11 +4,13 @@ import { ChangePassword } from "@/components/Settings/ChangePassword";
 import { ChangeUsername } from "@/components/Settings/ChangeUsername";
 import { SettingsList } from "@/components/Settings/SettingsList";
 import { Container } from "@/components/ui/Container";
+import useCheckAuth from "@/hooks/useCheckAuth";
 import React, { useCallback } from "react";
 
 export type SettingsPane = "EMAIL" | "PASSWORD" | "USERNAME";
 
 export default function settingPage() {
+  useCheckAuth();
   const [settingPane, setSettingPane] = React.useState<SettingsPane>("EMAIL");
   let changeElement = <ChangeEmail />;
   switch (settingPane) {
@@ -23,7 +25,7 @@ export default function settingPage() {
     (pane: SettingsPane) => {
       setSettingPane(pane);
     },
-    [setSettingPane],
+    [setSettingPane]
   );
   return (
     <Container className="mt-5">

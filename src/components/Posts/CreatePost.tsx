@@ -14,8 +14,13 @@ import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
+import { useAuthStore } from "@/lib/storeZustand";
+import { useToast } from "../ui/use-toast";
+import { ToastAction } from "../ui/toast";
 
 export const CreatePost = (props: {}) => {
+  const { toast } = useToast()
+  const access_token = useAuthStore(state => state.access_token)
   const [files, setFiles] = useState<File[]>([]);
   const [uploadFile, setUploadFile] = useState<boolean>(false);
   const onDrop = useCallback(
@@ -103,6 +108,12 @@ export const CreatePost = (props: {}) => {
         </div>
       </>
     );
+  }
+
+  function createPost() {
+    if (!access_token) {
+      return toast({ title: "Login required", description: "Login to have full access on Poddy", action: <ToastAction altText="Okay">Alright</ToastAction> })
+    }
   }
   return (
     <Card className="m-2 mx-auto w-full lg:max-w-[800px]">

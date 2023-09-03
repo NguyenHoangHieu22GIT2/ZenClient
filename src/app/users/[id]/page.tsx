@@ -6,8 +6,7 @@ import { useAuthStore } from "@/lib/storeZustand";
 import React from "react";
 
 export default function Userpage() {
-  const token = useAuthStore((state) => state.access_token);
-  useCheckAuth(token);
+  useCheckAuth();
   return (
     <Container>
       <YourProfile />

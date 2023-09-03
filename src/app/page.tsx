@@ -6,6 +6,8 @@ import { Posts } from "@/components/Posts/Posts";
 import useCheckAuth from "@/hooks/useCheckAuth";
 import { Fragment } from "react";
 export default function Home() {
+  // useCheckAuth();
+
   return (
     <Fragment>
       <CreatePost />

@@ -13,7 +13,7 @@ interface props {
   onFinishStep: (userInfo: Partial<User>) => void;
 }
 
-export const RegisterSecondStep = (props: props) => {
+export const RegisterSecondStep = React.memo((props: props) => {
   const { toast } = useToast();
   const [file, setFile] = useState<File>();
   const onDrop = useCallback(
@@ -28,7 +28,7 @@ export const RegisterSecondStep = (props: props) => {
       }
       isValid && setFile(files[0]);
     },
-    [setFile],
+    [setFile]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const finishStep = useCallback(() => {
@@ -39,7 +39,7 @@ export const RegisterSecondStep = (props: props) => {
         action: <ToastAction altText="LOL">Ok!</ToastAction>,
       });
     }
-    props.onFinishStep({ avatar: file });
+    props.onFinishStep({ avatarFile: file });
   }, [file, props.onFinishStep]);
   return (
     <div>
@@ -72,4 +72,4 @@ export const RegisterSecondStep = (props: props) => {
       </div>
     </div>
   );
-};
+});

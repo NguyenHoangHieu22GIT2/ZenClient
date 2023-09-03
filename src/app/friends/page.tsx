@@ -6,8 +6,11 @@ import { Heading } from "@/components/ui/Heading";
 import { Container } from "@/components/ui/Container";
 import React from "react";
 import { FriendFilter } from "@/components/Friends/FriendFilter";
+import useCheckAuth from "@/hooks/useCheckAuth";
 
 export default function page() {
+  useCheckAuth();
+
   return (
     <Container className="mt-3">
       <Heading className="mb-2 lg:text-lg font-bold">

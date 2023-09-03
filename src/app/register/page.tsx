@@ -1,18 +1,14 @@
 "use client";
 import { Register } from "@/components/Authentication/Register";
 import { Layout } from "@/components/Layout/Layout";
+import useCheckAuth from "@/hooks/useCheckAuth";
+import { useCheckAuthInAuthenPage } from "@/hooks/useCheckAuthInAuthenPage";
 import { useAuthStore } from "@/lib/storeZustand";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function page() {
-  const router = useRouter()
-  const access_token = useAuthStore(state => state.access_token)
-  useEffect(() => {
-    if (access_token) {
-      router.replace("/")
-    }
-  }, [access_token])
+  useCheckAuthInAuthenPage();
   return (
     <>
       <div className="h-screen relative md:flex [&>*]:basis-1/2">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -19,17 +19,44 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@/Types/User";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/lib/axios.api";
+import { useToast } from "../ui/use-toast";
+import { RegisterResponse } from "@/Types/ResponseType";
+import { ToastAction } from "../ui/toast";
+import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
 
 type props = {
   onChangeStep: (user: Partial<User>) => void;
-  user: Partial<User>
+  user: Partial<User>;
 };
 
 export const RegisterFirstStep = (props: props) => {
+  const { toast } = useToast();
+  const { mutate, error, isLoading, data } = useMutation({
+    mutationFn: async (
+      data: Pick<User, "email" | "username" | "gender" | "password">
+    ) => {
+      return api
+        .post("/users/validateRegister", data)
+        .then((result) => result.data);
+    },
+  });
+  useEffect(() => {
+    if (!isLoading && data) {
+      props.onChangeStep(data);
+    } else if (!isLoading && error) {
+      const theError = error as RegisterResponse<"error">;
+      toast({
+        title: theError.response.data.error,
+        description: theError.response.data.message,
+        action: <ToastAction altText="Okay!">Okay!</ToastAction>,
+      });
+    }
+  }, [error, isLoading, data]);
   const createUserSchema = z
     .object({
       email: z.string().email({ message: "The Field should be an email" }),
@@ -44,14 +71,14 @@ export const RegisterFirstStep = (props: props) => {
           {
             message:
               "The password should have at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 5 characters",
-          },
+          }
         ),
       gender: z.enum(["male", "female"]),
       confirmPassword: z.string(),
     })
     .refine((data) => data.confirmPassword === data.password, {
       message: "The passwords don't match",
-      path: ["confirmPassword"]
+      path: ["confirmPassword"],
     });
   type createUserType = z.infer<typeof createUserSchema>;
   const form = useForm<createUserType>({
@@ -61,19 +88,24 @@ export const RegisterFirstStep = (props: props) => {
       confirmPassword: "",
       email: props.user.email ? props.user.email : "",
       gender: props.user.gender ? props.user.gender : "male",
-      username: props.user.username ? props.user.username : ""
-    }
+      username: props.user.username ? props.user.username : "",
+    },
   });
   function submit({ username, email, gender, password }: createUserType) {
-    const result: Partial<User> = {
+    const result: Pick<User, "email" | "username" | "gender" | "password"> = {
       username,
-      email, gender, password
-    }
-    props.onChangeStep(result);
+      email,
+      gender,
+      password,
+    };
+    mutate(result);
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(submit)}>
+      <form
+        className="flex flex-col gap-3"
+        onSubmit={form.handleSubmit(submit)}
+      >
         <FormField
           control={form.control}
           name="email"
@@ -81,7 +113,11 @@ export const RegisterFirstStep = (props: props) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input
+                  disabled={isLoading ? true : false}
+                  placeholder="Email"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -94,7 +130,11 @@ export const RegisterFirstStep = (props: props) => {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="username" {...field} />
+                <Input
+                  disabled={isLoading ? true : false}
+                  placeholder="username"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,7 +148,11 @@ export const RegisterFirstStep = (props: props) => {
               <FormLabel>Gender</FormLabel>
               <FormControl>
                 {/* <Input placeholder="gender" type="hidden" {...field} /> */}
-                <Select onValueChange={field.onChange} required={true}>
+                <Select
+                  disabled={isLoading ? true : false}
+                  onValueChange={field.onChange}
+                  required={true}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose your gender" />
                   </SelectTrigger>
@@ -132,7 +176,12 @@ export const RegisterFirstStep = (props: props) => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="password" type="password" {...field} />
+                <Input
+                  placeholder="password"
+                  type="password"
+                  disabled={isLoading ? true : false}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -148,6 +197,7 @@ export const RegisterFirstStep = (props: props) => {
                 <Input
                   type="password"
                   placeholder="confirm the password"
+                  disabled={isLoading ? true : false}
                   {...field}
                 />
               </FormControl>
@@ -155,7 +205,7 @@ export const RegisterFirstStep = (props: props) => {
             </FormItem>
           )}
         />
-        <Button className="mt-4">Create</Button>
+        <ButtonWithLoadingState isLoading={isLoading} children={"Next Step"} />
       </form>
     </Form>
   );

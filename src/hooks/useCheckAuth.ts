@@ -4,24 +4,13 @@ import { useAuthStore } from "@/lib/storeZustand";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const useCheckAuth = (access_token: string) => {
-  // const checkUserQuery = useQuery({
-  //   queryKey: ["authAccessToken"],
-  //   queryFn: async () => {
-  //     return api
-  //       .get("/users/validateUser", {
-  //         headers: { setAuthorization: `bearer ${access_token}` },
-  //       })
-  //       .then((result) => result.data);
-  //   },
-  // });
+const useCheckAuth = () => {
+  const access_token = useAuthStore((state) => state.access_token);
   const router = useRouter();
   useEffect(() => {
     if (!access_token) router.push("/login");
-    else {
-    }
   }, []);
   return access_token;
 };

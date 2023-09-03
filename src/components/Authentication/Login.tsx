@@ -34,26 +34,28 @@ import { ToastAction } from "../ui/toast";
 import { LoginResponse } from "@/Types/ResponseType";
 import { useRouter } from "next/navigation";
 import { Cookies } from "react-cookie";
+import Image from "next/image";
+import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
 export const Login = (props: {}) => {
   const cookie = new Cookies();
   const onChangeAccessToken = useAuthStore((state) => state.changeAccessToken);
   const router = useRouter();
   const { toast } = useToast();
-  const LoginUserMutation = useMutation({
+  const loginUserMutation = useMutation({
     mutationFn: (existingUser: LoginUser) => {
-      return api.post("users/login", existingUser).then((data) => {
+      return api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_LOGIN!, existingUser).then((data) => {
         return data.data;
       });
     },
   });
 
   useEffect(() => {
-    if (!LoginUserMutation.isLoading && LoginUserMutation.data) {
-      const result = LoginUserMutation.data as LoginResponse<"success">;
+    if (!loginUserMutation.isLoading && loginUserMutation.data) {
+      const result = loginUserMutation.data as LoginResponse<"success">;
       cookie.set("jwtToken", result.access_token, {
         // httpOnly: true,
-        // sameSite: "lax",
-        // secure: true,
+        sameSite: "lax",
+        secure: true,
         maxAge: 3600000,
       });
       onChangeAccessToken(result.access_token);
@@ -63,15 +65,15 @@ export const Login = (props: {}) => {
       });
       router.replace("/");
     }
-    if (!LoginUserMutation.isLoading && LoginUserMutation.error) {
-      const error = LoginUserMutation.error as LoginResponse<"error">;
+    if (!loginUserMutation.isLoading && loginUserMutation.error) {
+      const error = loginUserMutation.error as LoginResponse<"error">;
       toast({
         title: error.response.data.message,
         description: error.response.data.error,
         action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
       });
     }
-  }, [LoginUserMutation.data, LoginUserMutation.isLoading]);
+  }, [loginUserMutation.data, loginUserMutation.isLoading]);
   const userSchema = z.object({
     email: z
       .string({
@@ -102,7 +104,7 @@ export const Login = (props: {}) => {
 
   function onSubmit(values: LoginUser) {
     //TODO:Send the request
-    LoginUserMutation.mutate(values);
+    loginUserMutation.mutate(values);
   }
 
   type LoginUser = z.infer<typeof userSchema>;
@@ -142,7 +144,7 @@ export const Login = (props: {}) => {
                     <Input
                       placeholder="Email"
                       {...field}
-                      disabled={LoginUserMutation.isLoading ? true : false}
+                      disabled={loginUserMutation.isLoading ? true : false}
                     />
                   </FormControl>
                   <FormMessage />
@@ -157,21 +159,20 @@ export const Login = (props: {}) => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
+                      type="password"
                       placeholder="Password"
                       {...field}
-                      disabled={LoginUserMutation.isLoading ? true : false}
+                      disabled={loginUserMutation.isLoading ? true : false}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              disabled={LoginUserMutation.isLoading ? true : false}
-            >
-              Login
-            </Button>
+            <ButtonWithLoadingState
+              isLoading={loginUserMutation.isLoading}
+              children={"Login"}
+            />
           </form>
         </Form>
       </CardContent>
