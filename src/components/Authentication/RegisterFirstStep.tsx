@@ -31,7 +31,6 @@ import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
 
 type props = {
   onChangeStep: (user: Partial<User>) => void;
-  user: Partial<User>;
 };
 
 export const RegisterFirstStep = (props: props) => {
@@ -86,9 +85,9 @@ export const RegisterFirstStep = (props: props) => {
     defaultValues: {
       password: "",
       confirmPassword: "",
-      email: props.user.email ? props.user.email : "",
-      gender: props.user.gender ? props.user.gender : "male",
-      username: props.user.username ? props.user.username : "",
+      email: "",
+      gender: "male",
+      username: "",
     },
   });
   function submit({ username, email, gender, password }: createUserType) {

@@ -30,55 +30,26 @@ export const Register = () => {
       return api.post("/users/register", newUser).then((data) => data.data);
     },
   });
-  const [user, setUser] = useState<Partial<User>>({});
   const [step, setStep] = useState<Step>("STEP_ONE");
-  const nextStep = useCallback(
-    (userInfo: Partial<User>) => {
-      if (step == "STEP_ONE") {
-        setUser((oldUser) => ({ ...oldUser, ...userInfo }));
-      }
-      setStep("STEP_TWO");
-    },
-    [setStep, setUser, step]
-  );
-  const finishStep = useCallback(
-    (userInfo: Partial<User>) => {
-      setUser((oldUser) => ({ ...oldUser, ...userInfo }));
-      setStep("STEP_THREE");
-    },
-    [setUser]
-  );
-  useEffect(() => {
-    if (step === "STEP_THREE") {
-      const theUser = user as User;
-      const avatar = theUser.avatarFile;
-      const avatarName = v4() + avatar.name;
-      const imageRef = ref(storage, `images/${avatarName}`);
-      uploadBytes(imageRef, avatar).then((snapshot) => {
-        getDownloadURL(snapshot.ref);
-      });
-      //TODO: Send the request to server (Nest.JS)
-      createUserMutation.mutate({
-        ...theUser,
-        avatar: avatarName,
-      });
-    }
-  }, [step]);
-  let registerStepElement = (
-    <RegisterFirstStep user={user} onChangeStep={nextStep} />
-  );
+  const nextStep = useCallback(() => {
+    setStep("STEP_TWO");
+  }, [setStep]);
+  const finishStep = useCallback(() => {
+    setStep("STEP_THREE");
+  }, [setStep]);
+  let registerStepElement = <RegisterFirstStep onChangeStep={nextStep} />;
   if (step == "STEP_TWO") {
     registerStepElement = <RegisterSecondStep onFinishStep={finishStep} />;
   }
-  const goBackStep = useCallback(() => {
-    setStep("STEP_ONE");
-  }, [setStep]);
+  // const goBackStep = useCallback(() => {
+  //   setStep("STEP_ONE");
+  // }, [setStep]);
   return (
     <Card className="m-2 w-[80vw] max-w-[500px] min-w-[300px] shadow-lg">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Register</span>
-          {step == "STEP_TWO" && <Button onClick={goBackStep}>Back</Button>}
+          {/* {step == "STEP_TWO" && <Button onClick={goBackStep}>Back</Button>} */}
         </CardTitle>
         <CardDescription>
           Become a user of one of the best Social media
