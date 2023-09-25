@@ -31,7 +31,7 @@ import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
 
 type props = {
   onChangeStep: (user: Partial<User>) => void;
-  user: Partial<User>;
+  onSetUser: (userInfo: Partial<User>) => void;
 };
 
 export const RegisterFirstStep = (props: props) => {
@@ -41,7 +41,7 @@ export const RegisterFirstStep = (props: props) => {
       data: Pick<User, "email" | "username" | "gender" | "password">
     ) => {
       return api
-        .post("/users/validateRegister", data)
+        .post("/auth/validate-user", data)
         .then((result) => result.data);
     },
   });
@@ -86,9 +86,9 @@ export const RegisterFirstStep = (props: props) => {
     defaultValues: {
       password: "",
       confirmPassword: "",
-      email: props.user.email ? props.user.email : "",
-      gender: props.user.gender ? props.user.gender : "male",
-      username: props.user.username ? props.user.username : "",
+      email: "",
+      gender: "male",
+      username: "",
     },
   });
   function submit({ username, email, gender, password }: createUserType) {
@@ -98,6 +98,12 @@ export const RegisterFirstStep = (props: props) => {
       gender,
       password,
     };
+    props.onSetUser({
+      email,
+      username,
+      gender,
+      password,
+    });
     mutate(result);
   }
   return (

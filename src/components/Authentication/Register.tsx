@@ -22,63 +22,58 @@ import {
 } from "firebase/storage";
 import { storage } from "../../lib/firebase";
 import { v4 } from "uuid";
+import { RegisterThirdStep } from "./RegisterThirdStep";
+import { StepBack } from "lucide-react";
 
 type Step = "STEP_ONE" | "STEP_TWO" | "STEP_THREE";
 export const Register = () => {
+  const [user, setUser] = useState<Partial<User>>({
+    email: "",
+    username: "",
+    gender: "male",
+    password: "",
+  });
   const createUserMutation = useMutation({
     mutationFn: (newUser: User) => {
       return api.post("/users/register", newUser).then((data) => data.data);
     },
   });
-  const [user, setUser] = useState<Partial<User>>({});
-  const [step, setStep] = useState<Step>("STEP_ONE");
-  const nextStep = useCallback(
+  const [step, setStep] = useState<Step>("STEP_THREE");
+  const changeUser = useCallback(
     (userInfo: Partial<User>) => {
-      if (step == "STEP_ONE") {
-        setUser((oldUser) => ({ ...oldUser, ...userInfo }));
-      }
-      setStep("STEP_TWO");
+      setUser(userInfo);
     },
-    [setStep, setUser, step]
+    [user]
   );
-  const finishStep = useCallback(
-    (userInfo: Partial<User>) => {
-      setUser((oldUser) => ({ ...oldUser, ...userInfo }));
-      setStep("STEP_THREE");
-    },
-    [setUser]
-  );
-  useEffect(() => {
-    if (step === "STEP_THREE") {
-      const theUser = user as User;
-      const avatar = theUser.avatarFile;
-      const avatarName = v4() + avatar.name;
-      const imageRef = ref(storage, `images/${avatarName}`);
-      uploadBytes(imageRef, avatar).then((snapshot) => {
-        getDownloadURL(snapshot.ref);
-      });
-      //TODO: Send the request to server (Nest.JS)
-      createUserMutation.mutate({
-        ...theUser,
-        avatar: avatarName,
-      });
-    }
-  }, [step]);
-  let registerStepElement = (
-    <RegisterFirstStep user={user} onChangeStep={nextStep} />
-  );
-  if (step == "STEP_TWO") {
-    registerStepElement = <RegisterSecondStep onFinishStep={finishStep} />;
-  }
   const goBackStep = useCallback(() => {
     setStep("STEP_ONE");
   }, [setStep]);
+  const nextStep = useCallback(() => {
+    setStep("STEP_TWO");
+  }, [setStep]);
+  const finishStep = useCallback(() => {
+    setStep("STEP_THREE");
+  }, [setStep]);
+  let registerStepElement = (
+    <RegisterFirstStep onSetUser={changeUser} onChangeStep={nextStep} />
+  );
+  if (step === "STEP_TWO") {
+    registerStepElement = (
+      <RegisterSecondStep
+        user={user}
+        onStepBack={goBackStep}
+        onFinishStep={finishStep}
+      />
+    );
+  } else if (step === "STEP_THREE") {
+    registerStepElement = <RegisterThirdStep />;
+  }
   return (
     <Card className="m-2 w-[80vw] max-w-[500px] min-w-[300px] shadow-lg">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Register</span>
-          {step == "STEP_TWO" && <Button onClick={goBackStep}>Back</Button>}
+          {/* {step == "STEP_TWO" && <Button onClick={goBackStep}>Back</Button>} */}
         </CardTitle>
         <CardDescription>
           Become a user of one of the best Social media
