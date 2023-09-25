@@ -43,9 +43,11 @@ export const Login = (props: {}) => {
   const { toast } = useToast();
   const loginUserMutation = useMutation({
     mutationFn: (existingUser: LoginUser) => {
-      return api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_LOGIN!, existingUser).then((data) => {
-        return data.data;
-      });
+      return api
+        .post(process.env.NEXT_PUBLIC_SERVER_AUTH_LOGIN, existingUser)
+        .then((data) => {
+          return data.data;
+        });
     },
   });
 

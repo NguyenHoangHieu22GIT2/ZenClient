@@ -41,7 +41,7 @@ export const RegisterFirstStep = (props: props) => {
       data: Pick<User, "email" | "username" | "gender" | "password">
     ) => {
       return api
-        .post("/auth/validate-user", data)
+        .post(process.env.NEXT_PUBLIC_SERVER_AUTH_VALIDATE_REGISTER, data)
         .then((result) => result.data);
     },
   });

@@ -1,17 +1,15 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { Eye, MessageSquare, Share2, ThumbsUp } from "lucide-react";
-import { Container } from "../ui/Container";
 import { PostComment } from "./Comments/PostComment";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
-import { Comment, CommentType } from "./Comments/Comment";
+import { CommentType } from "./Comments/Comment";
 import { Paragraph } from "../ui/Paragraph";
 import { Heading } from "../ui/Heading";
 import { Comments } from "./Comments/Comments";
@@ -21,37 +19,19 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
-import { comment } from "postcss";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Checkbox } from "../ui/checkbox";
 type props = {

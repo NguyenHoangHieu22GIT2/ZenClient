@@ -17,30 +17,57 @@ import Image from "next/image";
 import { useAuthStore } from "@/lib/storeZustand";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/lib/axios.api";
+import { Post } from "@/Types/Post";
+import { z } from "zod";
+import { Form } from "../ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Bearer } from "@/utils/Bearer";
+import { checkImageType } from "@/utils/checkImageType";
 
 export const CreatePost = (props: {}) => {
-  const { toast } = useToast()
-  const access_token = useAuthStore(state => state.access_token)
+  const authToken = useAuthStore((state) => state.access_token);
+  const { mutate, data, error, isLoading } = useMutation({
+    mutationKey: ["createPost"],
+    mutationFn: async (data: Pick<Post, "postBody" | "images">) => {
+      const formData = new FormData();
+      formData.append("postBody", data.postBody);
+      for (const file of data.images) {
+        formData.append("files", file);
+      }
+      const data_1 = await api.post("/posts/create-post", formData, {
+        headers: {
+          authorization: Bearer(authToken),
+        },
+      });
+      return data_1.data;
+    },
+  });
+  const { toast } = useToast();
+  const access_token = useAuthStore((state) => state.access_token);
   const [files, setFiles] = useState<File[]>([]);
   const [uploadFile, setUploadFile] = useState<boolean>(false);
   const onDrop = useCallback(
     (files: File[]) => {
       let isValid = true;
       files.forEach((file) => {
-        if (
-          !file.type.endsWith("jpg") &&
-          !file.type.endsWith("jpeg") &&
-          !file.type.endsWith("png")
-        ) {
-          isValid = false;
-        }
+        isValid = checkImageType(file);
       });
       isValid &&
         setFiles((prevArray: File[]) => {
           return [...prevArray, ...files];
         });
     },
-    [setFiles],
+    [setFiles]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   let uploadFileButton = !uploadFile ? (
@@ -95,7 +122,7 @@ export const CreatePost = (props: {}) => {
                     onClick={() => {
                       setFiles((prevArray) => {
                         return prevArray.filter(
-                          (file) => file.name !== image.name,
+                          (file) => file.name !== image.name
                         );
                       });
                     }}
@@ -109,11 +136,27 @@ export const CreatePost = (props: {}) => {
       </>
     );
   }
+  type postType = z.infer<typeof postSchema>;
+  const postSchema = z.object({
+    postBody: z.string().min(5),
+  });
+  const form = useForm<postType>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      postBody: "",
+    },
+  });
 
-  function createPost() {
+  function createPost(values: postType) {
     if (!access_token) {
-      return toast({ title: "Login required", description: "Login to have full access on Poddy", action: <ToastAction altText="Okay">Alright</ToastAction> })
+      return toast({
+        title: "Login required",
+        description: "Login to have full access on Poddy",
+        action: <ToastAction altText="Okay">Alright</ToastAction>,
+      });
     }
+
+    mutate({ postBody: values.postBody, images: files });
   }
   return (
     <Card className="m-2 mx-auto w-full lg:max-w-[800px]">
@@ -122,14 +165,33 @@ export const CreatePost = (props: {}) => {
         <CardDescription>Show yourself to the world!</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <Textarea placeholder="John, How do you feel? ☺️" />
-          <div className="mt-4">{uploadFileElement}</div>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(createPost)}>
+            <FormField
+              control={form.control}
+              name="postBody"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="John, How do you feel? ☺️"
+                      {...field}
+                      disabled={isLoading ? true : false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button className="mt-5">Post</Button>
+          </form>
+        </Form>
       </CardContent>
-      <CardFooter className="flex gap-3 items-center">
+      <CardFooter className="flex gap-2  items-center">
         {uploadFileButton}
-        <Button>Post</Button>
+        <div className="">{uploadFileElement}</div>
       </CardFooter>
     </Card>
   );

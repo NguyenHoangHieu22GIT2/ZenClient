@@ -7,12 +7,9 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function LoginPage(props: {}) {
-  useCheckAuthInAuthenPage();
   return (
-    <>
-      <div className="h-screen flex justify-center items-center">
-        <Login />
-      </div>
-    </>
+    <div className="h-screen flex justify-center items-center">
+      <Login />
+    </div>
   );
 }

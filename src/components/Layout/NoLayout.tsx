@@ -15,13 +15,12 @@ interface props extends PropsClassName {
   children: ReactNode;
 }
 
-export const Layout = React.memo((props: props) => {
+export const NoLayout = React.memo((props: props) => {
   const client = new QueryClient();
   useCheckAuth();
   return (
     <QueryClientProvider client={client}>
       <section className={props.className}>
-        <Header />
         <main className="">{props.children}</main>
       </section>
     </QueryClientProvider>

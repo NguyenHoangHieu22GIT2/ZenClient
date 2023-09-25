@@ -20,7 +20,7 @@ interface props {
 export const RegisterSecondStep = React.memo((props: props) => {
   const { mutate, isLoading, data, error } = useMutation({
     mutationFn: async (user: Partial<User>) => {
-      return api.post("/auth/register", user);
+      return api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_REGISTER, user);
     },
   });
   const { toast } = useToast();

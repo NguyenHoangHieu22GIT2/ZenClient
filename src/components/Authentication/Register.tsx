@@ -33,12 +33,8 @@ export const Register = () => {
     gender: "male",
     password: "",
   });
-  const createUserMutation = useMutation({
-    mutationFn: (newUser: User) => {
-      return api.post("/users/register", newUser).then((data) => data.data);
-    },
-  });
-  const [step, setStep] = useState<Step>("STEP_THREE");
+
+  const [step, setStep] = useState<Step>("STEP_ONE");
   const changeUser = useCallback(
     (userInfo: Partial<User>) => {
       setUser(userInfo);
@@ -69,7 +65,7 @@ export const Register = () => {
     registerStepElement = <RegisterThirdStep />;
   }
   return (
-    <Card className="m-2 w-[80vw] max-w-[500px] min-w-[300px] shadow-lg">
+    <Card className="m-2 h-screen flex flex-col justify-center shadow-lg">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Register</span>
