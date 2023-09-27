@@ -14,15 +14,15 @@ import { Notification } from "./Notification";
 import { Notifications } from "./Notifications";
 
 export const NotificationNav = (props: {}) => {
-  const [clearData, setClearData] = useState(false);
-  let notificationContent = <Notifications />;
-  if (clearData) {
-    notificationContent = (
-      <object type="image/svg+xml" data="/Notification.svg">
-        Notification
-      </object>
-    );
-  }
+  // const [clearData, setClearData] = useState(false);
+  // let notificationContent = <Notifications />;
+  // if (clearData) {
+  //   notificationContent = (
+  //     <object type="image/svg+xml" data="/Notification.svg">
+  //       Notification
+  //     </object>
+  //   );
+  // }
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -42,12 +42,12 @@ export const NotificationNav = (props: {}) => {
         {/*   Notification */}
         {/* </object> */}
         {/* <Notifications /> */}
-        {notificationContent}
+        {/* {notificationContent}
         <SheetFooter>
           <Button onClick={() => setClearData(true)} variant={"destructive"}>
             Clear
           </Button>
-        </SheetFooter>
+        </SheetFooter> */}
       </SheetContent>
     </Sheet>
   );

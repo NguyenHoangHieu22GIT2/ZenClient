@@ -20,6 +20,7 @@ interface props {
 export const RegisterSecondStep = React.memo((props: props) => {
   const { mutate, isLoading, data, error } = useMutation({
     mutationFn: async (user: Partial<User>) => {
+      //TODO: Create a formData to send images tomorrow :) Good Night
       return api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_REGISTER, user);
     },
   });
@@ -47,13 +48,6 @@ export const RegisterSecondStep = React.memo((props: props) => {
     } else {
       mutate(props.user);
     }
-    // if (!file) {
-    //   return toast({
-    //     title: "Please Insert an image",
-    //     description: "That is literally the easiest thing ever, please!",
-    //     action: <ToastAction altText="LOL">Ok!</ToastAction>,
-    //   });
-    // }
     props.onFinishStep();
   }, [file, props.onFinishStep]);
   return (
@@ -87,7 +81,7 @@ export const RegisterSecondStep = React.memo((props: props) => {
           Skip
         </Button>
         <Button onClick={finishStep} variant={"default"}>
-          Ok
+          wsa Ok
         </Button>
       </div>
     </div>

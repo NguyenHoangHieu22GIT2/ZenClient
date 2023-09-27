@@ -1,4 +1,3 @@
-"use client";
 import React, {
   Fragment,
   PropsWithChildren,
@@ -11,19 +10,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Cookies } from "react-cookie";
 import { useAuthStore } from "@/lib/storeZustand";
 import useCheckAuth from "@/hooks/useCheckAuth";
+import { CheckAuth } from "./CheckAuth";
+import { Provider } from "./Provider";
 interface props extends PropsClassName {
   children: ReactNode;
 }
 
-export const Layout = React.memo((props: props) => {
-  const client = new QueryClient();
-  useCheckAuth();
+export const Layout = (props: props) => {
   return (
-    <QueryClientProvider client={client}>
+    <Provider>
+      <CheckAuth />
       <section className={props.className}>
-        <Header />
+        {/* <Header /> */}
         <main className="">{props.children}</main>
       </section>
-    </QueryClientProvider>
+    </Provider>
   );
-});
+};

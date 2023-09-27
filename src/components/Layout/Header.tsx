@@ -1,4 +1,3 @@
-"use client";
 import { Container } from "@/components/ui/Container";
 import React from "react";
 import Link from "next/link";
@@ -33,10 +32,10 @@ import { Input } from "../ui/input";
 import { useAuthStore } from "../../lib/storeZustand";
 import { NavsPhone } from "./NavsPhone";
 import { NavsComputer } from "./NavsComputer";
-export const Header = React.memo(() => {
-  const access_token = useAuthStore((state) => state.access_token);
-  const { theme, setTheme } = useTheme();
-  const pathname = usePathname();
+import { HeaderNavigation } from "../Header/Navigation";
+import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
+import { UserAvatarLink } from "../Header/UserAvatarLink";
+export const Header = () => {
   return (
     <header className="py-2 z-50 dark:bg-slate-800/80 bg-slate-100/80 backdrop-blur-lg sticky top-0">
       <Container>
@@ -54,61 +53,21 @@ export const Header = React.memo(() => {
           </main>
           {/* For computers */}
           <nav className="hidden md:block">
-            <ul className="flex gap-5">
-              <li className="text-3xl">
-                <Link href="/">
-                  {pathname === "/" ? <GoHomeFill /> : <GoHome />}
-                </Link>
-              </li>
-              <li className="text-3xl">
-                <Link href="/posts">
-                  {pathname === "/posts" ? <BsPostcardFill /> : <BsPostcard />}
-                </Link>
-              </li>
-              <li className="text-3xl">
-                <Link href="/friends">
-                  {pathname === "/friends" ? <BsPeopleFill /> : <BsPeople />}
-                </Link>
-              </li>
-              <li className="text-3xl">
-                <Link href="/messages">
-                  {pathname === "/messages" ? (
-                    <BiSolidMessageSquareDetail />
-                  ) : (
-                    <BiMessageSquareDetail />
-                  )}
-                </Link>
-              </li>
-              <li className="text-3xl">
-                <Link href="/groups">
-                  {pathname === "/groups" ? <BiSolidGroup /> : <BiGroup />}
-                </Link>
-              </li>
-            </ul>
+            <HeaderNavigation />
           </nav>
+          {/* The Div is the problem */}
           <div className="md:flex md:items-center md:gap-5 hidden ">
             <NotificationNav />
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent ">
-                  <AvatarHoverCard
-                    username="User"
-                    avatarUrl={
-                      access_token
-                        ? "https://github.com/shadcn.png"
-                        : "/default-user.jpeg"
-                    }
-                    // avatarUrl="https://github.com/shadcn.png"
-                    yearOfJoined={0}
-                  />
-                </Button>
+              <DropdownMenuTrigger
+                className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent "
+                asChild
+              >
+                {/* The problem is here */}
+                <UserAvatarHoverCard />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <NavsComputer
-                  theme={theme}
-                  setTheme={setTheme}
-                  hasAccessToken={access_token.length > 0}
-                />
+                <NavsComputer />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -126,25 +85,14 @@ export const Header = React.memo(() => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <NavsPhone hasAccessToken={access_token.length > 0} />
+                <NavsPhone />
               </DropdownMenuContent>
             </DropdownMenu>
             <NotificationNav />
-            <Link href={access_token ? "/users/1" : "/login"}>
-              <AvatarHoverCard
-                username="User"
-                avatarUrl={
-                  access_token
-                    ? "https://github.com/shadcn.png"
-                    : "/default-user.jpeg"
-                }
-                // avatarUrl="https://github.com/shadcn.png"
-                yearOfJoined={0}
-              />
-            </Link>
+            <UserAvatarLink />
           </div>
         </div>
       </Container>
     </header>
   );
-});
+};

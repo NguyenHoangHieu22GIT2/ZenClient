@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-export default function ValidateAccount(props: any) {
+export default function ValidateAccount(props: { params: { token: string } }) {
   const router = useRouter();
   const { mutate, data, error, isLoading } = useMutation({
     mutationKey: ["validate-account"],

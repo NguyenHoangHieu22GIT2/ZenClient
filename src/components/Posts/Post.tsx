@@ -34,6 +34,7 @@ import {
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Checkbox } from "../ui/checkbox";
+import Image from "next/image";
 type props = {
   avatarUrl: string;
   username: string;
@@ -43,6 +44,7 @@ type props = {
   numOfViews: number;
   badge: string;
   isLiked: boolean;
+  images: string[];
 };
 
 export const Post = (props: props) => {
@@ -151,6 +153,16 @@ export const Post = (props: props) => {
         <Separator className="my-2" />
         <Heading>{props.heading}</Heading>
         <Paragraph>{props.paragraph}</Paragraph>
+        <div className="flex flex-wrap gap-2 justify-center">
+          {props.images.map((image) => (
+            <Image
+              src={process.env.NEXT_PUBLIC_SERVER_URL_UPLOADS + image}
+              alt={props.heading}
+              width={500}
+              height={500}
+            />
+          ))}
+        </div>
       </CardContent>
       <CardFooter className="block ">
         <div className="flex gap-2 mb-3">
@@ -196,7 +208,6 @@ export const Post = (props: props) => {
         </div>
         <Separator />
         <div className="mt-5">{commentsElement}</div>
-        <div></div>
       </CardFooter>
     </Card>
   );

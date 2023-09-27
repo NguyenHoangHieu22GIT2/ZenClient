@@ -1,21 +1,31 @@
 import React from "react";
 import { Container } from "../ui/Container";
 import { Post } from "./Post";
+import { Post as PostType } from "@/Types/Post";
 
-export const Posts = (props: {}) => {
+type props = {
+  posts: PostType[];
+};
+
+export const Posts = (props: props) => {
   return (
     <div>
-      <Post
-        isLiked={true}
-        avatarUrl="https://github.com/shadcn.png"
-        username="ShadCn"
-        badge="Admin"
-        numOfViews={499}
-        paragraph="This is a good day to code a beautiful website like Poddy"
-        heading="Best day to Code!"
-        dateOfPublished={new Date()}
-        key={1}
-      />
+      {props.posts.map((post) => {
+        return (
+          <Post
+            isLiked={false}
+            avatarUrl={post.user.avatar || "/default-user.jpeg"}
+            username={post.user.username}
+            badge="Admin"
+            numOfViews={post.views}
+            paragraph={post.postBody}
+            heading={post.postHeading}
+            dateOfPublished={post.createdAt}
+            key={post._id}
+            images={post.images}
+          />
+        );
+      })}
     </div>
   );
 };

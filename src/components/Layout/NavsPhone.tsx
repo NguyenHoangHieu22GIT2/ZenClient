@@ -6,12 +6,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
+import { useAuthStore } from "@/lib/storeZustand";
 
-type props = {
-  hasAccessToken: boolean;
-};
-
-export const NavsPhone = (props: props) => {
+export const NavsPhone = (props: {}) => {
+  const access_token = useAuthStore((state) => state.access_token);
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem>
@@ -38,7 +36,7 @@ export const NavsPhone = (props: props) => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      {props.hasAccessToken ? (
+      {access_token ? (
         <DropdownMenuItem>
           <Link className="text-xl" href="/logout">
             Logout

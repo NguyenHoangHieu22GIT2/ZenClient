@@ -1,3 +1,4 @@
+"use client";
 import { useAuthStore } from "@/lib/storeZustand";
 import React, { useEffect } from "react";
 import { z } from "zod";
@@ -69,6 +70,7 @@ export const Login = (props: {}) => {
     }
     if (!loginUserMutation.isLoading && loginUserMutation.error) {
       const error = loginUserMutation.error as LoginResponse<"error">;
+      console.log(loginUserMutation);
       toast({
         title: error.response.data.message,
         description: error.response.data.error,

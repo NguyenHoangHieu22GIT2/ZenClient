@@ -15,7 +15,7 @@ export const AvatarHoverCard = (props: props) => {
       <HoverCardTrigger asChild>
         <Avatar>
           <AvatarImage className={props.className} src={props.avatarUrl} />
-          <AvatarFallback>{props.username}</AvatarFallback>
+          <h1>{props.username}</h1>
         </Avatar>
       </HoverCardTrigger>
       <HoverCardContent className="w-56 shadow-lg">

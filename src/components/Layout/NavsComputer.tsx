@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -6,14 +7,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
+import { useTheme } from "next-themes";
+import { useAuthStore } from "@/lib/storeZustand";
 
-type props = {
-  hasAccessToken: boolean;
-  setTheme: (mode: string) => void;
-  theme: string | undefined;
-};
-
-export const NavsComputer = (props: props) => {
+export const NavsComputer = (props: {}) => {
+  const { theme, setTheme } = useTheme();
+  const access_token = useAuthStore((state) => state.access_token);
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem>
@@ -27,9 +26,7 @@ export const NavsComputer = (props: props) => {
         <Button
           className="text-xl text-left font-medium p-0"
           variant={"link"}
-          onClick={() =>
-            props.setTheme(props.theme === "light" ? "dark" : "light")
-          }
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
         >
           Theme
         </Button>
@@ -41,7 +38,7 @@ export const NavsComputer = (props: props) => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      {props.hasAccessToken ? (
+      {access_token ? (
         <DropdownMenuItem>
           <Link className="text-xl" href="/logout">
             Logout

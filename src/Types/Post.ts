@@ -1,6 +1,6 @@
 import { Brand } from "./Brand";
 import { GroupId } from "./Group";
-import { UserId } from "./User";
+import { User, UserId } from "./User";
 import { Types } from "mongoose";
 export enum Mode {
   "global",
@@ -21,11 +21,15 @@ export type CommentType = {
 }[];
 export type Post = {
   _id?: PostId;
+  postHeading: string;
   postBody: string;
   userId: UserId;
-  images: string[] | File[];
+  images: string[];
   likes: UserId[];
+  views: number;
   comments: CommentType[];
   mode: Mode;
   GroupId: GroupId;
+  user: User;
+  createdAt: Date;
 };

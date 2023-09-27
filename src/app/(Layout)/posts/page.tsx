@@ -6,12 +6,10 @@ import useCheckAuth from "@/hooks/useCheckAuth";
 import React from "react";
 
 export default function PostsPage() {
-  useCheckAuth();
-
   return (
     <Container>
       <CreatePost />
-      <Posts />
+      <Posts posts={[]} />
     </Container>
   );
 }
