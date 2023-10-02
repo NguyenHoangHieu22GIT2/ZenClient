@@ -37,82 +37,9 @@ import { useRouter } from "next/navigation";
 import { Cookies } from "react-cookie";
 import Image from "next/image";
 import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
+import { useLoginPage } from "@/hooks/useLoginPage";
 export const Login = (props: {}) => {
-  const cookie = new Cookies();
-  const onChangeAccessToken = useAuthStore((state) => state.changeAccessToken);
-  const router = useRouter();
-  const { toast } = useToast();
-  const loginUserMutation = useMutation({
-    mutationFn: (existingUser: LoginUser) => {
-      return api
-        .post(process.env.NEXT_PUBLIC_SERVER_AUTH_LOGIN, existingUser)
-        .then((data) => {
-          return data.data;
-        });
-    },
-  });
-
-  useEffect(() => {
-    if (!loginUserMutation.isLoading && loginUserMutation.data) {
-      const result = loginUserMutation.data as LoginResponse<"success">;
-      cookie.set("jwtToken", result.access_token, {
-        // httpOnly: true,
-        sameSite: "lax",
-        secure: true,
-        maxAge: 3600000,
-      });
-      onChangeAccessToken(result.access_token);
-      toast({
-        title: "Login Successfully",
-        action: <ToastAction altText="Great!">Great!</ToastAction>,
-      });
-      router.replace("/");
-    }
-    if (!loginUserMutation.isLoading && loginUserMutation.error) {
-      const error = loginUserMutation.error as LoginResponse<"error">;
-      console.log(loginUserMutation);
-      toast({
-        title: error.response.data.message,
-        description: error.response.data.error,
-        action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
-      });
-    }
-  }, [loginUserMutation.data, loginUserMutation.isLoading]);
-  const userSchema = z.object({
-    email: z
-      .string({
-        required_error: "email is required",
-        invalid_type_error: "Please type out Letters",
-      })
-      .email({ message: "It should be an email" }),
-    password: z
-      .string()
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        {
-          message:
-            "The password should have at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 5 characters",
-        }
-      ),
-  });
-
-  const form = useForm<LoginUser>({
-    resolver: zodResolver(userSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  // console.log(form.formState.errors);
-
-  function onSubmit(values: LoginUser) {
-    //TODO:Send the request
-    loginUserMutation.mutate(values);
-  }
-
-  type LoginUser = z.infer<typeof userSchema>;
-
+  const { form, onSubmit, loginUserMutation } = useLoginPage();
   return (
     <Card className="m-2 w-[80vw] max-w-[500px] min-w-[300px] shadow-lg">
       <CardHeader className="text-center">

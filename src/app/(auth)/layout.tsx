@@ -22,10 +22,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NoLayout>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-            <Toaster />
-          </ThemeProvider>
+          {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
+          {children}
+          <Toaster />
+          {/* </ThemeProvider> */}
         </NoLayout>
       </body>
     </html>

@@ -1,4 +1,3 @@
-"use client";
 import { Friend } from "@/components/Friends/Friend";
 import { Friends } from "@/components/Friends/Friends";
 import { Layout } from "@/components/Layout/Layout";

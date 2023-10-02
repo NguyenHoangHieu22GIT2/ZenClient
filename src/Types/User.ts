@@ -10,4 +10,14 @@ export type User = {
   avatarFile: File;
   username: string;
   gender: "male" | "female";
+  badge: string;
 };
+
+export type UserRegisterStepOne = Pick<
+  User,
+  "email" | "gender" | "password" | "username"
+>;
+export type UserRegisterStepTwo = Pick<
+  User,
+  "email" | "gender" | "password" | "username" | "avatar"
+>;

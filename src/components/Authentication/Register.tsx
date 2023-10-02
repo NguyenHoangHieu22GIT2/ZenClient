@@ -11,7 +11,7 @@ import { Separator } from "../ui/separator";
 import { RegisterFirstStep } from "./RegisterFirstStep";
 import { RegisterSecondStep } from "./RegisterSecondStep";
 import { Button } from "../ui/button";
-import { User } from "@/Types/User";
+import { User, UserRegisterStepOne } from "@/Types/User";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import {
@@ -28,7 +28,7 @@ import { StepBack } from "lucide-react";
 
 type Step = "STEP_ONE" | "STEP_TWO" | "STEP_THREE";
 export const Register = () => {
-  const [user, setUser] = useState<Partial<User>>({
+  const [user, setUser] = useState<UserRegisterStepOne>({
     email: "",
     username: "",
     gender: "male",
@@ -37,7 +37,7 @@ export const Register = () => {
 
   const [step, setStep] = useState<Step>("STEP_ONE");
   const changeUser = useCallback(
-    (userInfo: Partial<User>) => {
+    (userInfo: UserRegisterStepOne) => {
       setUser(userInfo);
     },
     [user]
@@ -98,4 +98,3 @@ export const Register = () => {
     </Card>
   );
 };
-// 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

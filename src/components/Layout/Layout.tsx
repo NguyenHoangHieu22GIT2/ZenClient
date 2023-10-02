@@ -1,15 +1,6 @@
-import React, {
-  Fragment,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { ReactNode } from "react";
 import { Header } from "./Header";
 import { PropsClassName } from "@/Types/Props";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Cookies } from "react-cookie";
-import { useAuthStore } from "@/lib/storeZustand";
-import useCheckAuth from "@/hooks/useCheckAuth";
 import { CheckAuth } from "./CheckAuth";
 import { Provider } from "./Provider";
 interface props extends PropsClassName {
@@ -21,7 +12,7 @@ export const Layout = (props: props) => {
     <Provider>
       <CheckAuth />
       <section className={props.className}>
-        {/* <Header /> */}
+        <Header />
         <main className="">{props.children}</main>
       </section>
     </Provider>

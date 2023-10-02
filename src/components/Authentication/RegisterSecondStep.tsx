@@ -5,37 +5,37 @@ import { AiOutlineUser } from "react-icons/ai";
 import { useDropzone } from "react-dropzone";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { User } from "@/Types/User";
+import { User, UserRegisterStepOne, UserRegisterStepTwo } from "@/Types/User";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { randomBytes } from "crypto";
+import { checkImageType } from "@/utils/checkImageType";
 interface props {
-  onFinishStep: (userInfo?: Partial<User>) => void;
+  onFinishStep: (userInfo?: UserRegisterStepOne) => void;
   onStepBack: () => void;
-  user: Partial<User>;
+  user: UserRegisterStepOne;
 }
 
 export const RegisterSecondStep = React.memo((props: props) => {
   const { mutate, isLoading, data, error } = useMutation({
-    mutationFn: async (user: Partial<User>) => {
-      //TODO: Create a formData to send images tomorrow :) Good Night
-      return api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_REGISTER, user);
+    mutationFn: async (user: UserRegisterStepTwo | UserRegisterStepOne) => {
+      const formData = new FormData();
+      let key: keyof typeof user;
+      for (key in user) {
+        formData.append(key, user[key]);
+      }
+      return (
+        await api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_REGISTER, formData)
+      ).data;
     },
   });
-  const { toast } = useToast();
   const [file, setFile] = useState<File>();
   const onDrop = useCallback(
     (files: File[]) => {
-      let isValid = true;
-      if (
-        !files[0].type.endsWith("jpg") &&
-        !files[0].type.endsWith("png") &&
-        !files[0].type.endsWith("jpeg")
-      ) {
-        isValid = false;
-      }
+      let isValid = checkImageType(files[0]);
+
       isValid && setFile(files[0]);
     },
     [setFile]
@@ -81,7 +81,7 @@ export const RegisterSecondStep = React.memo((props: props) => {
           Skip
         </Button>
         <Button onClick={finishStep} variant={"default"}>
-          wsa Ok
+          Alright
         </Button>
       </div>
     </div>

@@ -17,7 +17,7 @@ export const YourPosts = (props: {}) => {
       <Separator className="my-5" />
       <CreatePost />
       <Separator className="my-5" />
-      <Posts />
+      <Posts posts={[]} />
     </div>
   );
 };

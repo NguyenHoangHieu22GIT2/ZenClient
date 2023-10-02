@@ -1,15 +1,11 @@
 import React from "react";
-import { Comment, CommentType } from "./Comment";
+import { Comment } from "./Comment";
+import { CommentType, PostId } from "@/Types/Post";
 
 type props = {
   comments: CommentType[];
+  postId: PostId;
 };
 export const Comments = (props: props) => {
-  return (
-    <>
-      {props.comments.map((comment) => (
-        <Comment {...comment} key={comment._id} />
-      ))}
-    </>
-  );
+  return <></>;
 };

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
@@ -10,6 +11,7 @@ interface props extends PropsClassName {
 }
 
 export const AvatarHoverCard = (props: props) => {
+  // Server :"", client :"hoang hieu"
   return (
     <HoverCard>
       <HoverCardTrigger asChild>

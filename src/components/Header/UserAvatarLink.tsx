@@ -2,15 +2,18 @@
 import Link from "next/link";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { useAuthStore } from "@/lib/storeZustand";
+import { cookies } from "next/headers";
+import { jwtCookieToObject } from "@/utils/jwtCookieToObject";
+import { useUserFromZustandClient } from "@/hooks/useUserFromZustandClient";
 
 export function UserAvatarLink() {
-  const user = useAuthStore((state) => state);
+  const { user } = useUserFromZustandClient();
   return (
-    <Link href={user.access_token ? `/users/${user._id}` : "/login"}>
+    <Link href={user && user._id ? `/users/${user._id}` : "/login"}>
       <AvatarHoverCard
         username="User"
         avatarUrl={
-          user.access_token
+          user && user._id
             ? user.avatar
               ? user.avatar
               : "/default-user.jpeg"

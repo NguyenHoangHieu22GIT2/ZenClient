@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -21,17 +21,18 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "@/Types/User";
+import { User, UserRegisterStepOne } from "@/Types/User";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { useToast } from "../ui/use-toast";
 import { RegisterResponse } from "@/Types/ResponseType";
 import { ToastAction } from "../ui/toast";
 import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
+import { userRegisterFirstStepDto } from "@/dtos/user-register-first-step.dto";
 
 type props = {
-  onChangeStep: (user: Partial<User>) => void;
-  onSetUser: (userInfo: Partial<User>) => void;
+  onChangeStep: (user: UserRegisterStepOne) => void;
+  onSetUser: (userInfo: UserRegisterStepOne) => void;
 };
 
 export const RegisterFirstStep = (props: props) => {
@@ -57,32 +58,10 @@ export const RegisterFirstStep = (props: props) => {
       });
     }
   }, [error, isLoading, data]);
-  const createUserSchema = z
-    .object({
-      email: z.string().email({ message: "The Field should be an email" }),
-      username: z
-        .string()
-        .min(5, { message: "Username needs to be at least 5 characters" })
-        .max(255, { message: "Username needs to be less than 255 characters" }),
-      password: z
-        .string()
-        .regex(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-          {
-            message:
-              "The password should have at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 5 characters",
-          }
-        ),
-      gender: z.enum(["male", "female"]),
-      confirmPassword: z.string(),
-    })
-    .refine((data) => data.confirmPassword === data.password, {
-      message: "The passwords don't match",
-      path: ["confirmPassword"],
-    });
-  type createUserType = z.infer<typeof createUserSchema>;
+
+  type createUserType = z.infer<typeof userRegisterFirstStepDto>;
   const form = useForm<createUserType>({
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(userRegisterFirstStepDto),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -91,21 +70,24 @@ export const RegisterFirstStep = (props: props) => {
       username: "",
     },
   });
-  function submit({ username, email, gender, password }: createUserType) {
-    const result: Pick<User, "email" | "username" | "gender" | "password"> = {
-      username,
-      email,
-      gender,
-      password,
-    };
-    props.onSetUser({
-      email,
-      username,
-      gender,
-      password,
-    });
-    mutate(result);
-  }
+  const submit = useCallback(
+    ({ username, email, gender, password }: createUserType) => {
+      const result: Pick<User, "email" | "username" | "gender" | "password"> = {
+        username,
+        email,
+        gender,
+        password,
+      };
+      props.onSetUser({
+        email,
+        username,
+        gender,
+        password,
+      });
+      mutate(result);
+    },
+    []
+  );
   return (
     <Form {...form}>
       <form

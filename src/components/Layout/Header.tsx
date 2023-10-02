@@ -1,3 +1,4 @@
+"use client";
 import { Container } from "@/components/ui/Container";
 import React from "react";
 import Link from "next/link";
@@ -33,8 +34,10 @@ import { useAuthStore } from "../../lib/storeZustand";
 import { NavsPhone } from "./NavsPhone";
 import { NavsComputer } from "./NavsComputer";
 import { HeaderNavigation } from "../Header/Navigation";
-import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
+
 import { UserAvatarLink } from "../Header/UserAvatarLink";
+import dynamic from "next/dynamic";
+import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
 export const Header = () => {
   return (
     <header className="py-2 z-50 dark:bg-slate-800/80 bg-slate-100/80 backdrop-blur-lg sticky top-0">
@@ -59,12 +62,10 @@ export const Header = () => {
           <div className="md:flex md:items-center md:gap-5 hidden ">
             <NotificationNav />
             <DropdownMenu>
-              <DropdownMenuTrigger
-                className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent "
-                asChild
-              >
-                {/* The problem is here */}
-                <UserAvatarHoverCard />
+              <DropdownMenuTrigger asChild>
+                <Button className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent ">
+                  <UserAvatarHoverCard />
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <NavsComputer />
@@ -75,12 +76,7 @@ export const Header = () => {
           <div className="flex md:hidden items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  onClick={() => {
-                    console.log("Hello world");
-                  }}
-                  className="bg-slate-200 text-slate-600 hover:bg-slate-300 transition border-slate-100 border-2"
-                >
+                <Button className="bg-slate-200 text-slate-600 hover:bg-slate-300 transition border-slate-100 border-2">
                   <Bars />
                 </Button>
               </DropdownMenuTrigger>

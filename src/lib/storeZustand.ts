@@ -20,8 +20,6 @@ type userStore = Pick<User, "avatar" | "email" | "username" | "_id">;
 
 const user: userStore | "" = token && jwt(token);
 
-console.log(user);
-
 export const useAuthStore = create<authStoreType>()((set) => ({
   access_token: cookie.get("jwtToken") || "",
   _id: user && user._id,

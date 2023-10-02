@@ -20,9 +20,9 @@ export const NavsComputer = (props: {}) => {
           Your page
         </Link>
       </DropdownMenuItem>
-      <DropdownMenuSeparator />
+      {/* <DropdownMenuSeparator />
       <DropdownMenuItem>
-        {/*TODO:Change this back to a button with functionality*/}
+        TODO:Change this back to a button with functionality
         <Button
           className="text-xl text-left font-medium p-0"
           variant={"link"}
@@ -30,7 +30,7 @@ export const NavsComputer = (props: {}) => {
         >
           Theme
         </Button>
-      </DropdownMenuItem>
+      </DropdownMenuItem> */}
       <DropdownMenuSeparator />
       <DropdownMenuItem>
         <Link className="text-xl" href="/settings">
