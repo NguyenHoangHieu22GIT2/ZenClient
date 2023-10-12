@@ -7,7 +7,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
-export const FriendFilter = () => {
+
+type props = {
+  onChangeUsernameFilter: (username: string) => void;
+};
+export const FriendFilter = (props: props) => {
+  const [filter, setFilter] = useState("");
   const [openCriteria, setOpenCriteria] = useState(false);
   const style = openCriteria ? "block" : "";
   return (
@@ -15,8 +20,12 @@ export const FriendFilter = () => {
       <div className="mb-5">
         <h1 className="font-bold mb-1">Search:</h1>
         <div className="flex gap-2">
-          <Input placeholder="name of the user" type="text" />
-          <Button>
+          <Input
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="name of the user"
+            type="text"
+          />
+          <Button onClick={() => props.onChangeUsernameFilter(filter)}>
             <AiOutlineSearch />
           </Button>
         </div>

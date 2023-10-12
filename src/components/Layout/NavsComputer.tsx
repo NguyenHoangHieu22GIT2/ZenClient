@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {
@@ -7,12 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
-import { useTheme } from "next-themes";
 import { useAuthStore } from "@/lib/storeZustand";
-
-export const NavsComputer = (props: {}) => {
-  const { theme, setTheme } = useTheme();
+import { useRouter } from "next/navigation";
+import { Cookies, useCookies } from "react-cookie";
+export const NavsComputer = (_props: {}) => {
+  const [cookies, setCookie, removeCookie] = useCookies(["jwtToken"]);
   const access_token = useAuthStore((state) => state.access_token);
+  const router = useRouter();
+  const logoutFn = useCallback(() => {
+    router.replace("/login");
+    removeCookie("jwtToken");
+  }, []);
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem>
@@ -40,9 +45,9 @@ export const NavsComputer = (props: {}) => {
       <DropdownMenuSeparator />
       {access_token ? (
         <DropdownMenuItem>
-          <Link className="text-xl" href="/logout">
+          <Button onClick={logoutFn} className="text-xl" variant={"link"}>
             Logout
-          </Link>
+          </Button>
         </DropdownMenuItem>
       ) : (
         <>

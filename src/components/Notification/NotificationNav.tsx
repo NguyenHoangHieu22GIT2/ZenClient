@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { IoMdNotifications } from "react-icons/io";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Notification } from "./Notification";
-import { Notifications } from "./Notifications";
 
 export const NotificationNav = (props: {}) => {
   // const [clearData, setClearData] = useState(false);

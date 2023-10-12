@@ -29,7 +29,6 @@ export function useLoginPage() {
         });
     },
   });
-
   useEffect(() => {
     if (!loginUserMutation.isLoading && loginUserMutation.data) {
       const result = loginUserMutation.data as LoginResponse<"success">;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,21 +10,8 @@ import {
 import { Separator } from "../ui/separator";
 import { RegisterFirstStep } from "./RegisterFirstStep";
 import { RegisterSecondStep } from "./RegisterSecondStep";
-import { Button } from "../ui/button";
-import { User, UserRegisterStepOne } from "@/Types/User";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/axios.api";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-} from "firebase/storage";
-import { storage } from "../../lib/firebase";
-import { v4 } from "uuid";
+import { UserRegisterStepOne } from "@/Types/User";
 import { RegisterThirdStep } from "./RegisterThirdStep";
-import { StepBack } from "lucide-react";
 
 type Step = "STEP_ONE" | "STEP_TWO" | "STEP_THREE";
 export const Register = () => {
@@ -40,7 +27,7 @@ export const Register = () => {
     (userInfo: UserRegisterStepOne) => {
       setUser(userInfo);
     },
-    [user]
+    [user],
   );
   const goBackStep = useCallback(() => {
     setStep("STEP_ONE");
@@ -70,24 +57,21 @@ export const Register = () => {
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Register</span>
-          {/* {step == "STEP_TWO" && <Button onClick={goBackStep}>Back</Button>} */}
         </CardTitle>
         <CardDescription>
           Become a user of one of the best Social media
         </CardDescription>
         <CardDescription className="font-semibold flex gap-2">
           <span
-            className={`${
-              step == "STEP_ONE" ? "text-blue-300 font-bold" : "text-gray-500"
-            }`}
+            className={`${step == "STEP_ONE" ? "text-blue-300 font-bold" : "text-gray-500"
+              }`}
           >
             Step 1
           </span>
           <span>-{">"}</span>
           <span
-            className={`${
-              step == "STEP_TWO" ? "text-blue-300 font-bold" : "text-gray-500"
-            }`}
+            className={`${step == "STEP_TWO" ? "text-blue-300 font-bold" : "text-gray-500"
+              }`}
           >
             Step 2
           </span>

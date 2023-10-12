@@ -11,8 +11,13 @@ import {
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { UserMinimalData } from "@/Types/User";
 
-export const Friend = () => {
+type props = {
+  user: UserMinimalData;
+};
+
+export const Friend = (props: props) => {
   function notInterested() {
     //TODO:Send back to server so that server will ignore this friend in the future
   }
@@ -26,16 +31,16 @@ export const Friend = () => {
         <Link href={"/user/1"}>
           <Image
             className="mx-auto"
-            src={"/avatar.jpg"}
-            alt="asd"
+            src={props.user.avatar ? props.user.avatar : "/avatar.jpg"}
+            alt={props.user.username}
             width={500}
             height={500}
           />
         </Link>
       </CardHeader>
       <CardContent className="mt-5">
-        <CardTitle>Martinez W</CardTitle>
-        <CardDescription>7km away...</CardDescription>
+        <CardTitle>{props.user.username}</CardTitle>
+        <CardDescription>{props.user.email}</CardDescription>
       </CardContent>
       <CardFooter className="grid grid-cols-2">
         <Button onClick={notInterested} variant={"ghost"}>

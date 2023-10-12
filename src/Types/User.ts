@@ -13,6 +13,11 @@ export type User = {
   badge: string;
 };
 
+export type UserMinimalData = Pick<
+  User,
+  "_id" | "email" | "username" | "avatar"
+>;
+
 export type UserRegisterStepOne = Pick<
   User,
   "email" | "gender" | "password" | "username"

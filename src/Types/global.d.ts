@@ -9,6 +9,7 @@ declare global {
       NEXT_PUBLIC_SERVER_URL_UPLOADS: string;
       NEXT_PUBLIC_SERVER_TOGGLE_LIKE_POST: string;
       NEXT_PUBLIC_SERVER_CREATE_COMMENT: string;
+      NEXT_PUBLIC_SERVER_RECOMMEND_USER: string;
     }
   }
 }

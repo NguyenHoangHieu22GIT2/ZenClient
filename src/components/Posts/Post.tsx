@@ -51,7 +51,7 @@ type props = {
 export const Post = (props: props) => {
   const { toast } = useToast();
   const [isLiked, setIsLiked] = useState(
-    props.post.isLiked ? props.post.isLiked : false
+    props.post.isLiked ? props.post.isLiked : false,
   );
   const [likes, setLikes] = useState(props.post.likes.length);
   const [loadMoreComments, setLoadMoreComments] = useState("");
@@ -106,7 +106,7 @@ export const Post = (props: props) => {
     (comment: CommentType) => {
       setComments((oldComments) => [comment, ...oldComments]);
     },
-    [setComments]
+    [setComments],
   );
   useEffect(() => {
     if (props.post.isLiked) setIsLiked(true);
@@ -161,7 +161,7 @@ export const Post = (props: props) => {
   }, [props.post._id]);
   const dateOfPublished = DateConverter(new Date(props.post.createdAt));
   return (
-    <Card className="m-2 sm:mx-auto w-full max-w-[800px]">
+    <Card className="m-2 sm:mx-auto bg-slate-50 w-full max-w-[800px]">
       <CardHeader className="flex flex-row justify-between px-6 py-3">
         <div className=" flex items-center gap-2">
           <AvatarHoverCard

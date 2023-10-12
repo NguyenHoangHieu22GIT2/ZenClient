@@ -26,17 +26,12 @@ import {
   BiSolidMessageSquareDetail,
 } from "react-icons/bi";
 import { NotificationNav } from "../Notification/NotificationNav";
-import { AvatarHoverCard } from "../ui/AvatarHoverCard";
-import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
 import { Input } from "../ui/input";
-import { useAuthStore } from "../../lib/storeZustand";
 import { NavsPhone } from "./NavsPhone";
 import { NavsComputer } from "./NavsComputer";
 import { HeaderNavigation } from "../Header/Navigation";
 
 import { UserAvatarLink } from "../Header/UserAvatarLink";
-import dynamic from "next/dynamic";
 import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
 export const Header = () => {
   return (

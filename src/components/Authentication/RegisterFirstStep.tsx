@@ -39,7 +39,7 @@ export const RegisterFirstStep = (props: props) => {
   const { toast } = useToast();
   const { mutate, error, isLoading, data } = useMutation({
     mutationFn: async (
-      data: Pick<User, "email" | "username" | "gender" | "password">
+      data: Pick<User, "email" | "username" | "gender" | "password">,
     ) => {
       return api
         .post(process.env.NEXT_PUBLIC_SERVER_AUTH_VALIDATE_REGISTER, data)
@@ -63,11 +63,11 @@ export const RegisterFirstStep = (props: props) => {
   const form = useForm<createUserType>({
     resolver: zodResolver(userRegisterFirstStepDto),
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      password: "SonGoku@1",
+      confirmPassword: "SonGoku@1",
       email: "",
       gender: "male",
-      username: "",
+      username: "NoName",
     },
   });
   const submit = useCallback(
@@ -86,7 +86,7 @@ export const RegisterFirstStep = (props: props) => {
       });
       mutate(result);
     },
-    []
+    [],
   );
   return (
     <Form {...form}>
