@@ -1,3 +1,4 @@
+// THIS IS DEPRECATED, NOT GOING TO USE THIS :D
 import { api } from "@/lib/axios.api";
 import { useAuthStore } from "@/lib/storeZustand";
 import { Bearer } from "@/utils/Bearer";

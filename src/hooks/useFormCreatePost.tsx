@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
-import { Post } from "@/Types/Post";
+import { zPostCreate, ztPost, ztPostCreate } from "@/Types/Post";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,17 +17,17 @@ import { checkImageType } from "@/utils/checkImageType";
 import { postCreateDto } from "@/dtos/post-create.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { checkFileTypeToUseIconOrImage } from "@/utils/CheckFileType";
 export function useFormCreatePost() {
   const user = useAuthStore((state) => state);
   const { mutate, data, error, isLoading } = useMutation({
     mutationKey: ["createPost"],
-    mutationFn: async (
-      data: Pick<Post, "postBody" | "postHeading"> & { images: File[] }
-    ) => {
+    mutationFn: async (data: ztPostCreate) => {
+      const parsedData = zPostCreate.parse(data);
       const formData = new FormData();
-      formData.append("postBody", data.postBody);
-      formData.append("postHeading", data.postHeading);
-      for (const file of data.images) {
+      formData.append("postBody", parsedData.postBody);
+      formData.append("postHeading", parsedData.postHeading);
+      for (const file of parsedData.files || []) {
         formData.append("files", file);
       }
       const data_1 = await api.post("/posts/create-post", formData, {
@@ -44,16 +44,17 @@ export function useFormCreatePost() {
   const onDrop = useCallback(
     (files: File[]) => {
       let isValid = true;
-      files.forEach((file) => {
-        isValid = checkImageType(file);
+      // files.forEach((file) => {
+      //   isValid = checkImageType(file);
+      // });
+      // isValid &&
+      setFiles((prevArray: File[]) => {
+        return [...prevArray, ...files];
       });
-      isValid &&
-        setFiles((prevArray: File[]) => {
-          return [...prevArray, ...files];
-        });
     },
     [setFiles]
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   let uploadFileButton = !uploadFile ? (
     <Button
@@ -61,7 +62,7 @@ export function useFormCreatePost() {
         setUploadFile(true);
       }}
     >
-      Image
+      File
     </Button>
   ) : (
     <Button
@@ -91,29 +92,40 @@ export function useFormCreatePost() {
             </p>
           )}
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mt-5">
           {files.length > 0 &&
-            files.map((image, index) => {
+            files.map((file, index) => {
+              const isImage = checkImageType(file);
               return (
                 <div key={index} className="relative">
                   <Image
-                    src={`${URL.createObjectURL(image)}`}
+                    className={`${
+                      isImage
+                        ? "w-[200px] min-w-[100px] max-w-[300px]"
+                        : "w-[200px] min-w-[100px] max-w-[300px] aspect-square"
+                    }`}
+                    src={`${
+                      isImage
+                        ? URL.createObjectURL(file)
+                        : checkFileTypeToUseIconOrImage(file.type)
+                    }`}
                     alt=""
                     width={200}
                     height={200}
                   />
-                  <span
+                  {!isImage && <h1>{file.name}</h1>}
+                  <button
                     className="absolute top-1 right-1 px-3 py-1 rounded-full cursor-pointer text-zinc-50 bg-slate-700/30"
                     onClick={() => {
                       setFiles((prevArray) => {
                         return prevArray.filter(
-                          (file) => file.name !== image.name
+                          (file) => file.name !== file.name
                         );
                       });
                     }}
                   >
                     X
-                  </span>
+                  </button>
                 </div>
               );
             })}
@@ -135,7 +147,7 @@ export function useFormCreatePost() {
     if (!user.access_token) {
       return toast({
         title: "Login required",
-        description: "Login to have full access on Poddy",
+        description: "Login to have full access on Zen",
         action: <ToastAction altText="Okay">Alright</ToastAction>,
       });
     }
@@ -143,7 +155,7 @@ export function useFormCreatePost() {
     mutate({
       postBody: values.postBody,
       postHeading: values.postHeading,
-      images: files,
+      files: files,
     });
   }
   return {

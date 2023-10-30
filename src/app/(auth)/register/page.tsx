@@ -1,10 +1,5 @@
 import { Register } from "@/components/Authentication/Register";
-import { Layout } from "@/components/Layout/Layout";
-import useCheckAuth from "@/hooks/useCheckAuth";
-import { useCheckAuthInAuthenPage } from "@/hooks/useCheckAuthInAuthenPage";
-import { useAuthStore } from "@/lib/storeZustand";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 
 export default async function page() {
   return (

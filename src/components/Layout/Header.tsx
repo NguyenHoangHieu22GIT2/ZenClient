@@ -1,4 +1,3 @@
-"use client";
 import { Container } from "@/components/ui/Container";
 import React from "react";
 import Link from "next/link";
@@ -33,20 +32,28 @@ import { HeaderNavigation } from "../Header/Navigation";
 
 import { UserAvatarLink } from "../Header/UserAvatarLink";
 import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
-export const Header = () => {
+import { Notification } from "@/Types/Notification";
+import { cookies } from "next/headers";
+
+type props = {
+  notifications: Notification[];
+};
+
+export const Header = (props: props) => {
+  const userId = cookies().get("userId")?.value;
   return (
-    <header className="py-2 z-50 dark:bg-slate-800/80 bg-slate-100/80 backdrop-blur-lg sticky top-0">
+    <header className="py-2 z-40 dark:bg-slate-800/80 bg-slate-100/80 backdrop-blur-lg sticky top-0">
       <Container>
         <div className="flex justify-between  w-full items-center">
           <main className="flex basis-2/4 gap-5 items-center">
             <Button variant={"link"} className="p-0 m-0">
               <Link href={"/"} className="font-bold text-2xl">
-                Poddy
+                Zen
               </Link>
             </Button>
             <Input
               className="w-full"
-              placeholder="Search in Poddy is fast and convenient"
+              placeholder="Search in Zen is fast and convenient"
             />
           </main>
           {/* For computers */}
@@ -55,7 +62,7 @@ export const Header = () => {
           </nav>
           {/* The Div is the problem */}
           <div className="md:flex md:items-center md:gap-5 hidden ">
-            <NotificationNav />
+            <NotificationNav notifications={props.notifications} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent ">
@@ -63,7 +70,7 @@ export const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <NavsComputer />
+                <NavsComputer userId={userId!} />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -79,7 +86,7 @@ export const Header = () => {
                 <NavsPhone />
               </DropdownMenuContent>
             </DropdownMenu>
-            <NotificationNav />
+            <NotificationNav notifications={props.notifications} />
             <UserAvatarLink />
           </div>
         </div>

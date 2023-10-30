@@ -1,7 +1,9 @@
-import { User } from "./User";
+import { z } from "zod";
+import { zPost, ztPost } from "./Post";
+import { zUser, ztLoginResponse, ztUser, ztUserMinimalData } from "./User";
 
 type ResponseType<
-  TStatus extends "success" | "error",
+  TStatus extends Status,
   TSuccess,
   TError
 > = TStatus extends "success"
@@ -10,14 +12,38 @@ type ResponseType<
   ? TError
   : never;
 
-export type RegisterResponse<TStatus extends "success" | "error"> =
-  ResponseType<
-    TStatus,
-    Pick<User, "username" | "password" | "gender" | "email">,
-    { response: { data: { error: string; message: string } } }
-  >;
-export type LoginResponse<TStatus extends "success" | "error"> = ResponseType<
+type Status = "success" | "error";
+
+export type ztErrorResponse = z.infer<typeof zErrorResponse>;
+
+export const zErrorResponse = z.object({
+  response: z.object({
+    data: z.object({
+      error: z.string(),
+      message: z.string(),
+    }),
+  }),
+});
+
+export type RegisterResponse<TStatus extends Status> = ResponseType<
   TStatus,
-  { access_token: string },
-  { response: { data: { error: string; message: string } } }
+  ztUserMinimalData,
+  ztErrorResponse
+>;
+export type LoginResponse<TStatus extends Status> = ResponseType<
+  TStatus,
+  ztLoginResponse,
+  ztErrorResponse
+>;
+
+export type createPostResponse<TStatus extends Status> = ResponseType<
+  TStatus,
+  ztPost,
+  ztErrorResponse
+>;
+
+export type getPostsResponse<TStatus extends Status> = ResponseType<
+  TStatus,
+  ztPost[],
+  ztErrorResponse
 >;

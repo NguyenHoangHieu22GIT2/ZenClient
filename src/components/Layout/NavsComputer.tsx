@@ -10,7 +10,12 @@ import {
 import { useAuthStore } from "@/lib/storeZustand";
 import { useRouter } from "next/navigation";
 import { Cookies, useCookies } from "react-cookie";
-export const NavsComputer = (_props: {}) => {
+
+type props = {
+  userId: string;
+};
+
+export const NavsComputer = (props: props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["jwtToken"]);
   const access_token = useAuthStore((state) => state.access_token);
   const router = useRouter();
@@ -21,7 +26,7 @@ export const NavsComputer = (_props: {}) => {
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem>
-        <Link className="text-xl" href="/users/1">
+        <Link className="text-xl" href={`/users/${props.userId}`}>
           Your page
         </Link>
       </DropdownMenuItem>

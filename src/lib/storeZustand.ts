@@ -1,10 +1,8 @@
 import { create } from "zustand";
 import { Cookies } from "react-cookie";
 import jwt from "jwt-decode";
-import { User } from "@/Types/User";
+import { ztUserMinimalData } from "@/Types/User";
 const cookie = new Cookies();
-
-const token = cookie.get("jwtToken") || "";
 
 type authStoreType = {
   access_token: string;
@@ -16,25 +14,23 @@ type authStoreType = {
   clearAccessToken: () => void;
 };
 
-type userStore = Pick<User, "avatar" | "email" | "username" | "_id">;
-
-const user: userStore | "" = token && jwt(token);
+export type userStore = ztUserMinimalData;
 
 export const useAuthStore = create<authStoreType>()((set) => ({
   access_token: cookie.get("jwtToken") || "",
-  _id: user && user._id,
-  username: user && user.username,
-  email: user && user.email,
-  avatar: user && user.avatar,
+  _id: "",
+  username: "",
+  email: "",
+  avatar: "",
   changeAccessToken: (newToken) =>
     set(() => {
-      const user: userStore = token && jwt(newToken);
+      const user: userStore | "" = newToken && jwt(newToken);
       return {
         access_token: newToken,
-        avatar: user.avatar,
-        email: user.email,
-        username: user.username,
-        _id: user._id,
+        avatar: user && user.avatar,
+        email: user && user.email,
+        username: user && user.username,
+        _id: user && user._id,
       };
     }),
   clearAccessToken: () => set(() => ({ access_token: "" })),

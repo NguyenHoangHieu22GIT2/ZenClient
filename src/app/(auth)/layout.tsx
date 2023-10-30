@@ -6,7 +6,7 @@ import { NoLayout } from "@/components/Layout/NoLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Poddy",
+  title: "Zen",
   description: "Social Media Website",
 };
 
@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <div id="modal-root" />
         <NoLayout>
           {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
           {children}

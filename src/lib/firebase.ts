@@ -15,11 +15,11 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyDLYe72BP3fCQme92AJ_EXhyWoDP-B5HNw",
 
-  authDomain: "poddy-files.firebaseapp.com",
+  authDomain: "Zen-files.firebaseapp.com",
 
-  projectId: "poddy-files",
+  projectId: "Zen-files",
 
-  storageBucket: "poddy-files.appspot.com",
+  storageBucket: "Zen-files.appspot.com",
 
   messagingSenderId: "139787627141",
 

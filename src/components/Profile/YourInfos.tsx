@@ -72,7 +72,7 @@ export const YourInfos = (props: {}) => {
       <CardContent className="">
         <CardTitle className="text-center">ShadCN</CardTitle>
         <CardDescription className="text-center">
-          A Person with passion to build Poddy, the best social Media website
+          A Person with passion to build Zen, the best social Media website
           ever!
         </CardDescription>
         <Separator className="my-5" />

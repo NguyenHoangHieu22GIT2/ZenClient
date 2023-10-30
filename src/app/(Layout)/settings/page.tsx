@@ -14,17 +14,17 @@ export default function settingPage() {
   let changeElement = <ChangeEmail />;
   switch (settingPane) {
     case "PASSWORD":
-      changeElement = <ChangePassword></ChangePassword>;
+      changeElement = <ChangePassword />;
       break;
     case "USERNAME":
-      changeElement = <ChangeUsername></ChangeUsername>;
+      changeElement = <ChangeUsername />;
       break;
   }
   const changeSettingPane = useCallback(
     (pane: SettingsPane) => {
       setSettingPane(pane);
     },
-    [setSettingPane]
+    [setSettingPane],
   );
   return (
     <Container className="mt-5">

@@ -1,15 +1,15 @@
 "use client";
 import { Fragment, useState } from "react";
 import { CreatePost } from "./CreatePost";
-import { Posts } from "./Posts";
+import { Posts, resultsOfPostsInfiniteQuery } from "./Posts";
 import { Post } from "@/Types/Post";
 
 type props = {
-  posts: Post[];
+  postsData: resultsOfPostsInfiniteQuery;
 };
 
 export function FullPost(props: props) {
-  const [posts, setPosts] = useState<Post[]>(props.posts);
+  const [posts, setPosts] = useState<Post[]>(props.postsData.posts || []);
   function createPost(post: Post) {
     setPosts((oldPosts) => [post, ...oldPosts]);
   }
@@ -17,7 +17,7 @@ export function FullPost(props: props) {
   return (
     <Fragment>
       <CreatePost onCreatePost={createPost} />
-      <Posts posts={posts} />
+      {/* <Posts posts={posts} /> */}
     </Fragment>
   );
 }

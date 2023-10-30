@@ -10,12 +10,12 @@ import {
 import { Separator } from "../ui/separator";
 import { RegisterFirstStep } from "./RegisterFirstStep";
 import { RegisterSecondStep } from "./RegisterSecondStep";
-import { UserRegisterStepOne } from "@/Types/User";
+import { zUserRegisterStepOne, ztUserRegisterStepOne } from "@/Types/User";
 import { RegisterThirdStep } from "./RegisterThirdStep";
 
 type Step = "STEP_ONE" | "STEP_TWO" | "STEP_THREE";
 export const Register = () => {
-  const [user, setUser] = useState<UserRegisterStepOne>({
+  const [user, setUser] = useState<ztUserRegisterStepOne>({
     email: "",
     username: "",
     gender: "male",
@@ -24,10 +24,11 @@ export const Register = () => {
 
   const [step, setStep] = useState<Step>("STEP_ONE");
   const changeUser = useCallback(
-    (userInfo: UserRegisterStepOne) => {
-      setUser(userInfo);
+    (userInfo: ztUserRegisterStepOne) => {
+      const parsedUserInfo = zUserRegisterStepOne.parse(userInfo);
+      setUser(parsedUserInfo);
     },
-    [user],
+    [user]
   );
   const goBackStep = useCallback(() => {
     setStep("STEP_ONE");
@@ -63,15 +64,17 @@ export const Register = () => {
         </CardDescription>
         <CardDescription className="font-semibold flex gap-2">
           <span
-            className={`${step == "STEP_ONE" ? "text-blue-300 font-bold" : "text-gray-500"
-              }`}
+            className={`${
+              step == "STEP_ONE" ? "text-blue-300 font-bold" : "text-gray-500"
+            }`}
           >
             Step 1
           </span>
           <span>-{">"}</span>
           <span
-            className={`${step == "STEP_TWO" ? "text-blue-300 font-bold" : "text-gray-500"
-              }`}
+            className={`${
+              step == "STEP_TWO" ? "text-blue-300 font-bold" : "text-gray-500"
+            }`}
           >
             Step 2
           </span>

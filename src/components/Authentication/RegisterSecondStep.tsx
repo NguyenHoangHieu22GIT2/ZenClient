@@ -5,7 +5,13 @@ import { AiOutlineUser } from "react-icons/ai";
 import { useDropzone } from "react-dropzone";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { User, UserRegisterStepOne, UserRegisterStepTwo } from "@/Types/User";
+import {
+  zUser,
+  zUserRegisterStepOne,
+  zUserRegisterStepTwo,
+  ztUserRegisterStepOne,
+  ztUserRegisterStepTwo,
+} from "@/Types/User";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
 import { useMutation } from "@tanstack/react-query";
@@ -13,18 +19,19 @@ import { api } from "@/lib/axios.api";
 import { randomBytes } from "crypto";
 import { checkImageType } from "@/utils/checkImageType";
 interface props {
-  onFinishStep: (userInfo?: UserRegisterStepOne) => void;
+  onFinishStep: (userInfo?: ztUserRegisterStepOne) => void;
   onStepBack: () => void;
-  user: UserRegisterStepOne;
+  user: ztUserRegisterStepOne;
 }
 
 export const RegisterSecondStep = React.memo((props: props) => {
   const { mutate, isLoading, data, error } = useMutation({
-    mutationFn: async (user: UserRegisterStepTwo | UserRegisterStepOne) => {
+    mutationFn: async (user: ztUserRegisterStepTwo | ztUserRegisterStepOne) => {
+      const parsedData = zUserRegisterStepOne.parse(user);
       const formData = new FormData();
-      let key: keyof typeof user;
+      let key: keyof typeof parsedData;
       for (key in user) {
-        formData.append(key, user[key]);
+        formData.append(key, parsedData[key]);
       }
       return (
         await api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_REGISTER, formData)
@@ -44,7 +51,7 @@ export const RegisterSecondStep = React.memo((props: props) => {
   const finishStep = useCallback(() => {
     const salt = randomBytes(12).toString("hex");
     if (file) {
-      mutate({ ...props.user, avatar: salt + file.name });
+      mutate({ ...props.user, avatarFile: file });
     } else {
       mutate(props.user);
     }

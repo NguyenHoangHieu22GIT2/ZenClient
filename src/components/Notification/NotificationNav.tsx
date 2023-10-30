@@ -9,8 +9,15 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { Notifications } from "./Notifications";
+import { Notification } from "@/Types/Notification";
 
-export const NotificationNav = (props: {}) => {
+type props = {
+  notifications: Notification[];
+};
+
+export const NotificationNav = (props: props) => {
   // const [clearData, setClearData] = useState(false);
   // let notificationContent = <Notifications />;
   // if (clearData) {
@@ -23,7 +30,12 @@ export const NotificationNav = (props: {}) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={"outline"}>
+        <Button
+          variant={"outline"}
+          className={cn(
+            " after:text-white after:w-5 after:h-5 after:absolute relative after:bg-red-500 after:-top-1 after:-right-1 after:rounded-full"
+          )}
+        >
           <IoMdNotifications />
         </Button>
       </SheetTrigger>
@@ -38,7 +50,7 @@ export const NotificationNav = (props: {}) => {
         {/* <object type="image/svg+xml" data="/Notification.svg"> */}
         {/*   Notification */}
         {/* </object> */}
-        {/* <Notifications /> */}
+        <Notifications notifications={props.notifications} />
         {/* {notificationContent}
         <SheetFooter>
           <Button onClick={() => setClearData(true)} variant={"destructive"}>

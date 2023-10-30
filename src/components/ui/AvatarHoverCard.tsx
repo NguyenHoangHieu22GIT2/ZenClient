@@ -3,6 +3,7 @@ import React from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { PropsClassName } from "@/Types/Props";
+import { imageUrl } from "@/utils/imageUrl";
 
 interface props extends PropsClassName {
   avatarUrl: string;
@@ -11,12 +12,14 @@ interface props extends PropsClassName {
 }
 
 export const AvatarHoverCard = (props: props) => {
-  // Server :"", client :"hoang hieu"
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <Avatar>
-          <AvatarImage className={props.className} src={props.avatarUrl} />
+          <AvatarImage
+            className={props.className}
+            src={imageUrl(props.avatarUrl)}
+          />
           <h1>{props.username}</h1>
         </Avatar>
       </HoverCardTrigger>
@@ -29,7 +32,7 @@ export const AvatarHoverCard = (props: props) => {
           <div className="space-y-1">
             <h4 className="font-bold">{props.username}</h4>
             <p className="text-sm text-gray-500">
-              Has joined Poddy {props.yearOfJoined} years ago
+              Has joined Zen {props.yearOfJoined} years ago
             </p>
           </div>
         </div>

@@ -7,14 +7,11 @@ import {
   CardTitle,
 } from "../ui/card";
 import { FormCreatePost } from "./FormCreatePost";
-import { Post } from "@/Types/Post";
-import jwtDecode from "jwt-decode";
-import { cookies } from "next/headers";
-import { User } from "@/Types/User";
+import { ztPost } from "@/Types/Post";
 import { jwtCookieToObject } from "@/utils/jwtCookieToObject";
 
 type props = {
-  onCreatePost?: (post: Post) => void;
+  onCreatePost?: (post: ztPost) => void;
 };
 
 export const CreatePost = async (props: props) => {

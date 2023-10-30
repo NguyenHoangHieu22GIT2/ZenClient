@@ -1,9 +1,6 @@
 "use client";
-import { useAuthStore } from "@/lib/storeZustand";
-import React, { useEffect } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,17 +22,6 @@ import {
 import Link from "next/link";
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
 import { Separator } from "../ui/separator";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/axios.api";
-import { User } from "@/Types/User";
-import { AxiosError } from "axios";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useToast } from "../ui/use-toast";
-import { ToastAction } from "../ui/toast";
-import { LoginResponse } from "@/Types/ResponseType";
-import { useRouter } from "next/navigation";
-import { Cookies } from "react-cookie";
-import Image from "next/image";
 import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
 import { useLoginPage } from "@/hooks/useLoginPage";
 export const Login = (props: {}) => {

@@ -21,7 +21,12 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, UserRegisterStepOne } from "@/Types/User";
+import {
+  zUser,
+  zUserRegisterStepOne,
+  ztUser,
+  ztUserRegisterStepOne,
+} from "@/Types/User";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { useToast } from "../ui/use-toast";
@@ -31,18 +36,17 @@ import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
 import { userRegisterFirstStepDto } from "@/dtos/user-register-first-step.dto";
 
 type props = {
-  onChangeStep: (user: UserRegisterStepOne) => void;
-  onSetUser: (userInfo: UserRegisterStepOne) => void;
+  onChangeStep: (user: ztUserRegisterStepOne) => void;
+  onSetUser: (userInfo: ztUserRegisterStepOne) => void;
 };
 
 export const RegisterFirstStep = (props: props) => {
   const { toast } = useToast();
   const { mutate, error, isLoading, data } = useMutation({
-    mutationFn: async (
-      data: Pick<User, "email" | "username" | "gender" | "password">,
-    ) => {
+    mutationFn: async (data: ztUserRegisterStepOne) => {
+      const parsedData = zUserRegisterStepOne.parse(data);
       return api
-        .post(process.env.NEXT_PUBLIC_SERVER_AUTH_VALIDATE_REGISTER, data)
+        .post(process.env.NEXT_PUBLIC_SERVER_AUTH_VALIDATE_REGISTER, parsedData)
         .then((result) => result.data);
     },
   });
@@ -72,7 +76,7 @@ export const RegisterFirstStep = (props: props) => {
   });
   const submit = useCallback(
     ({ username, email, gender, password }: createUserType) => {
-      const result: Pick<User, "email" | "username" | "gender" | "password"> = {
+      const result: ztUserRegisterStepOne = {
         username,
         email,
         gender,
@@ -86,7 +90,7 @@ export const RegisterFirstStep = (props: props) => {
       });
       mutate(result);
     },
-    [],
+    []
   );
   return (
     <Form {...form}>

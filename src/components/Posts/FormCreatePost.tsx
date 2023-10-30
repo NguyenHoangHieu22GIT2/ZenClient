@@ -11,10 +11,10 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFormCreatePost } from "@/hooks/useFormCreatePost";
-import { User } from "@/Types/User";
+import { userStore } from "@/lib/storeZustand";
 
 type props = {
-  user: User;
+  user: userStore;
 };
 
 export function FormCreatePost(props: props) {
