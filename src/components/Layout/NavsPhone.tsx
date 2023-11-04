@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {
@@ -7,10 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
-import { useAuthStore } from "@/lib/storeZustand";
+import { useRouter } from "next/navigation";
+import jsCookie from "js-cookie";
 
 export const NavsPhone = (props: {}) => {
-  const access_token = useAuthStore((state) => state.access_token);
+  const userId = jsCookie.get("userId");
+  const router = useRouter();
+  const logoutFn = useCallback(() => {
+    router.replace("/login");
+    jsCookie.remove("userId");
+  }, []);
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem>
@@ -37,11 +43,15 @@ export const NavsPhone = (props: {}) => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      {access_token ? (
+      {userId ? (
         <DropdownMenuItem>
-          <Link className="text-xl" href="/logout">
+          <Button
+            className="text-xl text-left"
+            onClick={logoutFn}
+            variant={"link"}
+          >
             Logout
-          </Link>
+          </Button>
         </DropdownMenuItem>
       ) : (
         <>

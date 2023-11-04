@@ -1,12 +1,12 @@
-import { useAuthStore } from "@/lib/storeZustand";
-import { User } from "@/Types/User";
+import { useUserStore } from "@/lib/useUserStore";
+import { ztUser } from "@/Types/User";
 import { useEffect, useState } from "react";
 
 export function useUserFromZustandClient() {
-  const userFromZustand = useAuthStore(
+  const userFromZustand = useUserStore(
     (state) => state
-  ) as unknown as Partial<User>;
-  const [user, setUser] = useState<Partial<User>>();
+  ) as unknown as Partial<ztUser>;
+  const [user, setUser] = useState<Partial<ztUser>>();
 
   useEffect(() => {
     setUser(userFromZustand);

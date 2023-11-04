@@ -1,34 +1,38 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { Posts, resultsOfPostsInfiniteQuery } from "../Posts/Posts";
+import { Posts } from "../Posts/Posts";
 import { CreatePost } from "../Posts/CreatePost";
 import { cookies } from "next/headers";
+import { useUserStore } from "@/lib/useUserStore";
+import { Friends } from "../Friends/Friends";
+import Information from "./Information";
 
-export type props = {
-  postsData: resultsOfPostsInfiniteQuery;
-};
+type tabs = "POSTS" | "FRIENDS" | "INFORMATION";
 
-export const YourPosts = (props: props) => {
-  const userId = cookies().get("userId")!.value;
+export const YourPosts = () => {
+  const user = useUserStore((state) => state.user);
+  const [tab, setTab] = useState<tabs>("POSTS");
   return (
     <div>
       <Card className="p-3 flex justify-stretch [&>*]:basis-1/3 gap-3">
-        <Button variant={"secondary"}>Posts</Button>
-        <Button variant={"secondary"}>Friends</Button>
-        <Button variant={"secondary"}>Information</Button>
+        <Button onClick={() => setTab("POSTS")} variant={"secondary"}>
+          Posts
+        </Button>
+        <Button onClick={() => setTab("FRIENDS")} variant={"secondary"}>
+          Friends
+        </Button>
+        <Button onClick={() => setTab("INFORMATION")} variant={"secondary"}>
+          Information
+        </Button>
       </Card>
       <Separator className="my-5" />
       <CreatePost />
       <Separator className="my-5" />
-      <Posts
-        postsData={{
-          posts: props.postsData.posts,
-          postsCount: props.postsData.postsCount,
-        }}
-        userId={userId}
-      />
+      {/* <Posts userId={user._id} /> */}
+      {/* <Information /> */}
     </div>
   );
 };

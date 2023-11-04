@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -18,20 +19,46 @@ import {
 } from "@/components/ui/tooltip";
 import {
   ContextMenu,
-  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-export const YourInfos = (props: {}) => {
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios.api";
+//TODO: Query data : (friends,posts, followers, followings)
+//TODO: User Description,avatar,Name
+import jsCookie from "js-cookie";
+import { zUserPage, ztUserPage } from "@/Types/User";
+import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
+import { CheckImageUrl } from "@/utils/CheckImageUrl";
+import { useUserStore } from "@/lib/useUserStore";
+import Link from "next/link";
+type props = {
+  userId: string;
+};
+
+export const YourInfos = (props: props) => {
+  const userStore = useUserStore((state) => state.user);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["queryInfos"],
+    queryFn: () => {
+      return api
+        .get<ztUserPage>(`users/${props.userId}`, { withCredentials: true })
+        .then((data) => {
+          const parsedData = zUserPage.parse(data.data);
+          return parsedData;
+        });
+    },
+  });
+  if (isLoading || !data) {
+    return <h1>Is Loading...</h1>;
+  }
+  const user = data.user;
+  const postsCount = data.postsCount;
+  const friendsInfo = data.friendsInfo;
   return (
     <Card>
       <CardHeader className="">
@@ -41,12 +68,13 @@ export const YourInfos = (props: {}) => {
               <Tooltip>
                 <TooltipTrigger className="cursor-default w-full">
                   <Image
-                    src={"/avatar.jpeg"}
+                    src={CheckImageUrl(user.avatar)}
                     width={100}
                     height={100}
                     alt="ShadCN"
-                    className="mx-auto rounded-full"
+                    className="mx-auto aspect-square rounded-full"
                   />
+                  {/* <UserAvatarHoverCard user={user} /> */}
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Right click for more options</p>
@@ -70,24 +98,30 @@ export const YourInfos = (props: {}) => {
         </ContextMenu>
       </CardHeader>
       <CardContent className="">
-        <CardTitle className="text-center">ShadCN</CardTitle>
+        <CardTitle className="text-center">{user.username}</CardTitle>
         <CardDescription className="text-center">
           A Person with passion to build Zen, the best social Media website
           ever!
         </CardDescription>
         <Separator className="my-5" />
         <ul>
-          <li>21 Friends</li>
-          <li>8 Posts</li>
-          <li>29 Followers</li>
-          <li>119 Following</li>
+          <li>{friendsInfo.friends.length} Friends</li>
+          <li>{postsCount} Posts</li>
+          <li>{friendsInfo.followers.length} Followers</li>
+          <li>{friendsInfo.followings.length} Following</li>
         </ul>
       </CardContent>
       <Separator className="my-5" />
       <CardFooter className="flex gap-1 flex-wrap justify-center">
-        <Button>Add Friend</Button>
-        <Button>Message</Button>
-        <Button className="md:w-full">Settings</Button>
+        {userStore._id !== user._id && (
+          <>
+            <Button>Add Friend</Button>
+            <Button>Message</Button>
+          </>
+        )}
+        <Button asChild className="md:w-full">
+          <Link href="/settings">Settings</Link>
+        </Button>
       </CardFooter>
     </Card>
   );

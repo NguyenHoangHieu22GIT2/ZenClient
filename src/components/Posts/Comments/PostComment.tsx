@@ -3,21 +3,25 @@ import { Input } from "@/components/ui/input";
 import React, { FormEvent, useState } from "react";
 import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
 import { useMutation } from "@tanstack/react-query";
-import { CommentId, CommentType, PostId, ReplyType } from "@/Types/Post";
-import { Bearer } from "@/utils/Bearer";
-import { useAuthStore } from "@/lib/storeZustand";
+import {
+  CommentId,
+  ztCommentType,
+  PostId,
+  ztReplyType,
+  zCommentType,
+} from "@/Types/Post";
 import { api } from "@/lib/axios.api";
+import { useUserStore } from "@/lib/useUserStore";
 
 type props = {
-  onAddComment?: (comment: CommentType) => void;
-  onAddReply?: (comment: ReplyType) => void;
+  onAddComment?: (comment: ztCommentType) => void;
+  onAddReply?: (comment: ztReplyType) => void;
   postId: PostId;
   commentId?: CommentId;
 };
 
 export const PostComment = (props: props) => {
-  console.log(props);
-  const user = useAuthStore((state) => state);
+  const user = useUserStore((state) => state.user);
   const { mutate, isLoading, error } = useMutation({
     mutationKey: ["post/comments"],
     mutationFn: async (data: {
@@ -27,38 +31,41 @@ export const PostComment = (props: props) => {
     }) => {
       console.log(data);
       return api
-        .post(process.env.NEXT_PUBLIC_SERVER_CREATE_COMMENT, data, {
-          headers: {
-            authorization: Bearer(user.access_token),
-          },
-        })
+        .post<ztCommentType>(
+          process.env.NEXT_PUBLIC_SERVER_CREATE_COMMENT,
+          data,
+          {
+            withCredentials: true,
+          }
+        )
         .then((result) => {
-          const data: CommentType = result.data;
+          console.log(result.data);
+          const parsedData = zCommentType.parse(result.data);
           if (props.onAddComment) {
             props.onAddComment({
-              _id: data._id,
+              _id: parsedData._id,
               user: {
-                username: data.user.username,
-                avatar: data.user.avatar || "./default-user.jpeg",
+                username: parsedData.user.username,
+                avatar: parsedData.user.avatar || "/default-user.jpeg",
               },
               comment: data.comment,
-              replies: data.replies,
-              userId: data.userId,
+              replies: parsedData.replies,
+              userId: parsedData.userId,
               repliesCount: 0,
             });
           } else if (props.onAddReply) {
             props.onAddReply({
-              _id: data._id,
+              _id: parsedData._id,
               user: {
-                username: data.user.username,
-                avatar: data.user.avatar || "./default-user.jpeg",
+                username: parsedData.user.username,
+                avatar: parsedData.user.avatar || "/default-user.jpeg",
               },
-              comment: data.comment,
-              userId: data.userId,
+              comment: parsedData.comment,
+              userId: parsedData.userId,
             });
           }
 
-          return result;
+          return parsedData;
         });
     },
   });
@@ -84,7 +91,7 @@ export const PostComment = (props: props) => {
   return (
     <form onSubmit={submit} className="flex gap-2">
       <AvatarHoverCard
-        avatarUrl={user.avatar || "./default-user.jpeg"}
+        avatarUrl={user.avatar || "/default-user.jpeg"}
         username={user.username}
         yearOfJoined={4}
       />

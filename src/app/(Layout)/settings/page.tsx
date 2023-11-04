@@ -1,4 +1,5 @@
 "use client";
+import { ChangeAvatar } from "@/components/Settings/ChangeAvatar";
 import { ChangeEmail } from "@/components/Settings/ChangeEmail";
 import { ChangePassword } from "@/components/Settings/ChangePassword";
 import { ChangeUsername } from "@/components/Settings/ChangeUsername";
@@ -7,7 +8,7 @@ import { Container } from "@/components/ui/Container";
 import useCheckAuth from "@/hooks/useCheckAuth";
 import React, { useCallback } from "react";
 
-export type SettingsPane = "EMAIL" | "PASSWORD" | "USERNAME";
+export type SettingsPane = "EMAIL" | "PASSWORD" | "USERNAME" | "AVATAR";
 
 export default function settingPage() {
   const [settingPane, setSettingPane] = React.useState<SettingsPane>("EMAIL");
@@ -19,12 +20,14 @@ export default function settingPage() {
     case "USERNAME":
       changeElement = <ChangeUsername />;
       break;
+    case "AVATAR":
+      changeElement = <ChangeAvatar />;
   }
   const changeSettingPane = useCallback(
     (pane: SettingsPane) => {
       setSettingPane(pane);
     },
-    [setSettingPane],
+    [setSettingPane]
   );
   return (
     <Container className="mt-5">

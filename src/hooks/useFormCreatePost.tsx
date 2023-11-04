@@ -1,5 +1,3 @@
-import { useAuthStore } from "@/lib/storeZustand";
-
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
@@ -19,11 +17,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { checkFileTypeToUseIconOrImage } from "@/utils/CheckFileType";
 export function useFormCreatePost() {
-  const user = useAuthStore((state) => state);
   const { mutate, data, error, isLoading } = useMutation({
     mutationKey: ["createPost"],
     mutationFn: async (data: ztPostCreate) => {
       const parsedData = zPostCreate.parse(data);
+      console.log(parsedData);
       const formData = new FormData();
       formData.append("postBody", parsedData.postBody);
       formData.append("postHeading", parsedData.postHeading);
@@ -31,9 +29,7 @@ export function useFormCreatePost() {
         formData.append("files", file);
       }
       const data_1 = await api.post("/posts/create-post", formData, {
-        headers: {
-          authorization: Bearer(user.access_token),
-        },
+        withCredentials: true,
       });
       return data_1.data;
     },
@@ -43,11 +39,6 @@ export function useFormCreatePost() {
   const [uploadFile, setUploadFile] = useState<boolean>(false);
   const onDrop = useCallback(
     (files: File[]) => {
-      let isValid = true;
-      // files.forEach((file) => {
-      //   isValid = checkImageType(file);
-      // });
-      // isValid &&
       setFiles((prevArray: File[]) => {
         return [...prevArray, ...files];
       });
@@ -144,14 +135,6 @@ export function useFormCreatePost() {
   });
 
   function createPost(values: postType) {
-    if (!user.access_token) {
-      return toast({
-        title: "Login required",
-        description: "Login to have full access on Zen",
-        action: <ToastAction altText="Okay">Alright</ToastAction>,
-      });
-    }
-
     mutate({
       postBody: values.postBody,
       postHeading: values.postHeading,
@@ -169,6 +152,5 @@ export function useFormCreatePost() {
     toast,
     createPost,
     form,
-    user,
   };
 }

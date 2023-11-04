@@ -44,27 +44,29 @@ export default function ValidateAccount(props: { params: { token: string } }) {
   } else if (error) {
     message = (
       <CardDescription className="text-red-400">
-        something went wrong
+        something went wrong or maybe you already confirmed your account
       </CardDescription>
     );
   }
   return (
-    <Container className="flex justify-center items-center mt-52">
-      <Card className="px-16 py-8 shadow-lg">
-        <CardHeader>
-          <CardTitle>Confirming account!</CardTitle>
-        </CardHeader>
-        <CardContent>{message}</CardContent>
-        <CardFooter>
-          <Button
-            onClick={() => {
-              router.push("/login");
-            }}
-          >
-            Alright
-          </Button>
-        </CardFooter>
-      </Card>
-    </Container>
+    <main className="absolute w-full h-full bg-gradient-to-r from-purple-500 to-pink-500">
+      <Container className="flex justify-center items-center mt-52 ">
+        <Card className="px-16 py-8 shadow-lg">
+          <CardHeader>
+            <CardTitle>Confirming account!</CardTitle>
+          </CardHeader>
+          <CardContent>{message}</CardContent>
+          <CardFooter>
+            <Button
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              Alright
+            </Button>
+          </CardFooter>
+        </Card>
+      </Container>
+    </main>
   );
 }

@@ -1,22 +1,18 @@
-import { CommentId, CommentType, PostId, ReplyType } from "@/Types/Post";
+import { CommentId, ztReplyType } from "@/Types/Post";
 import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
 import { Username } from "@/components/ui/Username";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { api } from "@/lib/axios.api";
-import { useMutation } from "@tanstack/react-query";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 type props = {
-  comment: ReplyType;
+  comment: ztReplyType;
   onDeleteReply: (replyId: CommentId) => void;
 };
 
@@ -28,7 +24,7 @@ export function Reply(props: props) {
           <div className="flex gap-2 items-center ">
             <AvatarHoverCard
               username={props.comment.user.username}
-              avatarUrl={props.comment.user.avatar || "./default-user.jpeg"}
+              avatarUrl={props.comment.user.avatar || "/default-user.jpeg"}
               yearOfJoined={4}
             />
             <Username>{props.comment.user.username}</Username>

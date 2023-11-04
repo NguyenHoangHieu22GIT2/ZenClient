@@ -5,19 +5,23 @@ import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { Bearer } from "@/utils/Bearer";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChangeEmailDto } from "@/dtos/change-email.dto";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { z } from "zod";
-import { UserMinimalData } from "@/Types/User";
-import { Cookies } from "react-cookie";
+import { zUserMinimalData, ztUserMinimalData } from "@/Types/User";
 import { useRouter } from "next/navigation";
+import jsCookie from "js-cookie";
 export const ChangeEmail = () => {
   const router = useRouter();
-  const cookie = new Cookies();
-  const access_token = useAuthStore((state) => state.access_token);
   const { mutate, isLoading } = useMutation({
     mutationKey: ["change-email"],
     mutationFn: async (data: { email: string }) => {
@@ -26,18 +30,15 @@ export const ChangeEmail = () => {
           "/auth/email",
           { email: data.email },
           {
-            headers: {
-              Authorization: Bearer(access_token),
-            },
-          },
+            withCredentials: true,
+          }
         )
         .then((data) => {
           return data.data;
         })
-        .then((user: UserMinimalData) => {
-          if (user._id) {
-            cookie.remove("jwtToken");
-            cookie.remove("userId");
+        .then((user: ztUserMinimalData) => {
+          const parsedUser = zUserMinimalData.parse(user);
+          if (parsedUser._id) {
             router.replace("/");
           }
         })
@@ -78,6 +79,7 @@ export const ChangeEmail = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 );
               }}

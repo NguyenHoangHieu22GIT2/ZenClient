@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { IoMdNotifications } from "react-icons/io";
 import {
@@ -11,13 +12,26 @@ import {
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Notifications } from "./Notifications";
-import { Notification } from "@/Types/Notification";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios.api";
+import {
+  zNotification,
+  zNotifications,
+  ztNotification,
+} from "@/Types/Notification";
 
-type props = {
-  notifications: Notification[];
-};
-
-export const NotificationNav = (props: props) => {
+export const NotificationNav = () => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["getnotifications"],
+    queryFn: () => {
+      return api
+        .get<ztNotification[]>("notification", { withCredentials: true })
+        .then((data) => {
+          const parsedData = zNotifications.parse(data.data);
+          return parsedData;
+        });
+    },
+  });
   // const [clearData, setClearData] = useState(false);
   // let notificationContent = <Notifications />;
   // if (clearData) {
@@ -50,7 +64,7 @@ export const NotificationNav = (props: props) => {
         {/* <object type="image/svg+xml" data="/Notification.svg"> */}
         {/*   Notification */}
         {/* </object> */}
-        <Notifications notifications={props.notifications} />
+        <Notifications notifications={data || []} />
         {/* {notificationContent}
         <SheetFooter>
           <Button onClick={() => setClearData(true)} variant={"destructive"}>

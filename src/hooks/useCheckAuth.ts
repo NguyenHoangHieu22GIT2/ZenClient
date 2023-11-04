@@ -1,38 +1,28 @@
+"use client";
 // THIS IS DEPRECATED, NOT GOING TO USE THIS :D
 import { api } from "@/lib/axios.api";
-import { useAuthStore } from "@/lib/storeZustand";
-import { Bearer } from "@/utils/Bearer";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect } from "react";
+import jsCookie from "js-cookie";
+import { useUserStore } from "@/lib/useUserStore";
 const useCheckAuth = () => {
-  const access_token = useAuthStore((state) => state.access_token);
+  const changeUser = useUserStore((state) => state.changeUser);
   const router = useRouter();
-  const pathname = usePathname();
   useEffect(() => {
-    if (!access_token)
-      router.push(pathname === "/register" ? "/register" : "/login");
-    else if (pathname !== "/login" && pathname !== "/register") {
+    if (window) {
       api
-        .post(
-          "auth/validate-jwt-token",
-          {
-            token: access_token,
-          },
-          {
-            headers: {
-              authorization: Bearer(access_token),
-            },
-          }
-        )
-        .catch((_err) => {
-          router.push("/login");
+        .get("auth/validate-jwt-token", { withCredentials: true })
+        .then((result) => {
+          changeUser(result.data);
+          console.log(result.data);
+        })
+        .catch((err) => {
+          jsCookie.remove("userId");
+          router.replace("/login");
         });
     }
   }, []);
-  return access_token;
 };
 
 export default useCheckAuth;

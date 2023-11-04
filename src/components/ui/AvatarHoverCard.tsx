@@ -4,6 +4,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { PropsClassName } from "@/Types/Props";
 import { imageUrl } from "@/utils/imageUrl";
+import { CheckImageUrl } from "@/utils/CheckImageUrl";
 
 interface props extends PropsClassName {
   avatarUrl: string;
@@ -18,7 +19,7 @@ export const AvatarHoverCard = (props: props) => {
         <Avatar>
           <AvatarImage
             className={props.className}
-            src={imageUrl(props.avatarUrl)}
+            src={CheckImageUrl(props.avatarUrl)}
           />
           <h1>{props.username}</h1>
         </Avatar>
@@ -26,7 +27,13 @@ export const AvatarHoverCard = (props: props) => {
       <HoverCardContent className="w-56 shadow-lg">
         <div className="flex justify-between space-x-2 ">
           <Avatar>
-            <AvatarImage src={props.avatarUrl} />
+            <AvatarImage
+              src={
+                props.avatarUrl !== "/default-user.jpeg"
+                  ? imageUrl(props.avatarUrl)
+                  : "/default-user.jpeg"
+              }
+            />
             <AvatarFallback>{props.username}</AvatarFallback>
           </Avatar>
           <div className="space-y-1">

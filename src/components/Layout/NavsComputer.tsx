@@ -7,21 +7,20 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useRouter } from "next/navigation";
-import { Cookies, useCookies } from "react-cookie";
-
+import jsCookie from "js-cookie";
+import { api } from "@/lib/axios.api";
 type props = {
   userId: string;
 };
-
 export const NavsComputer = (props: props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["jwtToken"]);
-  const access_token = useAuthStore((state) => state.access_token);
+  const userId = jsCookie.get("userId");
   const router = useRouter();
   const logoutFn = useCallback(() => {
-    router.replace("/login");
-    removeCookie("jwtToken");
+    jsCookie.remove("userId");
+    api.get("auth/logout", { withCredentials: true }).then(() => {
+      router.replace("/login");
+    });
   }, []);
   return (
     <DropdownMenuGroup>
@@ -48,7 +47,7 @@ export const NavsComputer = (props: props) => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      {access_token ? (
+      {userId ? (
         <DropdownMenuItem>
           <Button onClick={logoutFn} className="text-xl" variant={"link"}>
             Logout

@@ -7,25 +7,20 @@ import { api } from "@/lib/axios.api";
 import { Bearer } from "@/utils/Bearer";
 import { cookies } from "next/headers";
 import { ztNotification } from "@/Types/Notification";
+import { linkToQueryPosts } from "@/utils/LinkToQuery";
+
 interface props extends PropsClassName {
   children: ReactNode;
 }
 
 export const Layout = async (props: props) => {
-  try {
-    const notificationResult = await api.get<ztNotification[]>("notification", {
-      withCredentials: true,
-    });
-    return (
-      <Provider>
-        <section className={props.className}>
-          <Header notifications={notificationResult.data} />
-          <main className="">{props.children}</main>
-        </section>
-      </Provider>
-    );
-  } catch (error) {
-    console.log(error);
-    return <h1>Error</h1>;
-  }
+  return (
+    <Provider>
+      <CheckAuth />
+      <section className={props.className}>
+        <Header />
+        <main>{props.children}</main>
+      </section>
+    </Provider>
+  );
 };

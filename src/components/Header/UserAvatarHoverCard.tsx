@@ -1,17 +1,25 @@
 "use client";
-import { useAuthStore } from "@/lib/storeZustand";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { cookies } from "next/headers";
 import jwt from "jwt-decode";
-import { useEffect, useState } from "react";
-import { useUserFromZustandClient } from "@/hooks/useUserFromZustandClient";
+import { useUserStore } from "@/lib/useUserStore";
+import { ztUser, ztUserMinimalData } from "@/Types/User";
 
-export function UserAvatarHoverCard() {
-  const { user } = useUserFromZustandClient();
+type props = {
+  user: ztUserMinimalData;
+};
+
+export function UserAvatarHoverCard(props: props) {
   return (
     <AvatarHoverCard
-      username={user && user.username ? user.username : ""}
-      avatarUrl={user && user.avatar ? user.avatar : "/default-user.jpeg"}
+      username={props.user && props.user.username ? props.user.username : ""}
+      avatarUrl={
+        props.user
+          ? props.user.avatar
+            ? props.user.avatar
+            : "/default-user.jpeg"
+          : "/default-user.jpeg"
+      }
       // avatarUrl="https://github.com/shadcn.png"
       yearOfJoined={0}
     />

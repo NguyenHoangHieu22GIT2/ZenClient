@@ -1,22 +1,25 @@
 "use client";
 import React, { useEffect, useReducer, useState } from "react";
 import { Friend } from "./Friend";
-import { User, UserId, UserMinimalData } from "@/Types/User";
-import { useAuthStore } from "@/lib/storeZustand";
+import { ztUser, UserId, ztUserMinimalData } from "@/Types/User";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Bearer } from "@/utils/Bearer";
 import { api } from "@/lib/axios.api";
 import { v4 } from "uuid";
 import { FilterActionType, filterReducerType } from "./NotInterestedFriends";
+import {
+  zResultsOfFriendsInfiniteQuery,
+  ztResultsOfFriendsInfiniteQuery,
+} from "@/Types/resultsOfInfiniteQuery";
 
 type props = {
-  users: UserMinimalData[];
+  users: ztUserMinimalData[];
   onChangeFilter: (data: {
     type: FilterActionType;
     payload: filterReducerType;
   }) => void;
   filterState: filterReducerType;
-  setUsers: React.Dispatch<React.SetStateAction<UserMinimalData[]>>;
+  setUsers: React.Dispatch<React.SetStateAction<ztUserMinimalData[]>>;
   onRemoveUserNotInterested: (userId: UserId) => void;
 };
 export type apiUrlType =
@@ -25,7 +28,6 @@ export type apiUrlType =
   | "has-sent-request";
 
 export const RecommendFriends = (props: props) => {
-  const access_token = useAuthStore((state) => state.access_token);
   const { error, fetchNextPage, remove } = useInfiniteQuery({
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -33,33 +35,33 @@ export const RecommendFriends = (props: props) => {
     queryKey: ["users", "friends"],
     queryFn: ({ pageParam = 1 }) => {
       return api
-        .get<resultsOfFriendsInfiniteQuery>(
-          `/users/recommend-users?limit=10&skip=${(pageParam - 1) * 10}${props.filterState.usernameFilter
-            ? `&searchInput=${props.filterState.usernameFilter}`
-            : ""
+        .get<ztResultsOfFriendsInfiniteQuery>(
+          `/users/recommend-users?limit=10&skip=${(pageParam - 1) * 10}${
+            props.filterState.usernameFilter
+              ? `&searchInput=${props.filterState.usernameFilter}`
+              : ""
           }`,
           {
-            headers: {
-              Authorization: Bearer(access_token),
-            },
-          },
+            withCredentials: true,
+          }
         )
         .then((data) => {
+          const parsedData = zResultsOfFriendsInfiniteQuery.parse(data.data);
           if (
             (props.users.length == 0 && pageParam == 1) ||
             (props.users.length > 1 && pageParam > 1)
           ) {
-            props.setUsers((oldUsers) => [...oldUsers, ...data.data.users]);
+            props.setUsers((oldUsers) => [...oldUsers, ...parsedData.users]);
           }
 
-          return data.data;
+          return parsedData;
         });
     },
     getNextPageParam: (lastPage, allPages) => {
       if (props.filterState.usernameFilter) {
         return undefined;
       }
-      const theLastPage = Math.ceil(lastPage.userCounts / 10);
+      const theLastPage = Math.ceil(lastPage.usersCount / 10);
       if (allPages.length < theLastPage) {
         return allPages.length + 1;
       } else {

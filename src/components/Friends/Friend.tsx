@@ -20,7 +20,6 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { Bearer } from "@/utils/Bearer";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
 import { imageUrl } from "@/utils/imageUrl";
@@ -41,7 +40,6 @@ export const Friend = (props: props) => {
     return checkUsersType(props.filterState);
   }, [props.filterState]);
   const [alreadySentTheRequest, setAlreadySentTheRequest] = useState(false);
-  const access_token = useAuthStore((state) => state.access_token);
   const notInterestedMutation = useMutation({
     mutationKey: ["notInterested"],
     mutationFn: (data: UserId) => {
@@ -52,9 +50,7 @@ export const Friend = (props: props) => {
             userId: data,
           },
           {
-            headers: {
-              Authorization: Bearer(access_token),
-            },
+            withCredentials: true,
           }
         )
         .then((result) => {
@@ -85,9 +81,7 @@ export const Friend = (props: props) => {
           process.env.NEXT_PUBLIC_SERVER_ADD_FRIEND,
           { userId: data },
           {
-            headers: {
-              Authorization: Bearer(access_token),
-            },
+            withCredentials: true,
           }
         )
         .then((data) => {

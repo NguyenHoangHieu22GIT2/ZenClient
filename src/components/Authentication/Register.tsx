@@ -54,7 +54,7 @@ export const Register = () => {
     registerStepElement = <RegisterThirdStep />;
   }
   return (
-    <Card className="m-2 h-screen flex flex-col justify-center shadow-lg">
+    <Card className="m-2 h-fit flex flex-col justify-center shadow-lg">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Register</span>

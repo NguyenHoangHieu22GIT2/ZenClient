@@ -5,6 +5,9 @@ import { GroupId } from "./Group";
 
 import { zUser, UserId, zUserMinimalData } from "./User";
 
+const PostIdTransformed = z.string().transform((data) => data as PostId);
+const CommentIdTransformed = z.string().transform((data) => data as CommentId);
+
 export type Mode = "global" | "private" | "normal";
 
 export type PostId = Brand<string, "PostId">;
@@ -15,14 +18,16 @@ export const zReplyType = z.object({
   comment: z.string(),
   userId: z.string(),
   user: zUser.pick({ avatar: true, username: true }),
-  _id: z.string(),
+  _id: CommentIdTransformed,
 });
+
+export type ztReplyType = z.infer<typeof zReplyType>;
 
 export const zCommentType = z.object({
   comment: z.string(),
   userId: z.string(),
   user: zUser.pick({ avatar: true, username: true }),
-  _id: z.string(),
+  _id: CommentIdTransformed,
   replies: z.array(zReplyType),
   repliesCount: z.number(),
 });
@@ -46,7 +51,7 @@ export type ztCommentType = z.infer<typeof zCommentType>;
 // };
 
 export type ztPost = z.infer<typeof zPost>;
-const PostIdTransformed = z.string().transform((data) => data as PostId);
+
 export const zPost = z.object({
   _id: PostIdTransformed,
   postHeading: z.string(),
@@ -69,8 +74,8 @@ export const zPost = z.object({
 });
 
 export const zPostCreate = z.object({
-  postHeading: z.string(),
-  postBody: z.string(),
+  postHeading: z.string().trim().min(1),
+  postBody: z.string().trim().min(1),
   files: typeof window === "undefined" ? z.null() : z.array(z.instanceof(File)),
 });
 

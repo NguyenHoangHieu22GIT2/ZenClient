@@ -2,7 +2,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { Friend } from "./Friend";
 import { zUser, UserId, ztUserMinimalData } from "@/Types/User";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Bearer } from "@/utils/Bearer";
 import { api } from "@/lib/axios.api";
@@ -34,13 +33,11 @@ export type apiUrlType =
 async function getResultsOfFriendsInfiniteQuery({
   pageParam,
   filterState,
-  access_token,
   setUsers,
   users,
 }: {
   pageParam: number;
   filterState: filterReducerType;
-  access_token: string;
   users: ztUserMinimalData[];
   setUsers: React.Dispatch<React.SetStateAction<ztUserMinimalData[]>>;
 }) {
@@ -53,13 +50,11 @@ async function getResultsOfFriendsInfiniteQuery({
         username: filterState.usernameFilter,
       }),
       {
-        headers: {
-          Authorization: Bearer(access_token),
-        },
+        withCredentials: true,
       }
     )
     .then((data) => {
-      if (users.length > 0 && pageParam > 1) {
+      if (users.length > 0) {
         setUsers((oldUsers) => [...oldUsers, ...data.data.users]);
       } else if (users.length === 0 && pageParam === 1) {
         setUsers(() => [...data.data.users]);
@@ -81,7 +76,6 @@ const getNextPageParam = (
 };
 
 export const Friends = (props: props) => {
-  const access_token = useAuthStore((state) => state.access_token);
   const { error, fetchNextPage, remove, refetch } = useInfiniteQuery({
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -92,7 +86,6 @@ export const Friends = (props: props) => {
         users: props.users,
         setUsers: props.setUsers,
         filterState: props.filterState,
-        access_token,
         pageParam,
       }),
     getNextPageParam,
@@ -118,8 +111,6 @@ export const Friends = (props: props) => {
     const onScroll = async (e: Event) => {
       const { scrollHeight, scrollTop, clientHeight } =
         document.scrollingElement!;
-      // console.log(scrollHeight - Math.floor(scrollTop) <= clientHeight * 1.1);
-
       if (
         !fetching &&
         scrollHeight - Math.floor(scrollTop) <= clientHeight * 1.1

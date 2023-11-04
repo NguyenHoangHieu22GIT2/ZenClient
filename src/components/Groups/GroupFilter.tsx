@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 export const GroupFilter = () => {
   const [openCriteria, setOpenCriteria] = useState(false);
   const style = openCriteria ? "block" : "";
@@ -21,7 +22,7 @@ export const GroupFilter = () => {
           </Button>
         </div>
       </div>
-      <div className={cn("mb-5 hidden md:block", style)}>
+      {/* <div className={cn("mb-5 hidden md:block", style)}>
         <h1 className="font-bold mb-1">Distance:</h1>
         <RadioGroup defaultValue="comfortable">
           <div className="flex items-center space-x-2">
@@ -37,7 +38,7 @@ export const GroupFilter = () => {
             <Label htmlFor="r3">{"<"}50Km</Label>
           </div>
         </RadioGroup>
-      </div>
+      </div> */}
       <div className={cn("mb-5 hidden md:block", style)}>
         <h1 className="font-bold mb-1">Criteria:</h1>
         <div className="flex items-center gap-3">
@@ -46,6 +47,12 @@ export const GroupFilter = () => {
         </div>
       </div>
       <Button className={cn("w-full hidden md:block", style)}>Filter</Button>
+      <Button
+        asChild
+        className={cn("w-full text-center hidden md:block my-3", style)}
+      >
+        <Link href={"/groups/create-group"}>Create Group</Link>
+      </Button>
       <Button
         className={cn("w-full md:hidden", openCriteria && "hidden")}
         onClick={() => setOpenCriteria(true)}

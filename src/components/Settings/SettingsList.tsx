@@ -3,7 +3,7 @@ import { Card } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { SettingsPane } from "@/app/settings/page";
+import { SettingsPane } from "@/app/(Layout)/settings/page";
 type props = {
   onChangePane: (type: SettingsPane) => void;
 };
@@ -36,6 +36,14 @@ export const SettingsList = React.memo((props: props) => {
             variant={"link"}
           >
             Change Username
+          </Button>
+        </li>
+        <li>
+          <Button
+            onClick={props.onChangePane.bind(this, "AVATAR")}
+            variant={"link"}
+          >
+            Change Avatar
           </Button>
         </li>
       </ul>

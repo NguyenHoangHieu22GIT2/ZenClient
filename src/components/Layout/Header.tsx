@@ -1,3 +1,4 @@
+"use client";
 import { Container } from "@/components/ui/Container";
 import React from "react";
 import Link from "next/link";
@@ -32,15 +33,11 @@ import { HeaderNavigation } from "../Header/Navigation";
 
 import { UserAvatarLink } from "../Header/UserAvatarLink";
 import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
-import { Notification } from "@/Types/Notification";
-import { cookies } from "next/headers";
+import { useUserStore } from "@/lib/useUserStore";
 
-type props = {
-  notifications: Notification[];
-};
-
-export const Header = (props: props) => {
-  const userId = cookies().get("userId")?.value;
+export const Header = (props: {}) => {
+  const user = useUserStore((state) => state.user);
+  const notificationNav = <NotificationNav />;
   return (
     <header className="py-2 z-40 dark:bg-slate-800/80 bg-slate-100/80 backdrop-blur-lg sticky top-0">
       <Container>
@@ -62,15 +59,15 @@ export const Header = (props: props) => {
           </nav>
           {/* The Div is the problem */}
           <div className="md:flex md:items-center md:gap-5 hidden ">
-            <NotificationNav notifications={props.notifications} />
+            {notificationNav}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="p-0  text-slate-600 hover:bg-transparent  transition bg-tranparent ">
-                  <UserAvatarHoverCard />
+                  <UserAvatarHoverCard user={user} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <NavsComputer userId={userId!} />
+                <NavsComputer userId={user._id} />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -86,8 +83,8 @@ export const Header = (props: props) => {
                 <NavsPhone />
               </DropdownMenuContent>
             </DropdownMenu>
-            <NotificationNav notifications={props.notifications} />
-            <UserAvatarLink />
+            {notificationNav}
+            <UserAvatarLink user={user} />
           </div>
         </div>
       </Container>

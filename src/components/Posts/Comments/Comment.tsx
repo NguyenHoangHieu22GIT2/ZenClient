@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { Username } from "@/components/ui/Username";
-import { CommentId, CommentType, PostId, ReplyType } from "@/Types/Post";
+import {
+  CommentId,
+  ztCommentType,
+  PostId,
+  ztReplyType,
+  zCommentType,
+  zReplyType,
+} from "@/Types/Post";
 import React, { useCallback, useState } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { PostComment } from "./PostComment";
 import { Replies } from "./Replies";
 import { api } from "@/lib/axios.api";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Bearer } from "@/utils/Bearer";
 import { v4 } from "uuid";
@@ -28,11 +34,10 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 
 type props = {
   postId: PostId;
-  comment: CommentType;
-  changeComments: React.Dispatch<React.SetStateAction<CommentType[]>>;
+  comment: ztCommentType;
+  changeComments: React.Dispatch<React.SetStateAction<ztCommentType[]>>;
 };
 export const Comment = (props: props) => {
-  const access_token = useAuthStore((state) => state.access_token);
   const [replies, setReplies] = useState(props.comment.replies || []);
 
   const {
@@ -55,25 +60,26 @@ export const Comment = (props: props) => {
           `/posts/delete-comment?postId=${postId}&commentId=${commentId}${
             replyId ? `&replyId=${replyId}` : ""
           }`,
-          { headers: { Authorization: Bearer(access_token) } }
+          {
+            withCredentials: true,
+          }
         )
         .then((data) => {
-          const deletedComment: CommentType = data.data;
-          console.log(deletedComment);
+          const parsedData = zCommentType.parse(data.data);
           if (replyId) {
             setReplies((oldReplies) => {
               return oldReplies.filter((reply) => {
-                return reply._id !== deletedComment._id;
+                return reply._id !== parsedData._id;
               });
             });
           } else {
             props.changeComments((oldComments) => {
               return oldComments.filter(
-                (comment) => comment._id !== deletedComment._id
+                (comment) => comment._id !== parsedData._id
               );
             });
           }
-          return deletedComment;
+          return parsedData;
         });
     },
   });
@@ -90,8 +96,9 @@ export const Comment = (props: props) => {
 
   const [openPostComment, setOpenPostComment] = useState(false);
   const createReply = useCallback(
-    (reply: ReplyType) => {
-      setReplies((oldArray) => [...oldArray, reply]);
+    (reply: ztReplyType) => {
+      const parsedReply = zReplyType.parse(reply);
+      setReplies((oldArray) => [...oldArray, parsedReply]);
     },
     [replies]
   );
@@ -103,9 +110,7 @@ export const Comment = (props: props) => {
         .get(
           `posts/get-replies?postId=${props.postId}&commentId=${props.comment._id}`,
           {
-            headers: {
-              Authorization: Bearer(access_token),
-            },
+            withCredentials: true,
           }
         )
         .then((data) => {
@@ -115,7 +120,6 @@ export const Comment = (props: props) => {
     },
     enabled: !!loadMoreReplies,
   });
-  console.log(data, isLoading);
   function getMoreReplies() {
     refetch();
     const random = v4();
@@ -129,7 +133,7 @@ export const Comment = (props: props) => {
           <div className="flex gap-2 items-center ">
             <AvatarHoverCard
               username={props.comment.user.username}
-              avatarUrl={props.comment.user.avatar || "./default-user.jpeg"}
+              avatarUrl={props.comment.user.avatar || "/default-user.jpeg"}
               yearOfJoined={4}
             />
             <Username>{props.comment.user.username}</Username>

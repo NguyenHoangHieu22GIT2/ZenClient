@@ -1,17 +1,29 @@
 "use client";
 import Link from "next/link";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
-import { useAuthStore } from "@/lib/storeZustand";
 import { cookies } from "next/headers";
 import { useUserFromZustandClient } from "@/hooks/useUserFromZustandClient";
+import { useUserStore } from "@/lib/useUserStore";
+import { ztUser, ztUserMinimalData } from "@/Types/User";
 
-export function UserAvatarLink() {
-  const { user } = useUserFromZustandClient();
+type props = {
+  user: ztUserMinimalData;
+};
+
+export function UserAvatarLink(props: props) {
   return (
-    <Link href={user && user._id ? `/users/${user._id}` : "/login"}>
+    <Link
+      href={
+        props.user && props.user._id ? `/users/${props.user._id}` : "/login"
+      }
+    >
       <AvatarHoverCard
         username="User"
-        avatarUrl={user && user.avatar ? user.avatar : "/default-user.jpeg"}
+        avatarUrl={
+          props.user && props.user.avatar
+            ? props.user.avatar
+            : "/default-user.jpeg"
+        }
         // avatarUrl="https://github.com/shadcn.png"
         yearOfJoined={0}
       />

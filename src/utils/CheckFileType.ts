@@ -1,7 +1,6 @@
 // This is used for knowing if this is not an image but a popular type of file, we will show that popular
 // type of file icon
 export function checkFileTypeToUseIconOrImage(fileType: string) {
-  console.log(fileType);
   if (
     fileType.includes(".document") ||
     fileType ===

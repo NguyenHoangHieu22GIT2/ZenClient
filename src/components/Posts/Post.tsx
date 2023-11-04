@@ -21,7 +21,6 @@ import Image from "next/image";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { Bearer } from "@/utils/Bearer";
-import { useAuthStore } from "@/lib/storeZustand";
 import { ztPost } from "@/Types/Post";
 
 import { DateConverter } from "@/utils/DateConverter";
@@ -49,8 +48,6 @@ export const Post = (props: props) => {
     props.post.comments
   );
 
-  const access_token = useAuthStore((state) => state.access_token);
-
   const {
     mutate: likeMutation,
     isLoading: likeIsLoading,
@@ -58,27 +55,19 @@ export const Post = (props: props) => {
   } = useMutation({
     mutationKey: ["post/like"],
     mutationFn: async (data: { postId: string }) => {
-      console.log(data);
       return api
         .patch(process.env.NEXT_PUBLIC_SERVER_TOGGLE_LIKE_POST, data, {
-          headers: {
-            authorization: Bearer(access_token),
-          },
+          withCredentials: true,
         })
         .then((data) => data);
     },
   });
-  const {
-    data: commentsData,
-    isLoading: commentsIsLoading,
-    error: commentsIsError,
-    refetch: commentsRefetch,
-  } = useQuery({
+  const { error: commentsIsError, refetch: commentsRefetch } = useQuery({
     queryKey: ["post/comments", loadMoreComments],
     queryFn: async () => {
       return api
         .get(`posts/get-comments?postId=${props.post._id}`, {
-          headers: { authorization: Bearer(access_token) },
+          withCredentials: true,
         })
         .then((data) => {
           setComments(data.data);
@@ -170,10 +159,6 @@ export const Post = (props: props) => {
     [reportDialog]
   );
 
-  console.log(
-    process.env.NEXT_PUBLIC_SERVER_URL_UPLOADS + props.post.images[openImage]
-  );
-
   const changeImageIndex = (direction: "LEFT" | "RIGHT") => {
     if (direction === "LEFT") {
       if (openImage === 0) setOpenImage(props.post.images.length - 1);
@@ -217,7 +202,7 @@ export const Post = (props: props) => {
           <div className=" flex items-center gap-2">
             <AvatarHoverCard
               username={props.post.user.username}
-              avatarUrl={props.post.user.avatar || "./default-user.jpeg"}
+              avatarUrl={props.post.user.avatar || "/default-user.jpeg"}
               yearOfJoined={4}
             />
             <div>

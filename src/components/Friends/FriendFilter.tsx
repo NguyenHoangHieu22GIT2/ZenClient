@@ -24,10 +24,10 @@ export const FriendFilter = (props: props) => {
   const [filter, setFilter] = useState(props.criteria.username || "");
   const [openCriteria, setOpenCriteria] = useState(false);
   const [notInterested, setNotInterested] = useState(
-    props.criteria.usersType === "not-interested" ? true : false,
+    props.criteria.usersType === "not-interested" ? true : false
   );
   const [hasSentRequest, setHasSentRequest] = useState(
-    props.criteria.usersType === "has-sent-request" ? true : false,
+    props.criteria.usersType === "has-sent-request" ? true : false
   );
   const style = openCriteria ? "block" : "";
   function changeFilter() {
@@ -35,12 +35,13 @@ export const FriendFilter = (props: props) => {
     window.history.pushState(
       null,
       "Friends",
-      `/friends?searchInput=${filter}&usersType=${notInterested
-        ? "not-interested"
-        : hasSentRequest
+      `/friends?searchInput=${filter}&usersType=${
+        notInterested
+          ? "not-interested"
+          : hasSentRequest
           ? "has-sent-request"
           : "normal-users"
-      }`,
+      }`
     );
     props.onChangeFilter({
       type: "CHANGE_ALL",
@@ -121,6 +122,20 @@ export const FriendFilter = (props: props) => {
             />
             <Label htmlFor="hasSentRequest">
               Friends that have sent the request.
+            </Label>
+          </div>
+          <div className="flex items-center gap-3">
+            <Checkbox
+              checked={hasSentRequest}
+              onCheckedChange={(checked: boolean) => {
+                setHasSentRequest(checked);
+                setNotInterested(false);
+              }}
+              id="hasSentRequest"
+              title="Friends that have sent the request"
+            />
+            <Label htmlFor="hasSentRequest">
+              Friends that sent you a request.
             </Label>
           </div>
         </div>

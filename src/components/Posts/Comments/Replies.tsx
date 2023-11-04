@@ -1,16 +1,10 @@
-import { CommentId, CommentType, PostId, ReplyType } from "@/Types/Post";
-import { Comment } from "./Comment";
+import { CommentId, ztCommentType, PostId, ztReplyType } from "@/Types/Post";
 import { Reply } from "./Reply";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios.api";
 import { useCallback, useState } from "react";
-import { v4 } from "uuid";
-import { useAuthStore } from "@/lib/storeZustand";
-import { Bearer } from "@/utils/Bearer";
 
 type props = {
-  replies: ReplyType[];
+  replies: ztReplyType[];
   repliesCount: number;
   refetchReplies: () => void;
   onDeleteReply: (replyId: CommentId) => void;
@@ -30,7 +24,7 @@ export function Replies(props: props) {
         </Button>
       )}
       <ul>
-        {props.replies.map((reply: ReplyType) => {
+        {props.replies.map((reply: ztReplyType) => {
           return (
             <Reply
               onDeleteReply={props.onDeleteReply}

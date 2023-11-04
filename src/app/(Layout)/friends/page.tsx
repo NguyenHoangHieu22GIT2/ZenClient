@@ -23,44 +23,40 @@ type props = {
 
 export default async function page(props: props) {
   try {
-    const jwtCookie = cookies().get("jwtToken");
-    if (!jwtCookie) {
-      return <h1>Error Found! Fix latter</h1>;
-    }
+    // const jwtCookie = cookies().get("jwtToken");
+    // if (!jwtCookie) {
+    //   return <h1>Error Found! Fix latter</h1>;
+    // }
     const username = props.searchParams.searchInput || "";
     const usersType = props.searchParams.usersType || "";
-
-    const result = await api
-      .get<ztResultsOfFriendsInfiniteQuery>(
-        // "users/recommend-users?limit=10&skip=0",
-        linkToQueryUsers({
-          limit: FRIENDS_LIMIT,
-          skip: 0,
-          username,
-          usersType: usersType,
-        }),
-        {
-          headers: {
-            authorization: Bearer(jwtCookie.value),
-          },
-        }
-      )
-      .then((data) => {
-        const parsedData = zResultsOfFriendsInfiniteQuery.parse(data.data);
-        return parsedData;
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
+    // const result = await api
+    //   .get<ztResultsOfFriendsInfiniteQuery>(
+    //     // "users/recommend-users?limit=10&skip=0",
+    //     linkToQueryUsers({
+    //       limit: FRIENDS_LIMIT,
+    //       skip: 0,
+    //       username,
+    //       usersType: usersType,
+    //     }),
+    //     {
+    //       headers: {
+    //         authorization: Bearer(jwtCookie.value),
+    //       },
+    //     }
+    //   )
+    //   .then((data) => {
+    //     const parsedData = zResultsOfFriendsInfiniteQuery.parse(data.data);
+    //     return parsedData;
+    //   })
+    //   .catch((err) => {
+    //     throw new Error(err);
+    //   });
     return (
       <Container className="mt-3">
         <Heading className="mb-2 lg:text-lg font-bold">
           Friends you may know!
         </Heading>
-        <FriendsComponent
-          criteria={{ username, usersType }}
-          friendsInifiteQuery={result}
-        />
+        <FriendsComponent criteria={{ username, usersType }} />
       </Container>
     );
   } catch (error: any) {

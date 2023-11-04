@@ -2,7 +2,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { Friend } from "./Friend";
 import { UserId, ztUserMinimalData } from "@/Types/User";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Bearer } from "@/utils/Bearer";
 import { api } from "@/lib/axios.api";
@@ -30,7 +29,6 @@ export type apiUrlType =
   | "has-sent-request";
 
 export const HasSentRequestFriends = (props: props) => {
-  const access_token = useAuthStore((state) => state.access_token);
   const { error, fetchNextPage, remove } = useInfiniteQuery({
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -45,9 +43,7 @@ export const HasSentRequestFriends = (props: props) => {
               : ""
           }`,
           {
-            headers: {
-              Authorization: Bearer(access_token),
-            },
+            withCredentials: true,
           }
         )
         .then((data) => {

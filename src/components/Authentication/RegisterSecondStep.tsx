@@ -27,11 +27,11 @@ interface props {
 export const RegisterSecondStep = React.memo((props: props) => {
   const { mutate, isLoading, data, error } = useMutation({
     mutationFn: async (user: ztUserRegisterStepTwo | ztUserRegisterStepOne) => {
-      const parsedData = zUserRegisterStepOne.parse(user);
+      const parsedData = zUserRegisterStepTwo.parse(user);
       const formData = new FormData();
-      let key: keyof typeof parsedData;
+      let key: keyof ztUserRegisterStepTwo;
       for (key in user) {
-        formData.append(key, parsedData[key]);
+        formData.append(key, parsedData[key]!);
       }
       return (
         await api.post(process.env.NEXT_PUBLIC_SERVER_AUTH_REGISTER, formData)
@@ -65,14 +65,15 @@ export const RegisterSecondStep = React.memo((props: props) => {
       <h1 className="text-center font-bold text-xl mb-4 ">Insert an avatar</h1>
       <div
         {...getRootProps()}
-        className="w-[70%] mx-auto relative aspect-square rounded-full border-4 border-dashed overflow-hidden bg-red-300 hover:bg-red-400 cursor-pointer transition"
+        className="w-[50%] mx-auto relative aspect-square rounded-full border-4 border-dashed overflow-hidden bg-red-300 hover:bg-red-400 cursor-pointer transition"
       >
         {file ? (
           <Image
-            src={`${URL.createObjectURL(file)}`}
+            className="w-full aspect-square"
+            src={URL.createObjectURL(file)}
             alt=""
-            width={1000}
-            height={1000}
+            width={700}
+            height={700}
           />
         ) : (
           <AiOutlineUser className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full" />

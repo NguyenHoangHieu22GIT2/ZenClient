@@ -17,6 +17,7 @@ export type filterReducerType = {
   usernameFilter?: string;
   isNotInterested?: boolean;
   HasSentRequest?: boolean;
+  friendsSentRequest?: boolean;
 };
 
 export interface FilterAction {
@@ -36,6 +37,7 @@ function filterReducer(
     return {
       ...state,
       isNotInterested: action.payload.isNotInterested,
+      friendsSentRequest: false,
       HasSentRequest: false,
     };
   } else if (action.type === "SET_HAS_SENT_REQUEST") {
@@ -43,19 +45,20 @@ function filterReducer(
       ...state,
       HasSentRequest: action.payload.HasSentRequest,
       isNotInterested: false,
+      friendsSentRequest: false,
     };
   } else if (action.type === "CHANGE_ALL") {
     return {
       usernameFilter: action.payload.usernameFilter,
       isNotInterested: action.payload.isNotInterested,
       HasSentRequest: action.payload.HasSentRequest,
+      friendsSentRequest: action.payload.friendsSentRequest,
     };
   }
   return state;
 }
 
 type props = {
-  friendsInifiteQuery: ztResultsOfFriendsInfiniteQuery;
   criteria: {
     username: string;
     usersType: findUsersType;
@@ -63,9 +66,7 @@ type props = {
 };
 
 export default function FriendsComponent(props: props) {
-  const [users, setUsers] = useState<ztUserMinimalData[]>(
-    props.friendsInifiteQuery.users
-  );
+  const [users, setUsers] = useState<ztUserMinimalData[]>([]);
   const [count, setCount] = useState(0);
   function removeUserNotInterested(userId: UserId) {
     setUsers((users) => {
@@ -78,7 +79,7 @@ export default function FriendsComponent(props: props) {
     {
       HasSentRequest: false,
       isNotInterested: false,
-      usernameFilter: "",
+      usernameFilter: props.criteria.username || "  ",
     }
   );
   function changeFilter({

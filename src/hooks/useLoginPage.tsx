@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { Cookies } from "react-cookie";
 import Cookie from "universal-cookie";
 import { userLoginDto } from "@/dtos/user-login.dto";
-import { useAuthStore } from "@/lib/storeZustand";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +14,6 @@ import { z } from "zod";
 import { zLoginResponse, ztLoginResponse, ztUser } from "@/Types/User";
 export function useLoginPage() {
   const cookie = new Cookies();
-  const onChangeAccessToken = useAuthStore((state) => state.changeAccessToken);
   const router = useRouter();
   const { toast } = useToast();
   const loginUserMutation = useMutation({
@@ -35,31 +33,35 @@ export function useLoginPage() {
   });
   const acookie = new Cookie();
   useEffect(() => {
-    if (!loginUserMutation.isLoading && loginUserMutation.data) {
-      const result = loginUserMutation.data as LoginResponse<"success">;
-      //TODO: I WILL THINK ABOUT PARSE AND SAFEPARSE IN THE FUTURE
-      const parsedResult = zLoginResponse.parse(result);
-
-      cookie.set("userId", parsedResult.userId, {
-        sameSite: "lax",
-        secure: true,
-        maxAge: 3600000,
-      });
-      onChangeAccessToken(parsedResult.access_token);
-      toast({
-        title: "Login Successfully",
-        action: <ToastAction altText="Great!">Great!</ToastAction>,
-      });
-      router.replace("/");
-    }
-    if (!loginUserMutation.isLoading && loginUserMutation.error) {
-      const error = loginUserMutation.error as LoginResponse<"error">;
-      const parsedError = zErrorResponse.parse(error);
-      toast({
-        title: parsedError.response.data.message,
-        description: parsedError.response.data.error,
-        action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
-      });
+    try {
+      if (!loginUserMutation.isLoading && loginUserMutation.data) {
+        const result = loginUserMutation.data as LoginResponse<"success">;
+        //TODO: I WILL THINK ABOUT PARSE AND SAFEPARSE IN THE FUTURE
+        const parsedResult = zLoginResponse.parse(result);
+        cookie.set("userId", parsedResult.userId, {
+          maxAge: 3600000,
+        });
+        // I can decode this
+        // onChangeAccessToken(parsedResult.access_token);
+        toast({
+          title: "Login Successfully",
+          action: <ToastAction altText="Great!">Great!</ToastAction>,
+        });
+        router.replace("/");
+      }
+      if (!loginUserMutation.isLoading && loginUserMutation.error) {
+        const error = loginUserMutation.error as LoginResponse<"error">;
+        const parsedError = zErrorResponse.parse(error);
+        toast({
+          title: parsedError.response.data.message,
+          description: parsedError.response.data.error,
+          action: (
+            <ToastAction altText="Goto schedule to undo">Okay</ToastAction>
+          ),
+        });
+      }
+    } catch (error) {
+      throw new Error("Something went wrong");
     }
   }, [loginUserMutation.data, loginUserMutation.isLoading]);
 

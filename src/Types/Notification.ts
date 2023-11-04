@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { zPost } from "./Post";
-import { zUser, UserId } from "./User";
 
 // export type Notification = {
 //   _id: string;
@@ -30,5 +28,7 @@ export const zNotification = z.object({
   notificationBody: z.string(),
   options: zNotificationOptions.partial(),
 });
+
+export const zNotifications = z.array(zNotification);
 
 export type ztNotification = z.infer<typeof zNotification>;

@@ -2,9 +2,9 @@ import React from "react";
 import { Notification } from "./Notification";
 import { Heading } from "../ui/Heading";
 import { Separator } from "../ui/separator";
-import { Notification as NotificationType } from "@/Types/Notification";
+import { ztNotification } from "@/Types/Notification";
 
-type props = { notifications: NotificationType[] };
+type props = { notifications: ztNotification[] };
 
 export const Notifications = (props: props) => {
   return (
