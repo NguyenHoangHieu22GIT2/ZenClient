@@ -11,12 +11,15 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFormCreatePost } from "@/hooks/useFormCreatePost";
-import { useUserStore } from "@/lib/useUserStore";
+import { GroupId } from "@/Types/Group";
 
-export function FormCreatePost() {
+type props = {
+  groupId?: GroupId;
+};
+
+export function FormCreatePost(props: props) {
   const { isLoading, uploadFileButton, uploadFileElement, createPost, form } =
-    useFormCreatePost();
-  const user = useUserStore((state) => state.user);
+    useFormCreatePost(props.groupId);
   return (
     <>
       <Form {...form}>
@@ -29,7 +32,7 @@ export function FormCreatePost() {
                 <FormLabel>Heading</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={`${user.username}, How do you feel? ☺️`}
+                    placeholder={`How do you feel? ☺️`}
                     {...field}
                     disabled={isLoading ? true : false}
                   />

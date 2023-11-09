@@ -61,7 +61,7 @@ export const YourInfos = (props: props) => {
   const friendsInfo = data.friendsInfo;
   return (
     <Card>
-      <CardHeader className="">
+      <CardHeader>
         <ContextMenu>
           <ContextMenuTrigger>
             <TooltipProvider>
@@ -85,7 +85,6 @@ export const YourInfos = (props: props) => {
           <ContextMenuContent>
             <ContextMenuItem>Block</ContextMenuItem>
             <ContextMenuItem>Unfollow</ContextMenuItem>
-            {/* <ContextMenuItem inset>Report</ContextMenuItem> */}
             <ContextMenuSub>
               <ContextMenuSubTrigger>Report</ContextMenuSubTrigger>
               <ContextMenuSubContent>

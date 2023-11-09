@@ -19,11 +19,7 @@ export function UserAvatarLink(props: props) {
     >
       <AvatarHoverCard
         username="User"
-        avatarUrl={
-          props.user && props.user.avatar
-            ? props.user.avatar
-            : "/default-user.jpeg"
-        }
+        avatarUrl={props.user.avatar}
         // avatarUrl="https://github.com/shadcn.png"
         yearOfJoined={0}
       />

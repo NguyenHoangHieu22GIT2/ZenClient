@@ -77,6 +77,7 @@ export const zPostCreate = z.object({
   postHeading: z.string().trim().min(1),
   postBody: z.string().trim().min(1),
   files: typeof window === "undefined" ? z.null() : z.array(z.instanceof(File)),
+  groupId: z.string().nullable(),
 });
 
 export type ztPostCreate = z.infer<typeof zPostCreate>;

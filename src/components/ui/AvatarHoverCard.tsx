@@ -27,13 +27,7 @@ export const AvatarHoverCard = (props: props) => {
       <HoverCardContent className="w-56 shadow-lg">
         <div className="flex justify-between space-x-2 ">
           <Avatar>
-            <AvatarImage
-              src={
-                props.avatarUrl !== "/default-user.jpeg"
-                  ? imageUrl(props.avatarUrl)
-                  : "/default-user.jpeg"
-              }
-            />
+            <AvatarImage src={props.avatarUrl} />
             <AvatarFallback>{props.username}</AvatarFallback>
           </Avatar>
           <div className="space-y-1">

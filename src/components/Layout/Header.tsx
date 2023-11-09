@@ -12,19 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { GoHomeFill, GoHome } from "react-icons/go";
-import {
-  BsPostcard,
-  BsPeople,
-  BsPeopleFill,
-  BsPostcardFill,
-} from "react-icons/bs";
-import {
-  BiGroup,
-  BiMessageSquareDetail,
-  BiSolidGroup,
-  BiSolidMessageSquareDetail,
-} from "react-icons/bi";
+
 import { NotificationNav } from "../Notification/NotificationNav";
 import { Input } from "../ui/input";
 import { NavsPhone } from "./NavsPhone";

@@ -29,7 +29,6 @@ export const PostComment = (props: props) => {
       comment: string;
       commentId?: CommentId;
     }) => {
-      console.log(data);
       return api
         .post<ztCommentType>(
           process.env.NEXT_PUBLIC_SERVER_CREATE_COMMENT,

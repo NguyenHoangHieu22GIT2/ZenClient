@@ -7,7 +7,6 @@ import { api } from "@/lib/axios.api";
 import { Bearer } from "@/utils/Bearer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeEmailDto } from "@/dtos/change-email.dto";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { z } from "zod";
 import { zUserMinimalData, ztUserMinimalData } from "@/Types/User";
@@ -17,7 +16,15 @@ import { useDropzone } from "react-dropzone";
 import { checkImageType } from "@/utils/checkImageType";
 import Image from "next/image";
 import { AiOutlineUser } from "react-icons/ai";
-export const ChangeAvatar = () => {
+import { imageUrl } from "@/utils/imageUrl";
+import { CheckImageUrl } from "@/utils/CheckImageUrl";
+
+type props = {
+  imageUrl?: string | null;
+  url: string;
+};
+
+export const ChangeAvatar = (props: props) => {
   const [file, setFile] = useState<File>();
   const { mutate, isLoading } = useMutation({
     mutationKey: ["change-email"],
@@ -25,7 +32,7 @@ export const ChangeAvatar = () => {
       const formData = new FormData();
       formData.append("avatar", data);
       return api
-        .patch("/users/upload-avatar", formData, {
+        .patch(props.url, formData, {
           withCredentials: true,
         })
         .then((data) => {
@@ -47,7 +54,33 @@ export const ChangeAvatar = () => {
     [setFile]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  let avatar = <></>;
 
+  if (props.imageUrl && !file) {
+    avatar = (
+      <Image
+        className="w-full aspect-square"
+        src={CheckImageUrl(props.imageUrl)}
+        alt=""
+        width={700}
+        height={700}
+      />
+    );
+  } else if (file) {
+    avatar = (
+      <Image
+        className="w-full aspect-square"
+        src={URL.createObjectURL(file)}
+        alt=""
+        width={700}
+        height={700}
+      />
+    );
+  } else {
+    avatar = (
+      <AiOutlineUser className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full" />
+    );
+  }
   return (
     <Card className="p-5 ">
       <CardHeader>
@@ -58,17 +91,7 @@ export const ChangeAvatar = () => {
           {...getRootProps()}
           className="w-[50%] mx-auto relative aspect-square rounded-full border-4 border-dashed overflow-hidden bg-red-300 hover:bg-red-400 cursor-pointer transition"
         >
-          {file ? (
-            <Image
-              className="w-full aspect-square"
-              src={URL.createObjectURL(file)}
-              alt=""
-              width={700}
-              height={700}
-            />
-          ) : (
-            <AiOutlineUser className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full" />
-          )}
+          {avatar}
           <Input
             className="w-full aspect-square "
             name="file0"
@@ -76,6 +99,7 @@ export const ChangeAvatar = () => {
           />
         </div>
         <Button
+          className="text-center"
           disabled={isLoading}
           onClick={() => {
             if (file) {

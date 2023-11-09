@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { ztPost, ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
@@ -7,53 +7,43 @@ import { Post } from "./Post";
 
 import { linkToQueryPosts } from "@/utils/LinkToQuery";
 import { POSTS_LIMIT } from "@/data/pageLimiter";
+import Loading from "@/app/(Layout)/loading";
+import { GroupId } from "@/Types/Group";
+import { useQueryInfinite } from "@/hooks/useQueryInfinite";
 
 type props = {
   userId?: string;
+  groupId?: GroupId;
 };
 
 export const Posts = (props: props) => {
   const [posts, setPosts] = useState<ztPost[]>([]);
-  const [postIds, setPostIds] = useState<string[]>([]);
-  const { fetchNextPage } = useInfiniteQuery({
-    queryKey: ["posts", "mainPage"],
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    refetchOnReconnect: false,
-    enabled: true,
-    queryFn: async ({ pageParam = 1 }) => {
-      const skip = Math.abs(pageParam - 1) * POSTS_LIMIT;
-      const result = await api.post<ztResultsOfPostsInfiniteQuery>(
-        // `posts/${props.linkToGetPost}&skip=${Math.abs((pageParam - 1) * 6)}`,
-        linkToQueryPosts({
-          limit: POSTS_LIMIT,
-          skip: skip,
-          userId: props.userId,
-        }),
-        {
-          ids: postIds,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+  const [skip, setSkip] = useState(0);
+  const [end, setEnd] = useState(false);
 
-      setPosts((oldPosts) => [...oldPosts, ...result.data.posts]);
-      setPostIds((oldPostIds) => [
-        ...oldPostIds,
-        ...result.data.posts.map((post) => post._id.toString()),
-      ]);
-      return result.data;
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      const theLastPage = Math.ceil(lastPage.postsCount / POSTS_LIMIT);
-      if (allPages.length < theLastPage) {
-        return allPages.length + 1;
-      } else {
-        return theLastPage;
+  const fetchingPosts = useCallback(async () => {
+    useQueryInfinite(
+      linkToQueryPosts({
+        limit: 3,
+        skip: skip,
+        userId: props.userId,
+        groupId: props.groupId,
+      }),
+      (result: ztResultsOfPostsInfiniteQuery) => {
+        setPosts((oldPosts) => [...oldPosts, ...result.posts]);
+        const lastPageNumber = Math.ceil(result.postsCount / 3);
+        if (skip < lastPageNumber) {
+          setSkip(skip + 3);
+        } else {
+          setSkip(lastPageNumber * 3);
+        }
       }
-    },
-  });
+    );
+  }, [skip]);
+
+  useEffect(() => {
+    fetchingPosts();
+  }, []);
 
   useEffect(() => {
     let fetching = false;
@@ -63,18 +53,18 @@ export const Posts = (props: props) => {
       if (!fetching && scrollHeight - scrollTop <= clientHeight) {
         fetching = true;
         if (fetching) {
-          await fetchNextPage();
+          await fetchingPosts();
         }
         fetching = false;
       }
     };
     document.addEventListener("scroll", onScroll);
     return () => document.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [skip]);
   return (
     <div className="min-h-screen pb-10">
       {posts.map((post, index) => {
-        return <Post key={post._id} post={post} />;
+        return <Post key={index} post={post} />;
       })}
     </div>
   );

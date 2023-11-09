@@ -7,10 +7,10 @@ import {
   CardTitle,
 } from "../ui/card";
 import { FormCreatePost } from "./FormCreatePost";
-import { ztPost } from "@/Types/Post";
+import { GroupId } from "@/Types/Group";
 
 type props = {
-  onCreatePost?: (post: ztPost) => void;
+  groupId?: GroupId;
 };
 
 export const CreatePost = (props: props) => {
@@ -21,7 +21,7 @@ export const CreatePost = (props: props) => {
         <CardDescription>Show yourself to the world!</CardDescription>
       </CardHeader>
       <CardContent>
-        <FormCreatePost />
+        <FormCreatePost groupId={props.groupId} />
       </CardContent>
     </Card>
   );

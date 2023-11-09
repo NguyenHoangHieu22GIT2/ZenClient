@@ -11,6 +11,7 @@ import { linkToQueryUsers } from "@/utils/LinkToQuery";
 import { FRIENDS_LIMIT } from "@/data/pageLimiter";
 import { checkUsersType } from "@/utils/CheckUsersType";
 import { ztResultsOfFriendsInfiniteQuery } from "@/Types/resultsOfInfiniteQuery";
+import { useQueryInfinite } from "@/hooks/useQueryInfinite";
 
 type props = {
   users: ztUserMinimalData[];
@@ -76,36 +77,36 @@ const getNextPageParam = (
 };
 
 export const Friends = (props: props) => {
-  const { error, fetchNextPage, remove, refetch } = useInfiniteQuery({
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    refetchOnReconnect: false,
-    queryKey: ["users", "friends"],
-    queryFn: ({ pageParam = 1 }) =>
-      getResultsOfFriendsInfiniteQuery({
-        users: props.users,
-        setUsers: props.setUsers,
-        filterState: props.filterState,
-        pageParam,
+  let [skip, setSkip] = useState(0);
+  const [end, setEnd] = useState(false);
+  const fetchNextPage = async () => {
+    await useQueryInfinite(
+      linkToQueryUsers({
+        usersType: checkUsersType(props.filterState),
+        skip: skip,
+        limit: FRIENDS_LIMIT,
+        username: props.filterState.usernameFilter,
       }),
-    getNextPageParam,
-  });
-
+      (result: ztResultsOfFriendsInfiniteQuery) => {
+        props.setUsers((oldUsers) => [...oldUsers, ...result.users]);
+        if (skip < result.usersCount) {
+          setSkip(skip + FRIENDS_LIMIT);
+        } else {
+          setSkip(result.usersCount);
+          setEnd(true);
+        }
+      }
+    );
+  };
   useEffect(() => {
-    if (props.users.length >= 1 && props.users.length <= 3) {
-      fetchNextPage();
-    }
-  }, [props.users]);
-
-  useEffect(() => {
-    remove();
-    refetch();
+    props.setUsers([]);
+    skip = 0;
+    fetchNextPage();
   }, [
     props.filterState.HasSentRequest,
     props.filterState.isNotInterested,
     props.filterState.usernameFilter,
   ]);
-
   useEffect(() => {
     let fetching = false;
     const onScroll = async (e: Event) => {
@@ -113,7 +114,8 @@ export const Friends = (props: props) => {
         document.scrollingElement!;
       if (
         !fetching &&
-        scrollHeight - Math.floor(scrollTop) <= clientHeight * 1.1
+        scrollHeight - Math.floor(scrollTop) <= clientHeight * 1.1 &&
+        !end
       ) {
         fetching = true;
         if (fetching) {
@@ -124,17 +126,16 @@ export const Friends = (props: props) => {
     };
     document.addEventListener("scroll", onScroll);
     return () => {
-      remove();
       document.removeEventListener("scroll", onScroll);
     };
   }, [fetchNextPage]);
   return (
     <div className="[&>*]:mb-6 sm:grid sm:grid-cols-2 sm:gap-2 md:grid-cols-3 lg:grid-cols-4">
-      {props.users.map((user) => (
+      {props.users.map((user, index) => (
         <Friend
           filterState={props.filterState}
           removeUserNotInterested={props.onRemoveUserNotInterested}
-          key={user._id}
+          key={index}
           user={user}
         />
       ))}

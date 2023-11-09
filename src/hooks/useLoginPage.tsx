@@ -6,7 +6,7 @@ import { LoginResponse, zErrorResponse } from "@/Types/ResponseType";
 import { useRouter } from "next/navigation";
 import { Cookies } from "react-cookie";
 import Cookie from "universal-cookie";
-import { userLoginDto } from "@/dtos/user-login.dto";
+import { userLoginDto } from "@/dtos/auth/user-login.dto";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,8 +41,6 @@ export function useLoginPage() {
         cookie.set("userId", parsedResult.userId, {
           maxAge: 3600000,
         });
-        // I can decode this
-        // onChangeAccessToken(parsedResult.access_token);
         toast({
           title: "Login Successfully",
           action: <ToastAction altText="Great!">Great!</ToastAction>,

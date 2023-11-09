@@ -2,6 +2,7 @@ type createLinkToQueryParameters = {
   url?: string;
   limit?: number;
   skip?: number;
+  userId?: string;
   latter?: string;
 };
 function createLinkToQuery({
@@ -9,8 +10,9 @@ function createLinkToQuery({
   limit,
   skip,
   url,
+  userId,
 }: createLinkToQueryParameters) {
-  return `${url}?limit=${limit}&skip=${skip}&${latter}` as const;
+  return `${url}?userId=${userId}&limit=${limit}&skip=${skip}${latter}` as const;
 }
 type generalOptions = {
   limit: number;
@@ -18,19 +20,27 @@ type generalOptions = {
 };
 interface optionsQueryPosts extends generalOptions {
   userId: string;
-  postIds: string[];
+  groupId: string;
 }
 
 export type findUsersType =
   | "not-interested"
   | "has-sent-request"
   | "normal-users";
-export function linkToQueryPosts(options: Partial<optionsQueryPosts>) {
+export function linkToQueryPosts({
+  limit,
+  skip,
+  userId,
+  groupId,
+}: Partial<optionsQueryPosts>) {
   return createLinkToQuery({
     url: "posts/get-posts",
-    limit: options.limit,
-    skip: options.skip,
-    latter: `userId=${options.userId}`,
+    limit: limit,
+    skip: skip,
+    // latter: userId ? `userId=${userId}` : "",
+    latter: `${userId ? `&userId=${userId}` : ""}${
+      groupId ? `&groupId=${groupId}` : ""
+    }`,
   });
   // return `posts/get-posts?limit=${options.limit}&skip=${options.skip}&userId=${options.userId}` as const;
 }
@@ -46,7 +56,7 @@ export function linkToQueryUsers(options: Partial<optionsQueryUsers>) {
     url: "users/get-users",
     limit: options.limit,
     skip: options.skip,
-    latter: `usersType=${options.usersType}&username=${options.username}`,
+    latter: `&usersType=${options.usersType}&username=${options.username}`,
   });
   // if (options.username) {
   //   return `users/get-users?limit=${options.limit}&skip=${options.skip}&usersType=${options.usersType}&username=${options.username}`;
@@ -56,6 +66,7 @@ export function linkToQueryUsers(options: Partial<optionsQueryUsers>) {
 
 interface optionsQueryGroups extends generalOptions {
   groupName: string;
+  userId: string;
 }
 
 export function linkToQueryGroups(options: Partial<optionsQueryGroups>) {
@@ -64,5 +75,6 @@ export function linkToQueryGroups(options: Partial<optionsQueryGroups>) {
     limit: options.limit,
     skip: options.skip,
     latter: options.groupName ? `groupName=${options.groupName}` : "",
+    userId: options.userId,
   });
 }

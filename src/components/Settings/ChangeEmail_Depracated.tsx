@@ -7,7 +7,7 @@ import { api } from "@/lib/axios.api";
 import { Bearer } from "@/utils/Bearer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeEmailDto } from "@/dtos/change-email.dto";
+import { ChangeEmailDto } from "@/dtos/user/change-email.dto";
 import {
   Form,
   FormControl,
@@ -19,7 +19,6 @@ import {
 import { z } from "zod";
 import { zUserMinimalData, ztUserMinimalData } from "@/Types/User";
 import { useRouter } from "next/navigation";
-import jsCookie from "js-cookie";
 export const ChangeEmail = () => {
   const router = useRouter();
   const { mutate, isLoading } = useMutation({

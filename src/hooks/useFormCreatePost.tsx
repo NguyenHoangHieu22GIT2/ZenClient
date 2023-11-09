@@ -12,19 +12,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Bearer } from "@/utils/Bearer";
 import { checkImageType } from "@/utils/checkImageType";
-import { postCreateDto } from "@/dtos/post-create.dto";
+import { postCreateDto } from "@/dtos/post/post-create.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { checkFileTypeToUseIconOrImage } from "@/utils/CheckFileType";
-export function useFormCreatePost() {
+import { GroupId } from "@/Types/Group";
+export function useFormCreatePost(groupId?: string) {
+  console.log(groupId);
   const { mutate, data, error, isLoading } = useMutation({
     mutationKey: ["createPost"],
     mutationFn: async (data: ztPostCreate) => {
       const parsedData = zPostCreate.parse(data);
-      console.log(parsedData);
       const formData = new FormData();
       formData.append("postBody", parsedData.postBody);
       formData.append("postHeading", parsedData.postHeading);
+      if (groupId) formData.append("groupId", groupId);
       for (const file of parsedData.files || []) {
         formData.append("files", file);
       }
@@ -139,6 +141,7 @@ export function useFormCreatePost() {
       postBody: values.postBody,
       postHeading: values.postHeading,
       files: files,
+      groupId: groupId || null,
     });
   }
   return {

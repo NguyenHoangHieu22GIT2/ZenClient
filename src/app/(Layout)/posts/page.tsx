@@ -8,7 +8,7 @@ export default function PostsPage() {
   return (
     <Container>
       <CreatePost />
-      <Posts posts={[]} />
+      <Posts />
     </Container>
   );
 }

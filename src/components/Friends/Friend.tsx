@@ -45,7 +45,7 @@ export const Friend = (props: props) => {
     mutationFn: (data: UserId) => {
       return api
         .patch(
-          process.env.NEXT_PUBLIC_SERVER_NOT_INTERESTED_USER,
+          "friends/not-interested",
           {
             userId: data,
           },
@@ -78,7 +78,7 @@ export const Friend = (props: props) => {
     mutationFn: (data: UserId) => {
       return api
         .patch(
-          process.env.NEXT_PUBLIC_SERVER_ADD_FRIEND,
+          "friends/add-friend",
           { userId: data },
           {
             withCredentials: true,
@@ -94,7 +94,6 @@ export const Friend = (props: props) => {
     notInterestedMutation.mutate(props.user._id);
   }
   function addFriend() {
-    //TODO:Send back to server the userId so that the server can send a friend request
     addFriendMutation.mutate(props.user._id);
   }
   return (

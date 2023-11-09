@@ -67,7 +67,6 @@ type props = {
 
 export default function FriendsComponent(props: props) {
   const [users, setUsers] = useState<ztUserMinimalData[]>([]);
-  const [count, setCount] = useState(0);
   function removeUserNotInterested(userId: UserId) {
     setUsers((users) => {
       return users.filter((user) => user._id.toString() !== userId.toString());
@@ -77,11 +76,12 @@ export default function FriendsComponent(props: props) {
   const [filterState, filterDispatch] = useReducer<typeof filterReducer>(
     filterReducer,
     {
-      HasSentRequest: false,
-      isNotInterested: false,
+      HasSentRequest: props.criteria.usersType === "has-sent-request",
+      isNotInterested: props.criteria.usersType === "not-interested",
       usernameFilter: props.criteria.username || "  ",
     }
   );
+
   function changeFilter({
     type,
     payload,
@@ -101,14 +101,6 @@ export default function FriendsComponent(props: props) {
       payload,
     });
   }
-
-  // useEffect(() => {
-  //   if (count > 0) setUsers([]);
-  // }, [
-  //   filterState.usernameFilter,
-  //   filterState.isNotInterested,
-  //   filterState.HasSentRequest,
-  // ]);
 
   function changeResetFilter() {
     filterDispatch({
@@ -134,31 +126,3 @@ export default function FriendsComponent(props: props) {
     </div>
   );
 }
-
-// {!filterState.isNotInterested && !filterState.HasSentRequest && (
-//   <RecommendFriends
-//     filterState={filterState}
-//     onChangeFilter={changeFilter}
-//     users={users}
-//     setUsers={setUsers}
-//     onRemoveUserNotInterested={removeUserNotInterested}
-//   />
-// )}
-// {filterState.isNotInterested && (
-//   <NotInterestedFriends
-//     filterState={filterState}
-//     onChangeFilter={changeFilter}
-//     users={users}
-//     setUsers={setUsers}
-//     onRemoveUserNotInterested={removeUserNotInterested}
-//   />
-// )}
-// {filterState.HasSentRequest && (
-//   <HasSentRequestFriends
-//     filterState={filterState}
-//     onChangeFilter={changeFilter}
-//     users={users}
-//     setUsers={setUsers}
-//     onRemoveUserNotInterested={removeUserNotInterested}
-//   />
-// )}

@@ -33,7 +33,7 @@ import { useToast } from "../ui/use-toast";
 import { RegisterResponse } from "@/Types/ResponseType";
 import { ToastAction } from "../ui/toast";
 import { ButtonWithLoadingState } from "../ui/ButtonWithLoadingState";
-import { userRegisterFirstStepDto } from "@/dtos/user-register-first-step.dto";
+import { userRegisterFirstStepDto } from "@/dtos/auth/user-register-first-step.dto";
 
 type props = {
   onChangeStep: (user: ztUserRegisterStepOne) => void;

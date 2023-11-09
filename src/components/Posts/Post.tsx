@@ -30,6 +30,7 @@ import { ReportPostDialog } from "./UI/ReportPostDialog";
 import { DropDownMenuPost } from "./UI/DropDownMenuPost";
 import Modal from "../uiOwnCreation/Modal";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
+import { CheckImageUrl } from "@/utils/CheckImageUrl";
 type props = {
   post: ztPost;
 };
@@ -202,7 +203,7 @@ export const Post = (props: props) => {
           <div className=" flex items-center gap-2">
             <AvatarHoverCard
               username={props.post.user.username}
-              avatarUrl={props.post.user.avatar || "/default-user.jpeg"}
+              avatarUrl={props.post.user.avatar}
               yearOfJoined={4}
             />
             <div>

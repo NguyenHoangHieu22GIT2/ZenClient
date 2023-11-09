@@ -10,11 +10,14 @@ export const zGroup = z.object({
   groupDescription: z.string().min(10),
   userId: UserIdTransformer,
   groupAvatar: z.string().nullable(),
-  groupAvatarFile: z
-    .instanceof(File, {
-      message: "You have to input a image here",
-    })
-    .optional(),
+  groupAvatarFile:
+    typeof window === "undefined"
+      ? z.null()
+      : z
+          .instanceof(File, {
+            message: "You have to input a image here",
+          })
+          .optional(),
   postIds: z.array(z.string()),
   userIds: z.array(UserIdTransformer),
   isPrivate: z.boolean().default(true),
@@ -29,6 +32,7 @@ export const zGroupQueries = z.object({
   postIds: z.array(z.string()),
   userIds: z.array(UserIdTransformer),
   isPrivate: z.boolean(),
+  areYouTheHost: z.boolean(),
 });
 export const zResultsOfGroupsInfiniteQuery = z.object({
   groups: z.array(zGroupQueries),

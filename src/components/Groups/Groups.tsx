@@ -11,7 +11,7 @@ import {
 } from "@/Types/Group";
 import { GROUPS_LIMIT } from "@/data/pageLimiter";
 import { linkToQueryGroups } from "@/utils/LinkToQuery";
-
+import jsCookie from "js-cookie";
 export const Groups = (props: {}) => {
   const [groups, setGroups] = useState<ztGroupQueries[]>([]);
   const [groupIds, setGroupIds] = useState<string[]>([]);
@@ -28,11 +28,8 @@ export const Groups = (props: {}) => {
           limit: GROUPS_LIMIT,
           skip: skip,
           groupName: "",
-        }),
-        {},
-        {
-          withCredentials: true,
-        }
+          userId: jsCookie.get("userId"),
+        })
       );
       const parsedResult = zResultsOfGroupsInfiniteQuery.parse(result.data);
       setGroups((oldGroups) => [...oldGroups, ...parsedResult.groups]);
@@ -51,7 +48,7 @@ export const Groups = (props: {}) => {
       }
     },
   });
-
+  console.log(groups);
   return (
     <div className="[&>*]:mb-6 sm:grid sm:grid-cols-2 sm:gap-2 md:grid-cols-3 lg:grid-cols-4">
       {groups.map((group, index) => {

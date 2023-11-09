@@ -2,10 +2,10 @@
 import React, { ReactNode, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 type props = {
-  onClose: () => void;
+  onClose?: () => void;
   children: ReactNode;
   title?: string;
-  className: string;
+  className?: string;
 };
 
 const Modal = ({ onClose, children, title, className }: props) => {
@@ -13,19 +13,15 @@ const Modal = ({ onClose, children, title, className }: props) => {
 
   React.useEffect(() => setMounted(true), []);
 
-  // create ref for the StyledModalWrapper component
   const modalWrapperRef = React.useRef<HTMLDivElement>(null);
 
-  // check if the user has clicked inside or outside the modal
-  // useCallback is used to store the function reference, so that on modal closure, the correct callback can be cleaned in window.removeEventListener
   const backDropHandler = useCallback((e: MouseEvent) => {
     if (!modalWrapperRef?.current?.contains(e.target as Node)) {
-      onClose();
+      onClose && onClose();
     }
   }, []);
 
   useEffect(() => {
-    // We wrap it inside setTimeout in order to prevent the eventListener to be attached before the modal is open.
     setTimeout(() => {
       window.addEventListener("click", backDropHandler);
     });
@@ -36,7 +32,7 @@ const Modal = ({ onClose, children, title, className }: props) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    onClose();
+    onClose && onClose();
   };
 
   const modalContent = (
@@ -47,9 +43,6 @@ const Modal = ({ onClose, children, title, className }: props) => {
       />
       <div ref={modalWrapperRef} className={`fixed  z-[60] ${className}`}>
         <div className="modal">
-          {/* <div className="modal-header">
-            <button onClick={handleCloseClick}>x</button>
-          </div> */}
           {title && <h1>{title}</h1>}
           <div className="modal-body">{children}</div>
         </div>

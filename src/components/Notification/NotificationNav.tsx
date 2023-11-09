@@ -32,22 +32,13 @@ export const NotificationNav = () => {
         });
     },
   });
-  // const [clearData, setClearData] = useState(false);
-  // let notificationContent = <Notifications />;
-  // if (clearData) {
-  //   notificationContent = (
-  //     <object type="image/svg+xml" data="/Notification.svg">
-  //       Notification
-  //     </object>
-  //   );
-  // }
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            " after:text-white after:w-5 after:h-5 after:absolute relative after:bg-red-500 after:-top-1 after:-right-1 after:rounded-full"
+            " after:text-white after:w-5 after:h-5 after:absolute relative after:bg-red-500 after:-top-1 after:-right-1 after:rounded-full text-xl"
           )}
         >
           <IoMdNotifications />

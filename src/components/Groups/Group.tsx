@@ -25,14 +25,13 @@ type props = {
 export const Group = ({ group }: props) => {
   const { toast } = useToast();
   const [hasJoined, setHasJoined] = useState(group.hasJoined);
-  console.log(group);
   const { data, error, isLoading, mutate } = useMutation({
     mutationKey: ["joinGroup"],
-    mutationFn: () => {
+    mutationFn: (groupId: string) => {
       return api
         .patch<ztGroup>(
           "groups/join-group",
-          { groupId: group._id },
+          { groupId: groupId.toString() },
           { withCredentials: true }
         )
         .then((data) => {
@@ -52,7 +51,7 @@ export const Group = ({ group }: props) => {
   });
 
   function joinGroup() {
-    mutate();
+    mutate(group._id);
     //TODO:Send back to server the userId so that the server can send a friend request
   }
   return (
