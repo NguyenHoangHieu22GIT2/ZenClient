@@ -1,12 +1,12 @@
 import { PropsPage } from "@/Types/PropsPage";
-import { YourProfile } from "@/components/Profile/YourProfile";
+import { UserProfile } from "@/components/Profile/UserProfile";
 import { Container } from "@/components/ui/Container";
 import React from "react";
 
 export default async function Userpage(props: PropsPage) {
   return (
     <Container>
-      <YourProfile userId={props.params.id} />
+      <UserProfile userId={props.params.id} />
     </Container>
   );
 }

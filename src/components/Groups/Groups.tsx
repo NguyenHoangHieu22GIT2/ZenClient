@@ -12,7 +12,12 @@ import {
 import { GROUPS_LIMIT } from "@/data/pageLimiter";
 import { linkToQueryGroups } from "@/utils/LinkToQuery";
 import jsCookie from "js-cookie";
-export const Groups = (props: {}) => {
+
+type props = {
+  userId: string;
+};
+
+export const Groups = (props: props) => {
   const [groups, setGroups] = useState<ztGroupQueries[]>([]);
   const [groupIds, setGroupIds] = useState<string[]>([]);
   const { fetchNextPage } = useInfiniteQuery({
@@ -29,6 +34,7 @@ export const Groups = (props: {}) => {
           skip: skip,
           groupName: "",
           userId: jsCookie.get("userId"),
+          userIdGroups: props.userId,
         })
       );
       const parsedResult = zResultsOfGroupsInfiniteQuery.parse(result.data);

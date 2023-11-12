@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -28,23 +28,25 @@ import {
 } from "@/components/ui/context-menu";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
-//TODO: Query data : (friends,posts, followers, followings)
-//TODO: User Description,avatar,Name
-import jsCookie from "js-cookie";
 import { zUserPage, ztUserPage } from "@/Types/User";
-import { UserAvatarHoverCard } from "../Header/UserAvatarHoverCard";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import { useUserStore } from "@/lib/useUserStore";
 import Link from "next/link";
+import useAddFriendMutation from "@/apis/Friend/useAddFriendMutation";
+import { useToast } from "../ui/use-toast";
+import { ToastAction } from "../ui/toast";
 type props = {
   userId: string;
 };
 
-export const YourInfos = (props: props) => {
+export const UserInfos = (props: props) => {
+  const { toast } = useToast();
+  const addFriendMutate = useAddFriendMutation();
+  const [hasSentFriendRequest, setHasSendFriendRequest] = useState(false);
   const userStore = useUserStore((state) => state.user);
   const { data, error, isLoading } = useQuery({
     queryKey: ["queryInfos"],
-    queryFn: () => {
+    queryFn: async () => {
       return api
         .get<ztUserPage>(`users/${props.userId}`, { withCredentials: true })
         .then((data) => {
@@ -53,12 +55,30 @@ export const YourInfos = (props: props) => {
         });
     },
   });
+  useEffect(() => {
+    if (addFriendMutate.data) {
+      setHasSendFriendRequest(addFriendMutate.data.hasSent);
+      const title = addFriendMutate.data.hasSent
+        ? "has Sent the request"
+        : "Undo the request successfully";
+      toast({
+        title,
+        action: <ToastAction altText="Alright">Alright</ToastAction>,
+      });
+    }
+  }, [addFriendMutate.data]);
   if (isLoading || !data) {
     return <h1>Is Loading...</h1>;
   }
+
+  if (error) {
+    return <h1>Error</h1>;
+  }
+
   const user = data.user;
   const postsCount = data.postsCount;
   const friendsInfo = data.friendsInfo;
+
   return (
     <Card>
       <CardHeader>
@@ -112,15 +132,18 @@ export const YourInfos = (props: props) => {
       </CardContent>
       <Separator className="my-5" />
       <CardFooter className="flex gap-1 flex-wrap justify-center">
-        {userStore._id !== user._id && (
+        {userStore._id !== user._id ? (
           <>
-            <Button>Add Friend</Button>
+            <Button onClick={() => addFriendMutate.mutate(props.userId)}>
+              {hasSentFriendRequest ? "Cancel" : "Send"} Friend Request
+            </Button>
             <Button>Message</Button>
           </>
+        ) : (
+          <Button asChild className="md:w-full">
+            <Link href="/settings">Settings</Link>
+          </Button>
         )}
-        <Button asChild className="md:w-full">
-          <Link href="/settings">Settings</Link>
-        </Button>
       </CardFooter>
     </Card>
   );

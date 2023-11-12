@@ -22,6 +22,18 @@ export const zGroup = z.object({
   userIds: z.array(UserIdTransformer),
   isPrivate: z.boolean().default(true),
 });
+
+export const zGroupMinimal = zGroup.pick({
+  _id: true,
+  groupAvatar: true,
+  groupName: true,
+  isPrivate: true,
+  groupDescription: true,
+});
+
+export const zArrayGroupMinimal = z.array(zGroupMinimal);
+export type ztArrayGroupMinimal = z.infer<typeof zArrayGroupMinimal>;
+
 export const zGroupQueries = z.object({
   _id: z.string(),
   groupName: z.string(),
@@ -38,6 +50,8 @@ export const zResultsOfGroupsInfiniteQuery = z.object({
   groups: z.array(zGroupQueries),
   groupsCount: z.number(),
 });
+
+export type ztGroupMinimal = z.infer<typeof zGroupMinimal>;
 
 export type ztResultsOfGroupsInfiniteQuery = z.infer<
   typeof zResultsOfGroupsInfiniteQuery
@@ -56,3 +70,11 @@ export const zGroupCreate = zGroup.omit({
 });
 
 export type ztGroupCreate = z.infer<typeof zGroupCreate>;
+export const zResultOfInfiniteQueryFindGroupsJoined = z.object({
+  groupsCount: z.number(),
+  groups: z.array(zGroupMinimal),
+});
+
+export type ztResultOfInfiniteQueryFindGroupsJoined = z.infer<
+  typeof zResultOfInfiniteQueryFindGroupsJoined
+>;

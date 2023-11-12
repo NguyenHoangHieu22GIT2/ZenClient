@@ -7,24 +7,33 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import Link from "next/link";
-export const UserGroup = (props: {}) => {
+import { ztGroupMinimal } from "@/Types/Group";
+import { CheckImageUrl } from "@/utils/CheckImageUrl";
+
+type props = {
+  group: ztGroupMinimal;
+};
+
+export const UserGroup = ({ group }: props) => {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Link href={"/groups/1"}>
+        <Link href={`/groups/${group._id}`}>
           <div className="flex gap-3">
             <div>
               <Image
-                src="https://images.unsplash.com/photo-1692610492938-37a4eed63ac0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80"
-                alt="The group image"
+                src={CheckImageUrl(group.groupAvatar)}
+                alt={group.groupName}
                 width={75}
                 height={75}
                 className="aspect-square rounded-full"
               />
             </div>
             <div>
-              <h1 className="font-bold">Cat Land</h1>
-              <p>A group for people who loves cat</p>
+              <h1 className="font-bold">{group.groupName}</h1>
+              <p className="w-64 whitespace-nowrap overflow-hidden text-ellipsis">
+                {group.groupDescription}
+              </p>
             </div>
           </div>
         </Link>

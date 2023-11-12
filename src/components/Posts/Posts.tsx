@@ -1,13 +1,7 @@
 "use client";
-import React, { Suspense, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ztPost, ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios.api";
 import { Post } from "./Post";
-
-import { linkToQueryPosts } from "@/utils/LinkToQuery";
-import { POSTS_LIMIT } from "@/data/pageLimiter";
-import Loading from "@/app/(Layout)/loading";
 import { GroupId } from "@/Types/Group";
 import { useQueryInfinite } from "@/hooks/useQueryInfinite";
 
@@ -20,16 +14,10 @@ export const Posts = (props: props) => {
   const [posts, setPosts] = useState<ztPost[]>([]);
   const [skip, setSkip] = useState(0);
   const [end, setEnd] = useState(false);
-
   const fetchingPosts = useCallback(async () => {
-    useQueryInfinite(
-      linkToQueryPosts({
-        limit: 3,
-        skip: skip,
-        userId: props.userId,
-        groupId: props.groupId,
-      }),
-      (result: ztResultsOfPostsInfiniteQuery) => {
+    useQueryInfinite({
+      url: "posts/get-posts",
+      cb: (result: ztResultsOfPostsInfiniteQuery) => {
         setPosts((oldPosts) => [...oldPosts, ...result.posts]);
         const lastPageNumber = Math.ceil(result.postsCount / 3);
         if (skip < lastPageNumber) {
@@ -37,8 +25,9 @@ export const Posts = (props: props) => {
         } else {
           setSkip(lastPageNumber * 3);
         }
-      }
-    );
+      },
+      params: { limit: 3, skip, userId: props.userId, groupId: props.groupId },
+    });
   }, [skip]);
 
   useEffect(() => {

@@ -12,7 +12,7 @@ import Information from "./Information";
 
 type tabs = "POSTS" | "FRIENDS" | "INFORMATION";
 
-export const YourPosts = () => {
+export const UserActions = () => {
   const user = useUserStore((state) => state.user);
   const [tab, setTab] = useState<tabs>("POSTS");
   return (

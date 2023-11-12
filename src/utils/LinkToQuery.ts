@@ -67,14 +67,22 @@ export function linkToQueryUsers(options: Partial<optionsQueryUsers>) {
 interface optionsQueryGroups extends generalOptions {
   groupName: string;
   userId: string;
+  userIdGroups: string;
 }
 
 export function linkToQueryGroups(options: Partial<optionsQueryGroups>) {
+  let latter = "";
+  if (options.groupName) {
+    latter += `&groupName=${options.groupName}`;
+  }
+  if (options.userIdGroups) {
+    latter += `&userIdGroups=${options.userIdGroups}`;
+  }
   return createLinkToQuery({
     url: "groups/find-groups",
     limit: options.limit,
     skip: options.skip,
-    latter: options.groupName ? `groupName=${options.groupName}` : "",
+    latter: latter,
     userId: options.userId,
   });
 }

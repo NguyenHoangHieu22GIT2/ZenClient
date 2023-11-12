@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,22 +11,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import {
-  UserId,
-  zUserMinimalData,
-  zUser,
-  ztUserMinimalData,
-} from "@/Types/User";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/axios.api";
-import { Bearer } from "@/utils/Bearer";
+import { UserId, ztUserMinimalData } from "@/Types/User";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
 import { imageUrl } from "@/utils/imageUrl";
 import { filterReducerType } from "./NotInterestedFriends";
 import { checkUsersType } from "@/utils/CheckUsersType";
-import { Description } from "@radix-ui/react-toast";
-import { Toaster } from "../ui/toaster";
+import UseNotInterestedMutation from "@/apis/Friend/UseNotInterestedMutation";
+import useAddFriendMutation from "@/apis/Friend/useAddFriendMutation";
 
 type props = {
   user: ztUserMinimalData;
@@ -40,66 +32,44 @@ export const Friend = (props: props) => {
     return checkUsersType(props.filterState);
   }, [props.filterState]);
   const [alreadySentTheRequest, setAlreadySentTheRequest] = useState(false);
-  const notInterestedMutation = useMutation({
-    mutationKey: ["notInterested"],
-    mutationFn: (data: UserId) => {
-      return api
-        .patch(
-          "friends/not-interested",
-          {
-            userId: data,
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((result) => {
-          if (usersTypeResult !== "not-interested") {
-            toast({
-              title: "Will not recommend this user in the future",
-              description:
-                "If you want to add friend with this user, go to his profile.",
-              action: <ToastAction altText="Okay!">Okay!</ToastAction>,
-            });
-          } else {
-            toast({
-              title: "This user will be recommended again in the future!",
-              description: "",
-              action: <ToastAction altText="Okay">Okay</ToastAction>,
-            });
-          }
-          props.removeUserNotInterested(data);
-          return result;
-        });
-    },
-  });
-  const addFriendMutation = useMutation({
-    mutationKey: ["addFriend"],
-    mutationFn: (data: UserId) => {
-      return api
-        .patch(
-          "friends/add-friend",
-          { userId: data },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((data) => {
-          setAlreadySentTheRequest(data.data.hasSent);
-          return data;
-        });
-    },
-  });
+  const notInterestedMutation = UseNotInterestedMutation();
+  const addFriendMutation = useAddFriendMutation();
   function notInterested() {
     notInterestedMutation.mutate(props.user._id);
   }
   function addFriend() {
     addFriendMutation.mutate(props.user._id);
   }
+
+  useEffect(() => {
+    if (addFriendMutation.data) {
+      setAlreadySentTheRequest(addFriendMutation.data.hasSent);
+    }
+  }, [addFriendMutation.data]);
+
+  useEffect(() => {
+    if (notInterestedMutation.data) {
+      if (usersTypeResult !== "not-interested") {
+        toast({
+          title: "Will not recommend this user in the future",
+          description:
+            "If you want to add friend with this user, go to his profile.",
+          action: <ToastAction altText="Okay!">Okay!</ToastAction>,
+        });
+      } else {
+        toast({
+          title: "This user will be recommended again in the future!",
+          description: "",
+          action: <ToastAction altText="Okay">Okay</ToastAction>,
+        });
+      }
+      props.removeUserNotInterested(notInterestedMutation.data);
+    }
+  }, [notInterestedMutation.data]);
   return (
     <Card className="shadow-lg overflow-hidden rounded-lg">
       <CardHeader className="p-0 mx-auto">
-        <Link href={`/user/${props.user._id}`}>
+        <Link href={`/users/${props.user._id}`}>
           <Image
             className="mx-auto"
             src={

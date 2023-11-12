@@ -1,5 +1,17 @@
+import { ztUserMinimalData } from "@/Types/User";
 import React from "react";
+import User from "./User";
 
-export default function Users() {
-  return <div>Users</div>;
+type props = {
+  users: ztUserMinimalData[];
+};
+
+export default function Users(props: props) {
+  return (
+    <div>
+      {props.users.map((user) => {
+        return <User user={user} />;
+      })}
+    </div>
+  );
 }

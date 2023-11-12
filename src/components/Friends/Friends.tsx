@@ -80,14 +80,9 @@ export const Friends = (props: props) => {
   let [skip, setSkip] = useState(0);
   const [end, setEnd] = useState(false);
   const fetchNextPage = async () => {
-    await useQueryInfinite(
-      linkToQueryUsers({
-        usersType: checkUsersType(props.filterState),
-        skip: skip,
-        limit: FRIENDS_LIMIT,
-        username: props.filterState.usernameFilter,
-      }),
-      (result: ztResultsOfFriendsInfiniteQuery) => {
+    await useQueryInfinite({
+      url: "users/get-users",
+      cb: (result: ztResultsOfFriendsInfiniteQuery) => {
         props.setUsers((oldUsers) => [...oldUsers, ...result.users]);
         if (skip < result.usersCount) {
           setSkip(skip + FRIENDS_LIMIT);
@@ -95,8 +90,14 @@ export const Friends = (props: props) => {
           setSkip(result.usersCount);
           setEnd(true);
         }
-      }
-    );
+      },
+      params: {
+        usersType: checkUsersType(props.filterState),
+        skip,
+        limit: FRIENDS_LIMIT,
+        username: props.filterState.usernameFilter,
+      },
+    });
   };
   useEffect(() => {
     props.setUsers([]);

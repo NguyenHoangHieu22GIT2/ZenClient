@@ -71,6 +71,12 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^4.36.1
     version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
+  '@ts-rest/core':
+    specifier: ^3.30.4
+    version: 3.30.4(zod@3.22.4)
+  '@ts-rest/next':
+    specifier: ^3.30.4
+    version: 3.30.4(@ts-rest/core@3.30.4)(next@13.4.13)(zod@3.22.4)
   '@types/js-cookie':
     specifier: ^3.0.5
     version: 3.0.5
@@ -2414,6 +2420,32 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /@ts-rest/core@3.30.4(zod@3.22.4):
+    resolution: {integrity: sha512-wHI3OHnqpak8jmz2drjzMtgvFVLBrTMvxkkWIUIsGDkEpFwuF/9592RpawkCLIvlxbrxTzp0MzqqwwbzlG6BkA==}
+    peerDependencies:
+      zod: ^3.22.3
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      zod: 3.22.4
+    dev: false
+
+  /@ts-rest/next@3.30.4(@ts-rest/core@3.30.4)(next@13.4.13)(zod@3.22.4):
+    resolution: {integrity: sha512-MxIhtcxQlKqRvAY9uN2Pzl8oVF/C9vIHcITcF/ghiDhiQTHgQewh9M95Sd9WUcnuEDEmwsx7vhJs4NWpd01MMA==}
+    peerDependencies:
+      '@ts-rest/core': 3.30.4
+      next: ^12.0.0 || ^13.0.0
+      zod: ^3.22.3
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@ts-rest/core': 3.30.4(zod@3.22.4)
+      next: 13.4.13(react-dom@18.2.0)(react@18.2.0)
+      zod: 3.22.4
     dev: false
 
   /@types/body-parser@1.19.4:
