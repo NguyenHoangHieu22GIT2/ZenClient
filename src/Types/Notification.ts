@@ -1,18 +1,12 @@
 import { z } from "zod";
-import { zUserMinimalData } from "./User";
+import { UserIdTransformer, zUserMinimalData } from "./User";
+import { Brand } from "./Brand";
 
-// export type Notification = {
-//   _id: string;
-//   userId: UserId;
-//   notificationHeader: string;
-//   notificationBody: string;
-//   options: Partial<{
-//     link: string;
-//     userId: User;
-//     postId: Post;
-//     groupId: Record<any, any>;
-//   }>;
-// };
+export type NotificationId = Brand<string, "NotificationId">;
+
+export const NotificationIdTransformer = z
+  .string()
+  .transform((data) => data as NotificationId);
 
 // TODO:Change UserId to user Zod
 export const zNotificationOptions = z.object({
@@ -23,17 +17,27 @@ export const zNotificationOptions = z.object({
 });
 
 export const zNotification = z.object({
-  _id: z.string(),
+  _id: NotificationIdTransformer,
   userId: z.string(),
-  notificationHeader: z.string(),
-  notificationBody: z.string(),
   options: zNotificationOptions.partial(),
   createdAt: z.string(),
   updatedAt: z.string(),
   hasSeen: z.boolean(),
+  notificationType: z.union([
+    z.literal("accept-friend"),
+    z.literal("friend-request"),
+    z.literal("general"),
+  ]),
 });
 
 export const zNotifications = z.array(zNotification);
+
+export const zFriendRequest = z.object({
+  userId: UserIdTransformer,
+  notificationId: NotificationIdTransformer,
+});
+
+export type ztFriendRequest = z.infer<typeof zFriendRequest>;
 
 export type ztNotifications = z.infer<typeof zNotifications>;
 

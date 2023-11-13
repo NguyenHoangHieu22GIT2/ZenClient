@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { imageUrl } from "./imageUrl";
 
-export function CheckImageUrl(url: string | null) {
+export function CheckImageUrl(url: string | null | undefined) {
   try {
     const parsedUrl = z.string().min(10).parse(url);
     return parsedUrl !== "/default-user.jpeg"

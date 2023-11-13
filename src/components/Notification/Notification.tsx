@@ -22,12 +22,8 @@ export const Notification = (props: props) => {
             </Avatar>
           </div>
           <div>
-            <CardTitle className="text-sm md:text-xl">
-              {props.notification.notificationHeader}
-            </CardTitle>
-            <CardDescription>
-              {props.notification.notificationBody}
-            </CardDescription>
+            <CardTitle className="text-sm md:text-xl"></CardTitle>
+            <CardDescription></CardDescription>
           </div>
         </CardContent>
       </Card>

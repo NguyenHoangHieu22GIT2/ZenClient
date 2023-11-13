@@ -6,12 +6,13 @@ import { linkToQueryPosts } from "@/utils/LinkToQuery";
 import { Fragment, Suspense } from "react";
 import Loading from "./loading";
 import { PropsPage } from "@/Types/PropsPage";
+import { socket } from "@/lib/socket";
 
 export default async function Home(props: PropsPage) {
   return (
     <Fragment>
       <CreatePost />
-      <Posts />
+      <Posts url="posts/get-posts" />
     </Fragment>
   );
 }

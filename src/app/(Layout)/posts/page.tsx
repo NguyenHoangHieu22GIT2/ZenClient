@@ -8,7 +8,7 @@ export default function PostsPage() {
   return (
     <Container>
       <CreatePost />
-      <Posts />
+      <Posts url="posts/get-posts" />
     </Container>
   );
 }

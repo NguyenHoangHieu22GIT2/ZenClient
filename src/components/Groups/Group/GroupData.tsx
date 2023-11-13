@@ -15,7 +15,7 @@ export const GroupData = (props: props) => {
   let mainPart = (
     <>
       <CreatePost groupId={props.groupId} />
-      <Posts groupId={props.groupId} />
+      <Posts url={`groups/${props.groupId}/posts`} />
     </>
   );
   switch (tab) {

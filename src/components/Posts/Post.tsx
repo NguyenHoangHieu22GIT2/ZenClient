@@ -31,6 +31,7 @@ import { DropDownMenuPost } from "./UI/DropDownMenuPost";
 import Modal from "../uiOwnCreation/Modal";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
+import { UserAvatarLink } from "../Header/UserAvatarLink";
 type props = {
   post: ztPost;
 };
@@ -93,7 +94,9 @@ export const Post = (props: props) => {
   useEffect(() => {
     if (props.post.isLiked) setIsLiked(true);
   }, [props.post.isLiked]);
-  const [isOpenComments, setIsOpenComments] = useState(false);
+  const [isOpenComments, setIsOpenComments] = useState(
+    props.post.comments.length > 0
+  );
 
   const mutateLike = useCallback(() => {
     likeMutation({
@@ -201,11 +204,7 @@ export const Post = (props: props) => {
       <Card className="m-2 sm:mx-auto bg-slate-50 w-full max-w-[800px]">
         <CardHeader className="flex flex-row justify-between px-6 py-3">
           <div className=" flex items-center gap-2">
-            <AvatarHoverCard
-              username={props.post.user.username}
-              avatarUrl={props.post.user.avatar}
-              yearOfJoined={4}
-            />
+            <UserAvatarLink user={props.post.user} />
             <div>
               <Label className="text-sm">{props.post.user.username}</Label>
               <p className="text-gray-500 text-[10px]">{dateOfPublished}</p>

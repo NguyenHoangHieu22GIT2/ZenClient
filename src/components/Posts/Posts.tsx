@@ -6,8 +6,8 @@ import { GroupId } from "@/Types/Group";
 import { useQueryInfinite } from "@/hooks/useQueryInfinite";
 
 type props = {
-  userId?: string;
-  groupId?: GroupId;
+  url: string;
+  params?: Record<string, string>;
 };
 
 export const Posts = (props: props) => {
@@ -16,17 +16,17 @@ export const Posts = (props: props) => {
   const [end, setEnd] = useState(false);
   const fetchingPosts = useCallback(async () => {
     useQueryInfinite({
-      url: "posts/get-posts",
+      url: props.url,
       cb: (result: ztResultsOfPostsInfiniteQuery) => {
         setPosts((oldPosts) => [...oldPosts, ...result.posts]);
         const lastPageNumber = Math.ceil(result.postsCount / 3);
-        if (skip < lastPageNumber) {
+        if (skip / 3 < lastPageNumber) {
           setSkip(skip + 3);
         } else {
-          setSkip(lastPageNumber * 3);
+          setEnd(true);
         }
       },
-      params: { limit: 3, skip, userId: props.userId, groupId: props.groupId },
+      params: { limit: 3, skip, ...props.params },
     });
   }, [skip]);
 
@@ -41,7 +41,7 @@ export const Posts = (props: props) => {
         document.scrollingElement!;
       if (!fetching && scrollHeight - scrollTop <= clientHeight) {
         fetching = true;
-        if (fetching) {
+        if (fetching && !end) {
           await fetchingPosts();
         }
         fetching = false;
@@ -49,9 +49,9 @@ export const Posts = (props: props) => {
     };
     document.addEventListener("scroll", onScroll);
     return () => document.removeEventListener("scroll", onScroll);
-  }, [skip]);
+  }, [skip, end]);
   return (
-    <div className="min-h-screen pb-10">
+    <div className="mb-10">
       {posts.map((post, index) => {
         return <Post key={index} post={post} />;
       })}

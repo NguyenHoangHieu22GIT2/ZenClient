@@ -15,7 +15,6 @@ const useCheckAuth = () => {
         .get("auth/validate-jwt-token", { withCredentials: true })
         .then((result) => {
           changeUser(result.data);
-          console.log(result.data);
         })
         .catch((err) => {
           jsCookie.remove("userId");

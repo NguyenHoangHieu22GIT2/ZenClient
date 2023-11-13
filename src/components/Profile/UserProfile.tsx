@@ -17,7 +17,7 @@ export const UserProfile = async (props: props) => {
         <UserActions />
         <UserGroups userId={props.userId} />
       </section>
-      <Posts userId={props.userId} />
+      <Posts url={`posts/get-user-posts/${props.userId}`} />
     </>
   );
 };

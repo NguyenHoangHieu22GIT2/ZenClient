@@ -1,25 +1,18 @@
-"use client";
-import { zAddFriend, ztAddFriend } from "@/Types/Friend";
-import {
-  NotificationId,
-  zFriendRequest,
-  ztFriendRequest,
-} from "@/Types/Notification";
-import { UserId } from "@/Types/User";
+import { zFriendRequest, ztFriendRequest } from "@/Types/Notification";
+import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { api } from "@/lib/axios.api";
-import { ToastAction } from "@radix-ui/react-toast";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
-export default function useDeclineFriendRequest() {
+export default function useAcceptFriendRequest() {
   const { toast } = useToast();
-  const declineFriendRequest = useMutation({
+  const acceptFriendRequesst = useMutation({
     mutationKey: ["addFriend"],
     mutationFn: async (data: ztFriendRequest) => {
       const parsedData = zFriendRequest.parse(data);
       return api
-        .patch<boolean>("friends/decline-friend", parsedData, {
+        .patch<boolean>("friends/accept-friend", parsedData, {
           withCredentials: true,
         })
         .then((result) => {
@@ -31,5 +24,5 @@ export default function useDeclineFriendRequest() {
         });
     },
   });
-  return declineFriendRequest;
+  return acceptFriendRequesst;
 }
