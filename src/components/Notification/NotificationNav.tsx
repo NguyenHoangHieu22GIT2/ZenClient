@@ -25,7 +25,8 @@ import { v4 } from "uuid";
 export const NotificationNav = () => {
   //this is for when you click the notification bell
   //it will fetch the notifications
-  //by default it will fetch no matter what which is very costy if people don't want to look at their noti
+  //by default it will fetch no matter what which is very costy if people don't want to look at their noti but it helps that user can actually see if they have any notifications that they have not read. so it's meh, good or bad, you decide here.
+  // UPDATE: using socketConversations.io to change the way we receive notifications
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["getnotifications"],
     enabled: true,

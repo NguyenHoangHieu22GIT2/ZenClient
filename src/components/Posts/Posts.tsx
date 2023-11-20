@@ -4,6 +4,7 @@ import { ztPost, ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
 import { Post } from "./Post";
 import { GroupId } from "@/Types/Group";
 import { useQueryInfinite } from "@/hooks/useQueryInfinite";
+import { POSTS_LIMIT } from "@/data/pageLimiter";
 
 type props = {
   url: string;
@@ -19,14 +20,14 @@ export const Posts = (props: props) => {
       url: props.url,
       cb: (result: ztResultsOfPostsInfiniteQuery) => {
         setPosts((oldPosts) => [...oldPosts, ...result.posts]);
-        const lastPageNumber = Math.ceil(result.postsCount / 3);
-        if (skip / 3 < lastPageNumber) {
-          setSkip(skip + 3);
+        const lastPageNumber = Math.ceil(result.postsCount / POSTS_LIMIT);
+        if (skip / POSTS_LIMIT < lastPageNumber) {
+          setSkip(skip + POSTS_LIMIT);
         } else {
           setEnd(true);
         }
       },
-      params: { limit: 3, skip, ...props.params },
+      params: { limit: POSTS_LIMIT, skip, ...props.params },
     });
   }, [skip]);
 
@@ -51,7 +52,7 @@ export const Posts = (props: props) => {
     return () => document.removeEventListener("scroll", onScroll);
   }, [skip, end]);
   return (
-    <div className="mb-10">
+    <div className="">
       {posts.map((post, index) => {
         return <Post key={index} post={post} />;
       })}

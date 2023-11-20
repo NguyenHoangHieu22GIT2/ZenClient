@@ -13,7 +13,7 @@ import { Button } from "../ui/button";
 import { useFormCreatePost } from "@/hooks/useFormCreatePost";
 import { GroupId } from "@/Types/Group";
 import { useEffect } from "react";
-import { socket } from "@/lib/socket";
+import { socketConversations } from "@/lib/socket";
 
 type props = {
   groupId?: GroupId;

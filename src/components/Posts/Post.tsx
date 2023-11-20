@@ -12,15 +12,9 @@ import { ToastAction } from "../ui/toast";
 import { CommentId, ztCommentType, PostId } from "@/Types/Post";
 import { Paragraph } from "../ui/Paragraph";
 import { Heading } from "../ui/Heading";
-import { Comments } from "./Comments/Comments";
-
-import { AvatarHoverCard } from "../ui/AvatarHoverCard";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { Checkbox } from "../ui/checkbox";
 import Image from "next/image";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
-import { Bearer } from "@/utils/Bearer";
 import { ztPost } from "@/Types/Post";
 
 import { DateConverter } from "@/utils/DateConverter";
@@ -185,16 +179,18 @@ export const Post = (props: props) => {
             <Button onClick={changeImageIndex.bind(this, "LEFT")}>
               <AiFillCaretLeft />
             </Button>
-            <Image
-              className="w-3/4  aspect-video"
-              src={
-                process.env.NEXT_PUBLIC_SERVER_URL_UPLOADS +
-                props.post.images[openImage]
-              }
-              alt={props.post.postHeading}
-              width={1920}
-              height={1080}
-            />
+            <div className="w-screen h-screen">
+              <Image
+                className="w-full h-full"
+                src={
+                  process.env.NEXT_PUBLIC_SERVER_URL_UPLOADS +
+                  props.post.images[openImage]
+                }
+                alt={props.post.postHeading}
+                width={1000}
+                height={1000}
+              />
+            </div>
             <Button onClick={changeImageIndex.bind(this, "RIGHT")}>
               <AiFillCaretRight />
             </Button>

@@ -15,10 +15,7 @@ export default async function Settingspage(props: PropsPage) {
       `groups/${props.params.id}`
     );
     const parsedResult = zChangeGroupInfoWithoutAvatarDto.parse(result.data);
-    console.log(
-      "🚀 ~ file: page.tsx:18 ~ Settingspage ~ parsedResult:",
-      parsedResult
-    );
+
     return (
       <Container>
         <GroupSetting groupId={props.params.id} groupInfo={parsedResult} />

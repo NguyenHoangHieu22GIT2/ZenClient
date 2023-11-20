@@ -21,7 +21,6 @@ export const Register = () => {
     gender: "male",
     password: "",
   });
-
   const [step, setStep] = useState<Step>("STEP_ONE");
   const changeUser = useCallback(
     (userInfo: ztUserRegisterStepOne) => {
@@ -64,17 +63,15 @@ export const Register = () => {
         </CardDescription>
         <CardDescription className="font-semibold flex gap-2">
           <span
-            className={`${
-              step == "STEP_ONE" ? "text-blue-300 font-bold" : "text-gray-500"
-            }`}
+            className={`${step == "STEP_ONE" ? "text-blue-300 font-bold" : "text-gray-500"
+              }`}
           >
             Step 1
           </span>
           <span>-{">"}</span>
           <span
-            className={`${
-              step == "STEP_TWO" ? "text-blue-300 font-bold" : "text-gray-500"
-            }`}
+            className={`${step == "STEP_TWO" ? "text-blue-300 font-bold" : "text-gray-500"
+              }`}
           >
             Step 2
           </span>

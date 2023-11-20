@@ -1,6 +1,9 @@
 import { DateOptions } from "./DateOptions";
 
-export function DateConverter(date: Date = new Date()): string {
-  const dateConverted = new Date(date).toLocaleDateString("en-US", DateOptions);
+export function DateConverter(
+  date: Date = new Date(),
+  dateOptions: Partial<typeof DateOptions> = DateOptions
+): string {
+  const dateConverted = new Date(date).toLocaleDateString("en-US", dateOptions);
   return dateConverted;
 }

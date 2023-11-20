@@ -15,11 +15,11 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyDLYe72BP3fCQme92AJ_EXhyWoDP-B5HNw",
 
-  authDomain: "Zen-files.firebaseapp.com",
+  authDomain: "Zed-files.firebaseapp.com",
 
-  projectId: "Zen-files",
+  projectId: "Zed-files",
 
-  storageBucket: "Zen-files.appspot.com",
+  storageBucket: "Zed-files.appspot.com",
 
   messagingSenderId: "139787627141",
 

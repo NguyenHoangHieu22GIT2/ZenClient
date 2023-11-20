@@ -1,7 +1,3 @@
-import { authMiddleware } from "@clerk/nextjs";
+console.log("Hello World")
 
-export default authMiddleware({});
 
-export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};

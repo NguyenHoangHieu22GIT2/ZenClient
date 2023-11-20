@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { Brand } from "./Brand";
 
+
 export type UserId = Brand<string, "UserId">;
-export const UserIdTransformer = z.string().transform((data) => data as UserId);
+export const UserId = z.string().transform((data) => data as UserId);
 
 export const zUser = z.object({
-  _id: UserIdTransformer,
+  _id: UserId,
   email: z.string(),
   // Question: should we put password in here ?
   password: z.string(),
@@ -13,11 +14,13 @@ export const zUser = z.object({
   avatarFile: typeof window === "undefined" ? z.null() : z.instanceof(File),
   username: z.string(),
   gender: z.union([z.literal("male"), z.literal("female")]),
+  description: z.string().optional()
 });
+
 
 export const zFriendsInfo = z.object({
   _id: z.string(),
-  userId: UserIdTransformer,
+  userId: UserId,
   friends: z.array(z.string()),
   wait: z.array(z.string()),
   await: z.array(z.string()),
@@ -50,6 +53,13 @@ export const zUserRegisterStepOne = zUser.pick({
   password: true,
   username: true,
 });
+
+export const zUserId = z.object({
+  userId: UserId
+})
+
+export type ztUserId = z.infer<typeof zUserId>
+
 export type ztUserRegisterStepOne = z.infer<typeof zUserRegisterStepOne>;
 
 export const zUserRegisterStepTwo = zUser.pick({
@@ -63,7 +73,7 @@ export type ztUserRegisterStepTwo = z.infer<typeof zUserRegisterStepTwo>;
 
 export const zLoginResponse = z.object({
   access_token: z.string(),
-  userId: UserIdTransformer,
+  userId: UserId,
 });
 
 export type ztLoginResponse = z.infer<typeof zLoginResponse>;

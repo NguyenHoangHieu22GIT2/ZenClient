@@ -38,7 +38,6 @@ export const PostComment = (props: props) => {
           }
         )
         .then((result) => {
-          console.log(result.data);
           const parsedData = zCommentType.parse(result.data);
           if (props.onAddComment) {
             props.onAddComment({
@@ -46,6 +45,7 @@ export const PostComment = (props: props) => {
               user: {
                 username: parsedData.user.username,
                 avatar: parsedData.user.avatar || "/default-user.jpeg",
+                _id: parsedData.user._id,
               },
               comment: data.comment,
               replies: parsedData.replies,
@@ -58,6 +58,7 @@ export const PostComment = (props: props) => {
               user: {
                 username: parsedData.user.username,
                 avatar: parsedData.user.avatar || "/default-user.jpeg",
+                _id: parsedData.user._id,
               },
               comment: parsedData.comment,
               userId: parsedData.userId,

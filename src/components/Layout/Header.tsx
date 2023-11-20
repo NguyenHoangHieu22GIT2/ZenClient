@@ -33,12 +33,12 @@ export const Header = (props: {}) => {
           <main className="flex basis-2/4 gap-5 items-center">
             <Button variant={"link"} className="p-0 m-0">
               <Link href={"/"} className="font-bold text-2xl">
-                Zen
+                Zed
               </Link>
             </Button>
             <Input
               className="w-full"
-              placeholder="Search in Zen is fast and convenient"
+              placeholder="Search in Zed is fast and convenient"
             />
           </main>
           {/* For computers */}

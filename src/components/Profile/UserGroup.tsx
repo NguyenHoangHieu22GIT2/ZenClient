@@ -19,14 +19,14 @@ export const UserGroup = ({ group }: props) => {
     <ContextMenu>
       <ContextMenuTrigger>
         <Link href={`/groups/${group._id}`}>
-          <div className="flex gap-3">
+          <div className="flex gap-8">
             <div>
               <Image
                 src={CheckImageUrl(group.groupAvatar)}
                 alt={group.groupName}
-                width={75}
-                height={75}
-                className="aspect-square rounded-full"
+                width={50}
+                height={50}
+                className="aspect-square rounded-full min-w-fit max-w-fit"
               />
             </div>
             <div>

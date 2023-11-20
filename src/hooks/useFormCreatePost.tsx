@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { checkFileTypeToUseIconOrImage } from "@/utils/CheckFileType";
 import { GroupId } from "@/Types/Group";
 export function useFormCreatePost(groupId?: string) {
-  console.log(groupId);
   const { mutate, data, error, isLoading } = useMutation({
     mutationKey: ["createPost"],
     mutationFn: async (data: ztPostCreate) => {

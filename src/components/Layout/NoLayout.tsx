@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { PropsClassName } from "@/Types/Props";
 import { Provider } from "./Provider";
 interface props extends PropsClassName {

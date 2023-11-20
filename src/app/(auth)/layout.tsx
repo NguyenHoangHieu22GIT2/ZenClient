@@ -6,7 +6,7 @@ import { NoLayout } from "@/components/Layout/NoLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Zen",
+  title: "Zed",
   description: "Social Media Website",
 };
 

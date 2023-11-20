@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserIdTransformer, zUserMinimalData } from "./User";
+import { UserId, zUserMinimalData } from "./User";
 import { Brand } from "./Brand";
 
 export type NotificationId = Brand<string, "NotificationId">;
@@ -33,7 +33,7 @@ export const zNotification = z.object({
 export const zNotifications = z.array(zNotification);
 
 export const zFriendRequest = z.object({
-  userId: UserIdTransformer,
+  userId: UserId,
   notificationId: NotificationIdTransformer,
 });
 

@@ -54,7 +54,6 @@ export const Groups = (props: props) => {
       }
     },
   });
-  console.log(groups);
   return (
     <div className="[&>*]:mb-6 sm:grid sm:grid-cols-2 sm:gap-2 md:grid-cols-3 lg:grid-cols-4">
       {groups.map((group, index) => {

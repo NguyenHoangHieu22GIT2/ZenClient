@@ -1,15 +1,15 @@
 import { z } from "zod";
-import { UserIdTransformer, zUser } from "./User";
+import { UserId, zUser } from "./User";
 
 export const zFriendDocument = z.object({
-  _id: UserIdTransformer,
-  userId: UserIdTransformer,
-  friends: z.array(UserIdTransformer),
-  await: z.array(UserIdTransformer),
-  wait: z.array(UserIdTransformer),
-  notInterested: z.array(UserIdTransformer),
-  followers: z.array(UserIdTransformer),
-  followings: z.array(UserIdTransformer),
+  _id: UserId,
+  userId: UserId,
+  friends: z.array(UserId),
+  await: z.array(UserId),
+  wait: z.array(UserId),
+  notInterested: z.array(UserId),
+  followers: z.array(UserId),
+  followings: z.array(UserId),
 });
 
 export const zAddFriend = z.object({

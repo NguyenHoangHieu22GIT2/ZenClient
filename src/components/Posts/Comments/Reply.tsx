@@ -1,4 +1,5 @@
 import { CommentId, ztReplyType } from "@/Types/Post";
+import { UserAvatarLink } from "@/components/Header/UserAvatarLink";
 import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
 import { Username } from "@/components/ui/Username";
 import {
@@ -22,11 +23,7 @@ export function Reply(props: props) {
       <div className="border rounded-lg shadow-sm p-2 dark:bg-slate-800 bg-slate-50">
         <div className="flex gap-2 items-center justify-between">
           <div className="flex gap-2 items-center ">
-            <AvatarHoverCard
-              username={props.comment.user.username}
-              avatarUrl={props.comment.user.avatar || "/default-user.jpeg"}
-              yearOfJoined={4}
-            />
+            <UserAvatarLink user={props.comment.user} />
             <Username>{props.comment.user.username}</Username>
           </div>
           <div>

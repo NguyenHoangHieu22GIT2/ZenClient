@@ -17,9 +17,9 @@ export const NavsComputer = (props: props) => {
   const userId = jsCookie.get("userId");
   const router = useRouter();
   const logoutFn = useCallback(() => {
-    jsCookie.remove("userId");
     api.get("auth/logout", { withCredentials: true }).then(() => {
       router.replace("/login");
+      jsCookie.remove("userId");
     });
   }, []);
   return (

@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { UserAvatarLink } from "@/components/Header/UserAvatarLink";
 
 type props = {
   postId: PostId;
@@ -131,11 +132,7 @@ export const Comment = (props: props) => {
       <div className="border rounded-lg shadow-sm p-2 dark:bg-slate-800 bg-slate-100">
         <div className="flex gap-2 items-center justify-between">
           <div className="flex gap-2 items-center ">
-            <AvatarHoverCard
-              username={props.comment.user.username}
-              avatarUrl={props.comment.user.avatar || "/default-user.jpeg"}
-              yearOfJoined={4}
-            />
+            <UserAvatarLink user={props.comment.user} />
             <Username>{props.comment.user.username}</Username>
           </div>
           <div>

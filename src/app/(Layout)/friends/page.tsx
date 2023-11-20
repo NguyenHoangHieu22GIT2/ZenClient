@@ -1,14 +1,9 @@
 import { Heading } from "@/components/ui/Heading";
 import { Container } from "@/components/ui/Container";
 import React from "react";
-import { api } from "@/lib/axios.api";
-import { Bearer } from "@/utils/Bearer";
 
 import FriendsComponent from "@/components/Friends/FriendsComponent";
-import { cookies } from "next/headers";
-import { findUsersType, linkToQueryUsers } from "@/utils/LinkToQuery";
-import { FRIENDS_LIMIT } from "@/data/pageLimiter";
-import { apiUrlType } from "@/components/Friends/NotInterestedFriends";
+import { findUsersType } from "@/utils/LinkToQuery";
 
 type props = {
   searchParams: {

@@ -42,7 +42,7 @@ export default function settingPage() {
         <ChangeInformation
           key={"username"}
           dto={ChangeUsernameDto}
-          pathServer="/users"
+          pathServer="/users/change-information"
           title="username"
           propertyNames={{ username: "" }}
         />

@@ -35,6 +35,7 @@ import Link from "next/link";
 import useAddFriendMutation from "@/apis/Friend/useAddFriendMutation";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
+import { socketConversations } from "@/lib/socket";
 type props = {
   userId: string;
 };
@@ -78,7 +79,6 @@ export const UserInfos = (props: props) => {
   const user = data.user;
   const postsCount = data.postsCount;
   const friendsInfo = data.friendsInfo;
-
   return (
     <Card>
       <CardHeader>
@@ -119,8 +119,7 @@ export const UserInfos = (props: props) => {
       <CardContent className="">
         <CardTitle className="text-center">{user.username}</CardTitle>
         <CardDescription className="text-center">
-          A Person with passion to build Zen, the best social Media website
-          ever!
+          {user.description}
         </CardDescription>
         <Separator className="my-5" />
         <ul>
@@ -138,6 +137,7 @@ export const UserInfos = (props: props) => {
               {hasSentFriendRequest ? "Cancel" : "Send"} Friend Request
             </Button>
             <Button>Message</Button>
+            <Button>Follow</Button>
           </>
         ) : (
           <Button asChild className="md:w-full">

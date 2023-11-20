@@ -11,25 +11,10 @@ import {
 import Image from "next/image";
 import { Separator } from "../../ui/separator";
 import { Button } from "../../ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-import { GroupId, zGroupQueries, ztGroupQueries } from "@/Types/Group";
+import { GroupId, zGroupQueries, zOutGroup, ztGroupQueries, ztOutGroup } from "@/Types/Group";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import { api } from "@/lib/axios.api";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import Loading from "@/app/(Layout)/loading";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -37,27 +22,53 @@ import { usePathname } from "next/navigation";
 import jsCookie from "js-cookie";
 import Modal from "@/components/uiOwnCreation/Modal";
 import { ChangeAvatar } from "@/components/Settings/ChangeAvatar";
+import { ContextMenuGroup } from "@radix-ui/react-context-menu";
+import { ContextMenuGroupAvatar } from "./ui/ContextMenuGroup";
+import { useUserStore } from "@/lib/useUserStore";
 type props = {
   groupId: GroupId;
 };
 export const GroupInfos = ({ groupId }: props) => {
   const pathName = usePathname();
+  const userId = useUserStore(state => state.user._id)
   const [openModalChangeImage, setOpenModalChangeImage] = useState(false);
-  const { data, error, isLoading } = useQuery({
+  const { data, error: errorGroup, isLoading: isLoadingGroup } = useQuery({
     queryKey: ["get-group-info"],
     queryFn: async () => {
       return (
-        await api.get<ztGroupQueries>(
+        api.get<ztGroupQueries>(
           `groups/${groupId}?userId=${jsCookie.get("userId")}`,
           {
             withCredentials: true,
           }
         )
-      ).data;
+      ).then(data => {
+        const parsedData = zGroupQueries.parse(data.data)
+        return parsedData
+      })
     },
     retry: false,
   });
-  if (data)
+
+  const { mutate, error: errorOutGroup, isLoading: isLoadingOutGroup } = useMutation({
+    mutationKey: ["out-group"],
+    mutationFn: async (data: ztOutGroup) => {
+      const parsedData = zOutGroup.parse(data);
+      return api.patch("groups/out-group", parsedData, { withCredentials: true }).then(data => data)
+    }
+  })
+
+
+  if (data) {
+    const onSetOpenModalChangeImage = () => {
+      if (data.userId === userId) {
+        setOpenModalChangeImage(true)
+      }
+    }
+
+    const outGroupMutation = () => {
+      mutate({ userId, groupId: data._id })
+    }
     return (
       <Card>
         {openModalChangeImage && (
@@ -72,43 +83,7 @@ export const GroupInfos = ({ groupId }: props) => {
           </Modal>
         )}
         <CardHeader>
-          <ContextMenu>
-            <ContextMenuTrigger>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={() => setOpenModalChangeImage(true)}
-                    className="cursor-default w-full"
-                  >
-                    <Image
-                      src={CheckImageUrl(data.groupAvatar)}
-                      width={100}
-                      height={100}
-                      alt={data.groupName}
-                      className="mx-auto rounded-full aspect-square cursor-pointer"
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Right click for more options</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem>Block</ContextMenuItem>
-              <ContextMenuItem>Unfollow</ContextMenuItem>
-              <ContextMenuSub>
-                <ContextMenuSubTrigger>Report</ContextMenuSubTrigger>
-                <ContextMenuSubContent>
-                  <ContextMenuItem>A Fake account</ContextMenuItem>
-                  <ContextMenuItem>
-                    create posts that are harmful
-                  </ContextMenuItem>
-                  <ContextMenuItem>Annoying to me</ContextMenuItem>
-                </ContextMenuSubContent>
-              </ContextMenuSub>
-            </ContextMenuContent>
-          </ContextMenu>
+          <ContextMenuGroupAvatar group={data} onSetOpenModalChangeImage={onSetOpenModalChangeImage} />
         </CardHeader>
         <CardContent className="">
           <CardTitle className="text-center">{data.groupName}</CardTitle>
@@ -126,7 +101,7 @@ export const GroupInfos = ({ groupId }: props) => {
         <Separator className="my-5" />
         <CardFooter className="flex gap-1 flex-wrap justify-center">
           {!data.hasJoined && <Button>Join Group</Button>}
-          {!data.areYouTheHost && data.hasJoined && <Button>Out Group</Button>}
+          {!data.areYouTheHost && data.hasJoined && <Button onClick={outGroupMutation}>Out Group</Button>}
           {data.areYouTheHost && (
             <Button asChild className="md:w-full">
               <Link href={`${pathName}/settings`}>Settings</Link>
@@ -135,7 +110,8 @@ export const GroupInfos = ({ groupId }: props) => {
         </CardFooter>
       </Card>
     );
-  if (!isLoading) {
+  }
+  if (!isLoadingGroup) {
     notFound();
   }
   return <h1>...</h1>;

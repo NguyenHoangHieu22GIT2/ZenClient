@@ -17,9 +17,7 @@ export const GroupActions = (props: {}) => {
   function changePostDirection() {
     setPostIsAscending((oldPostIsAscending) => !oldPostIsAscending);
   }
-  function search() {
-    console.log("Hello");
-  }
+  function search() {}
   return (
     <div>
       <Card className="p-3 flex justify-stretch [&>*]:basis-1/3 gap-3">

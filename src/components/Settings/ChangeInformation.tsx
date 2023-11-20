@@ -77,7 +77,6 @@ export const ChangeInformation = (props: props) => {
     resolver: zodResolver(props.dto),
     defaultValues: defaultValue,
   });
-  // console.log(form.getValues());
   useEffect(() => {
     form.reset();
   }, []);
@@ -93,7 +92,7 @@ export const ChangeInformation = (props: props) => {
         </div>
         <CardTitle>Change {props.title}:</CardTitle>
       </CardHeader>
-      <div className="">
+      <div >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)}>
             {Object.keys(props.propertyNames).map((property, index) => {
