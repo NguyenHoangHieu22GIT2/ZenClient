@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { FriendFilter } from "./FriendFilter";
-import { RecommendFriends } from "./RecommendFriends";
 import { UserId, ztUserMinimalData } from "@/Types/User";
-import { HasSentRequestFriends } from "./HasSentRequestFriends";
-import { Friends } from "./Friends";
-import { apiUrlType } from "./NotInterestedFriends";
 import { findUsersType } from "@/utils/LinkToQuery";
-import { ztResultsOfFriendsInfiniteQuery } from "@/Types/resultsOfInfiniteQuery";
+import { FriendsGeneral } from "./FriendsGeneral";
+import { checkUsersType } from "@/utils/CheckUsersType";
+import { useUserStore } from "@/lib/useUserStore";
+import { AcionsForFriendsGeneralComponent } from "./AcionsForFriendsGeneralComponent";
 export type FilterActionType =
   | "SET_USERNAME"
   | "SET_NOT_INTERESTED"
@@ -26,7 +25,7 @@ export interface FilterAction {
 }
 function filterReducer(
   state: filterReducerType,
-  action: FilterAction
+  action: FilterAction,
 ): filterReducerType {
   if (action.type === "SET_USERNAME") {
     return {
@@ -66,20 +65,14 @@ type props = {
 };
 
 export default function FriendsComponent(props: props) {
-  const [users, setUsers] = useState<ztUserMinimalData[]>([]);
-  function removeUserNotInterested(userId: UserId) {
-    setUsers((users) => {
-      return users.filter((user) => user._id.toString() !== userId.toString());
-    });
-  }
-
+  const user = useUserStore((state) => state.user);
   const [filterState, filterDispatch] = useReducer<typeof filterReducer>(
     filterReducer,
     {
       HasSentRequest: props.criteria.usersType === "has-sent-request",
       isNotInterested: props.criteria.usersType === "not-interested",
       usernameFilter: props.criteria.username || "  ",
-    }
+    },
   );
 
   function changeFilter({
@@ -94,7 +87,8 @@ export default function FriendsComponent(props: props) {
       filterState.HasSentRequest !== payload.HasSentRequest ||
       filterState.isNotInterested !== payload.isNotInterested
     ) {
-      setUsers([]);
+      // TODO: will fix this later!
+      // setUsers([]);
     }
     filterDispatch({
       type,
@@ -108,6 +102,19 @@ export default function FriendsComponent(props: props) {
       payload: { usernameFilter: "" },
     });
   }
+  const actionForFriendsGeneral: (userId: UserId) => React.JSX.Element = (
+    userId: UserId,
+  ) => {
+    return (
+      <AcionsForFriendsGeneralComponent
+        filterState={filterState}
+        userId={userId}
+      />
+    );
+    //   return function Component(userId: UserId) {
+    // return <></>
+    //   };
+  };
   return (
     <div className="flex md:flex-row  flex-col gap-2 [&>*:first-child]:basis-1/4 [&>*:last-child]:basis-3/4">
       <FriendFilter
@@ -116,12 +123,12 @@ export default function FriendsComponent(props: props) {
         filterState={filterState}
         criteria={props.criteria}
       />
-      <Friends
-        filterState={filterState}
-        onChangeFilter={changeFilter}
-        users={users}
-        setUsers={setUsers}
-        onRemoveUserNotInterested={removeUserNotInterested}
+      <FriendsGeneral
+        actions={actionForFriendsGeneral}
+        params={{
+          usersType: checkUsersType(filterState),
+          username: filterState.usernameFilter || "",
+        }}
       />
     </div>
   );

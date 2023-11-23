@@ -27,45 +27,6 @@ type props = {
 };
 
 export const Friend = (props: props) => {
-  const { toast } = useToast();
-  const usersTypeResult = useMemo(() => {
-    return checkUsersType(props.filterState);
-  }, [props.filterState]);
-  const [alreadySentTheRequest, setAlreadySentTheRequest] = useState(false);
-  const notInterestedMutation = UseNotInterestedMutation();
-  const addFriendMutation = useAddFriendMutation();
-  function notInterested() {
-    notInterestedMutation.mutate(props.user._id);
-  }
-  function addFriend() {
-    addFriendMutation.mutate(props.user._id);
-  }
-
-  useEffect(() => {
-    if (addFriendMutation.data) {
-      setAlreadySentTheRequest(addFriendMutation.data.hasSent);
-    }
-  }, [addFriendMutation.data]);
-
-  useEffect(() => {
-    if (notInterestedMutation.data) {
-      if (usersTypeResult !== "not-interested") {
-        toast({
-          title: "Will not recommend this user in the future",
-          description:
-            "If you want to add friend with this user, go to his profile.",
-          action: <ToastAction altText="Okay!">Okay!</ToastAction>,
-        });
-      } else {
-        toast({
-          title: "This user will be recommended again in the future!",
-          description: "",
-          action: <ToastAction altText="Okay">Okay</ToastAction>,
-        });
-      }
-      props.removeUserNotInterested(notInterestedMutation.data);
-    }
-  }, [notInterestedMutation.data]);
   return (
     <Card className="shadow-lg overflow-hidden rounded-lg">
       <CardHeader className="p-0 mx-auto">

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import useDeclineFriendRequest from "@/apis/Friend/useDeclineFriendRequest";
 import useAcceptFriendRequest from "@/apis/Friend/useAcceptFriendRequest";
+import { InteractiveNotification } from "./InteractiveNotification";
 
 type props = {
   notification: ztNotification;
@@ -33,44 +34,23 @@ export const NotificationFriendRequest = (props: props) => {
     });
     setHasAction("accept");
   }, []);
+
   return (
-    // <Link href={`users/${props.notification.options.userId?._id}`}>
-    <Card className="my-2">
-      <CardContent className="flex p-2 gap-2 items-center">
-        <div>
-          <Link href={`users/${props.notification.options.userId!._id}`}>
-            <Avatar>
-              <AvatarImage
-                src={CheckImageUrl(props.notification.options.userId!.avatar)}
-                alt="Avatar"
-              />
-              <AvatarFallback>
-                {props.notification.options.userId!.username}
-              </AvatarFallback>
-            </Avatar>
-          </Link>
-        </div>
-        <div>
-          <CardTitle className="text-sm md:text-xl">Friend Request</CardTitle>
-          <CardDescription>
-            <Link
-              href={`users/${props.notification.options.userId!._id}`}
-              className="font-bold"
-            >
-              {props.notification.options.userId!.username}
-            </Link>{" "}
-            Has sent you a friend request
-          </CardDescription>
-          {hasAction === "decline" && (
-            <i>You have Declined this friend requesst</i>
-          )}
-          {hasAction === "accept" && (
-            <i>You have accepted this friend requesst</i>
-          )}
-        </div>
-      </CardContent>
-      <CardFooter className=" flex justify-end  gap-5">
-        {hasAction === "waiting" && (
+    <InteractiveNotification
+      notificationHeader={props.notification.notificationHeader}
+      notificationBody={props.notification.notificationBody}
+      notification={props.notification}
+      componentCardContent={
+        hasAction === "accept" ? (
+          <h1>You have accepted the request</h1>
+        ) : hasAction === "decline" ? (
+          <h1>You have declined the request</h1>
+        ) : (
+          <></>
+        )
+      }
+      componentCardFooter={
+        hasAction === "waiting" ? (
           <>
             <Button onClick={declineMutate} variant={"destructive"}>
               Decline
@@ -83,9 +63,10 @@ export const NotificationFriendRequest = (props: props) => {
               Accept
             </Button>
           </>
-        )}
-      </CardFooter>
-    </Card>
-    // </Link>
+        ) : (
+          <></>
+        )
+      }
+    />
   );
 };

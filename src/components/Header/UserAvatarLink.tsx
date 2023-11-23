@@ -1,13 +1,10 @@
 "use client";
 import Link from "next/link";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
-import { cookies } from "next/headers";
-import { useUserFromZustandClient } from "@/hooks/useUserFromZustandClient";
-import { useUserStore } from "@/lib/useUserStore";
-import { ztUser, ztUserMinimalData } from "@/Types/User";
+import { ztUserMinimalDataOmitEmail } from "@/Types/Post";
 
 type props = {
-  user: ztUserMinimalData;
+  user: ztUserMinimalDataOmitEmail;
 };
 
 export function UserAvatarLink(props: props) {

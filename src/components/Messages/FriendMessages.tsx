@@ -18,8 +18,9 @@ import { UserAvatarLink } from "../Header/UserAvatarLink";
 import { ScrollArea } from "../ui/scroll-area";
 import { DateConverter } from "@/utils/DateConverter";
 import { useQuery } from "@tanstack/react-query";
-import { useQueryInfinite } from "@/hooks/useQueryInfinite";
+import { QueryInfinite } from "@/utils/QueryInfinite";
 import { UserId } from "@/Types/User";
+import { Message } from "./Message";
 type props = {
   conversation: ztConversation;
   onHearNotification: ({
@@ -37,14 +38,14 @@ export function FriendMessages(props: props) {
   const [end, setEnd] = useState(false);
   const [skip, setSkip] = useState(props.conversation.messages.length);
   const [messages, setMessages] = useState<ztMessage[]>(
-    props.conversation.messages
+    props.conversation.messages,
   );
   const friend =
     props.conversation.userIds[0]._id === userId
       ? props.conversation.userIds[1]
       : props.conversation.userIds[0];
   const fetchingMessages = useCallback(() => {
-    useQueryInfinite<
+    QueryInfinite<
       ztMessage[],
       { limit: number; skip: number; conversationId: string }
     >({
@@ -64,13 +65,13 @@ export function FriendMessages(props: props) {
         conversationId: props.conversation._id,
       },
     });
-  }, [skip, end]);
+  }, [skip, props.conversation._id]);
 
   useEffect(() => {
     setEnd(false);
     setMessages(props.conversation.messages);
     setSkip(props.conversation.messages.length);
-  }, [props.conversation._id]);
+  }, [props.conversation._id, props.conversation.messages]);
 
   useEffect(() => {
     socketConversations.on(socketNameOn.receiveMessage, (data: ztMessage) => {
@@ -155,38 +156,15 @@ export function FriendMessages(props: props) {
           ref={test}
           className="[&>:not(first-child)]:mt-5 h-full overflow-scroll  w-full inline-flex flex-col "
         >
-          {messages.map((msg, index) => {
-            if (test.current)
-              test.current!.scrollTop = test.current!.scrollHeight;
-            if (msg.userId === userId) {
-              return (
-                <div key={index} className="text-right mr-4">
-                  <h1 className="inline-block mb-1 bg-green-400 rounded-full  px-5 py-2">
-                    {msg.message}
-                  </h1>
-                  <p className="text-muted-foreground">
-                    {DateConverter(msg.date, {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              );
-            } else {
-              return (
-                <div key={index} className="text-left">
-                  <h1 className="inline-block mb-1 bg-blue-400 rounded-full  px-5 py-2">
-                    {msg.message}
-                  </h1>
-                  <p className="text-muted-foreground">
-                    {DateConverter(msg.date, {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              );
-            }
+          {messages.map((msg) => {
+            return (
+              <Message
+                msg={msg.message}
+                isYourMessage={msg.userId === userId}
+                date={msg.date}
+                key={msg._id}
+              />
+            );
           })}
         </div>
       </main>

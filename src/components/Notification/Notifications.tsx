@@ -5,6 +5,7 @@ import { ztNotification } from "@/Types/Notification";
 import { NotificationFriendRequest } from "./NotificationTypes/NotificationFriendRequest";
 import { NotificationAcceptFriend } from "./NotificationTypes/NotificationAcceptFriend";
 import { NotificationGeneral } from "./NotificationTypes/NotificationGeneral";
+import { NormalNotification } from "./NotificationTypes/NormalNotification";
 
 type props = { notifications: ztNotification[] };
 
@@ -28,7 +29,7 @@ export const Notifications = (props: props) => {
           );
         } else {
           return (
-            <NotificationGeneral
+            <NormalNotification
               notification={notification}
               key={notification._id}
             />

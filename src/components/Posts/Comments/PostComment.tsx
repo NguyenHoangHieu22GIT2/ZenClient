@@ -35,7 +35,7 @@ export const PostComment = (props: props) => {
           data,
           {
             withCredentials: true,
-          }
+          },
         )
         .then((result) => {
           const parsedData = zCommentType.parse(result.data);
@@ -87,6 +87,7 @@ export const PostComment = (props: props) => {
         comment: value,
       });
     }
+    setValue("");
   }
   return (
     <form onSubmit={submit} className="flex gap-2">
@@ -97,6 +98,7 @@ export const PostComment = (props: props) => {
       />
       <Input
         onChange={(e) => setValue(e.target.value)}
+        value={value}
         type="text"
         placeholder="Share your thoughts"
       />

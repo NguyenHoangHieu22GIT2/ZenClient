@@ -1,5 +1,5 @@
 "use client";
-// THIS IS DEPRECATED, NOT GOING TO USE THIS :D (for now still use)
+// THIS IS DEPRECATED, Not GOING TO USE THIS ANYMORE. CHANGE TO MIDDLEWARE
 import { api } from "@/lib/axios.api";
 
 import { useRouter, usePathname } from "next/navigation";
@@ -8,7 +8,7 @@ import jsCookie from "js-cookie";
 import { useUserStore } from "@/lib/useUserStore";
 import { socketConversations } from "@/lib/socket";
 import { socketNameEmit } from "@/utils/SocketName";
-import { zConversation, ztConversation } from "@/Types/Conversation";
+import { ztConversation } from "@/Types/Conversation";
 import { useChatSystemStore } from "@/lib/useChatSystemStore";
 const useCheckAuth = () => {
   const changeUser = useUserStore((state) => state.changeUser);
@@ -27,7 +27,7 @@ const useCheckAuth = () => {
           router.replace("/login");
         });
     }
-  }, []);
+  }, [changeUser, router]);
 
   useEffect(() => {
     if (userId)
@@ -43,13 +43,13 @@ const useCheckAuth = () => {
               break;
             }
           }
-        }
+        },
       );
 
     return () => {
       socketConversations.off(socketNameEmit.joinAllChatRoom);
     };
-  }, [userId]);
+  }, [userId, changeNotified]);
 };
 
 export default useCheckAuth;

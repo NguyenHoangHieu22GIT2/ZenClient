@@ -1,10 +1,14 @@
 import { z } from "zod";
 import { Brand } from "./Brand";
 
-
 export type UserId = Brand<string, "UserId">;
 export const UserId = z.string().transform((data) => data as UserId);
 
+export const zUserId = z.object({
+  userId: UserId,
+});
+
+export type ztUserId = z.infer<typeof zUserId>;
 export const zUser = z.object({
   _id: UserId,
   email: z.string(),
@@ -14,9 +18,8 @@ export const zUser = z.object({
   avatarFile: typeof window === "undefined" ? z.null() : z.instanceof(File),
   username: z.string(),
   gender: z.union([z.literal("male"), z.literal("female")]),
-  description: z.string().optional()
+  description: z.string().optional(),
 });
-
 
 export const zFriendsInfo = z.object({
   _id: z.string(),
@@ -27,15 +30,23 @@ export const zFriendsInfo = z.object({
   followers: z.array(z.string()),
   followings: z.array(z.string()),
   notInterested: z.array(z.string()),
+  isFollowing: z.boolean().optional(),
 });
 
-export const zUserPage = z.object({
+export const zUserInfoPage = z.object({
   user: zUser.omit({ password: true, avatarFile: true }),
   postsCount: z.number(),
-  friendsInfo: zFriendsInfo,
+  friendsInfo: z.object({
+    userId: UserId,
+    isFriend: z.boolean(),
+    isFollowing: z.boolean(),
+    friends: z.number(),
+    followers: z.number(),
+    followings: z.number(),
+  }),
 });
 
-export type ztUserPage = z.infer<typeof zUserPage>;
+export type ztUserInfoPage = z.infer<typeof zUserInfoPage>;
 
 export type ztUser = z.infer<typeof zUser>;
 
@@ -53,12 +64,6 @@ export const zUserRegisterStepOne = zUser.pick({
   password: true,
   username: true,
 });
-
-export const zUserId = z.object({
-  userId: UserId
-})
-
-export type ztUserId = z.infer<typeof zUserId>
 
 export type ztUserRegisterStepOne = z.infer<typeof zUserRegisterStepOne>;
 

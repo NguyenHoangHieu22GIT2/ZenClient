@@ -63,7 +63,7 @@ export const Comment = (props: props) => {
           }`,
           {
             withCredentials: true,
-          }
+          },
         )
         .then((data) => {
           const parsedData = zCommentType.parse(data.data);
@@ -76,7 +76,7 @@ export const Comment = (props: props) => {
           } else {
             props.changeComments((oldComments) => {
               return oldComments.filter(
-                (comment) => comment._id !== parsedData._id
+                (comment) => comment._id !== parsedData._id,
               );
             });
           }
@@ -92,17 +92,14 @@ export const Comment = (props: props) => {
         replyId,
       });
     },
-    [deleteCommentMutation, props.postId]
+    [deleteCommentMutation, props.postId, props.comment._id],
   );
 
   const [openPostComment, setOpenPostComment] = useState(false);
-  const createReply = useCallback(
-    (reply: ztReplyType) => {
-      const parsedReply = zReplyType.parse(reply);
-      setReplies((oldArray) => [...oldArray, parsedReply]);
-    },
-    [replies]
-  );
+  const createReply = useCallback((reply: ztReplyType) => {
+    const parsedReply = zReplyType.parse(reply);
+    setReplies((oldArray) => [...oldArray, parsedReply]);
+  }, []);
   const [loadMoreReplies, setLoadMoreReplies] = useState("");
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["post/comments/replies", loadMoreReplies],
@@ -112,7 +109,7 @@ export const Comment = (props: props) => {
           `posts/get-replies?postId=${props.postId}&commentId=${props.comment._id}`,
           {
             withCredentials: true,
-          }
+          },
         )
         .then((data) => {
           setReplies(data.data);

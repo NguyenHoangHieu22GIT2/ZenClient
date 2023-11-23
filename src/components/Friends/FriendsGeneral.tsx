@@ -1,44 +1,38 @@
 "use client";
-import React, { useEffect, useReducer, useState } from "react";
-import { Friend } from "./Friend";
-import { zUser, UserId, ztUserMinimalData } from "@/Types/User";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Bearer } from "@/utils/Bearer";
-import { api } from "@/lib/axios.api";
-import { v4 } from "uuid";
-import { FilterActionType, filterReducerType } from "./NotInterestedFriends";
-import { linkToQueryUsers } from "@/utils/LinkToQuery";
+import React, { useEffect, useState } from "react";
+import { UserId, ztUserMinimalData } from "@/Types/User";
 import { FRIENDS_LIMIT } from "@/data/pageLimiter";
-import { checkUsersType } from "@/utils/CheckUsersType";
 import { ztResultsOfFriendsInfiniteQuery } from "@/Types/resultsOfInfiniteQuery";
 import { QueryInfinite } from "@/utils/QueryInfinite";
+import { FriendGeneral } from "./FriendGeneral";
 
+// This is my approach to make this component low coupling...
+// function test()=>{
+//    return (userId:UserId)=>{ // this is a component function
+//         const use = mutate(userId)
+//         return <>
+//           <Button onClick={use}>Add Friend</Button>
+//         </>
+//       }
+//   }
 type props = {
-  users: ztUserMinimalData[];
-  onChangeFilter: ({
-    type,
-    payload,
-  }: {
-    type: FilterActionType;
-    payload: filterReducerType;
-  }) => void;
-  filterState: filterReducerType;
-  setUsers: React.Dispatch<React.SetStateAction<ztUserMinimalData[]>>;
-  onRemoveUserNotInterested: (userId: UserId) => void;
+  params: Record<string, string | number>;
+  actions: (userId: UserId) => React.JSX.Element;
 };
 export type apiUrlType =
   | "recommend-user"
   | "not-interested"
   | "has-sent-request";
 
-export const Friends = (props: props) => {
+export const FriendsGeneral = (props: props) => {
+  const [users, setUsers] = useState<ztUserMinimalData[]>([]);
   let [skip, setSkip] = useState(0);
   const [end, setEnd] = useState(false);
   const fetchNextPage = async () => {
     await QueryInfinite({
       url: "friends/get-users",
       cb: (result: ztResultsOfFriendsInfiniteQuery) => {
-        props.setUsers((oldUsers) => [...oldUsers, ...result.users]);
+        setUsers((oldUsers) => [...oldUsers, ...result.users]);
         if (skip < result.usersCount) {
           setSkip(skip + FRIENDS_LIMIT);
         } else {
@@ -47,21 +41,16 @@ export const Friends = (props: props) => {
         }
       },
       params: {
-        usersType: checkUsersType(props.filterState),
         skip,
         limit: FRIENDS_LIMIT,
-        username: props.filterState.usernameFilter,
+        ...props.params,
       },
     });
   };
   useEffect(() => {
-    props.setUsers([]);
+    setUsers([]);
     fetchNextPage();
-  }, [
-    props.filterState.HasSentRequest,
-    props.filterState.isNotInterested,
-    props.filterState.usernameFilter,
-  ]);
+  }, []);
   useEffect(() => {
     let fetching = false;
     const onScroll = async (e: Event) => {
@@ -86,12 +75,11 @@ export const Friends = (props: props) => {
   }, [fetchNextPage]);
   return (
     <div className="[&>*]:mb-6 sm:grid sm:grid-cols-2 sm:gap-2 md:grid-cols-3 lg:grid-cols-4">
-      {props.users.map((user, index) => (
-        <Friend
-          filterState={props.filterState}
-          removeUserNotInterested={props.onRemoveUserNotInterested}
+      {users.map((user, index) => (
+        <FriendGeneral
           key={index}
           user={user}
+          content={props.actions(user._id)}
         />
       ))}
     </div>

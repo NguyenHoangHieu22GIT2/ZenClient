@@ -33,7 +33,7 @@ type props = {
 export const Post = (props: props) => {
   const { toast } = useToast();
   const [isLiked, setIsLiked] = useState(
-    props.post.isLiked ? props.post.isLiked : false
+    props.post.isLiked ? props.post.isLiked : false,
   );
 
   const [openImage, setOpenImage] = useState(-1);
@@ -41,7 +41,7 @@ export const Post = (props: props) => {
   const [likes, setLikes] = useState(props.post.likes.length);
   const [loadMoreComments, setLoadMoreComments] = useState("");
   const [comments, setComments] = useState<ztCommentType[]>(
-    props.post.comments
+    props.post.comments,
   );
 
   const {
@@ -72,9 +72,6 @@ export const Post = (props: props) => {
     },
     enabled: !!loadMoreComments,
   });
-  if (commentsIsError) {
-    return <h1>Something went wrong</h1>;
-  }
   const refetchComments = useCallback(() => {
     commentsRefetch();
     setLoadMoreComments(v4());
@@ -83,13 +80,13 @@ export const Post = (props: props) => {
     (comment: ztCommentType) => {
       setComments((oldComments) => [comment, ...oldComments]);
     },
-    [setComments]
+    [setComments],
   );
   useEffect(() => {
     if (props.post.isLiked) setIsLiked(true);
   }, [props.post.isLiked]);
   const [isOpenComments, setIsOpenComments] = useState(
-    props.post.comments.length > 0
+    props.post.comments.length > 0,
   );
 
   const mutateLike = useCallback(() => {
@@ -154,9 +151,12 @@ export const Post = (props: props) => {
 
   const toggleReportDialog = useCallback(
     () => setReportDialog((oldBool) => !oldBool),
-    [reportDialog]
+    [reportDialog],
   );
 
+  if (commentsIsError) {
+    return <h1>Something went wrong</h1>;
+  }
   const changeImageIndex = (direction: "LEFT" | "RIGHT") => {
     if (direction === "LEFT") {
       if (openImage === 0) setOpenImage(props.post.images.length - 1);
@@ -176,9 +176,11 @@ export const Post = (props: props) => {
           }}
         >
           <div className="flex gap-3 w-full justify-center aspect-square items-center">
-            <Button onClick={changeImageIndex.bind(this, "LEFT")}>
-              <AiFillCaretLeft />
-            </Button>
+            {ImagesContainer.length > 1 && (
+              <Button onClick={changeImageIndex.bind(this, "LEFT")}>
+                <AiFillCaretLeft />
+              </Button>
+            )}
             <div className="w-screen h-screen">
               <Image
                 className="w-full h-full"
@@ -191,9 +193,11 @@ export const Post = (props: props) => {
                 height={1000}
               />
             </div>
-            <Button onClick={changeImageIndex.bind(this, "RIGHT")}>
-              <AiFillCaretRight />
-            </Button>
+            {ImagesContainer.length > 1 && (
+              <Button onClick={changeImageIndex.bind(this, "RIGHT")}>
+                <AiFillCaretRight />
+              </Button>
+            )}
           </div>
         </Modal>
       )}

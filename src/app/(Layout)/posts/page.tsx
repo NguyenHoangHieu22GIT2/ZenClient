@@ -8,7 +8,7 @@ export default function PostsPage() {
   return (
     <Container>
       <CreatePost />
-      <Posts url="posts/get-posts" />
+      <Posts inifiteScroll={true} url="posts/get-posts" />
     </Container>
   );
 }

@@ -1,19 +1,14 @@
 import React, { useCallback, useState } from "react";
 import { Card, CardContent, CardDescription, CardTitle } from "../../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { ztNotification } from "@/Types/Notification";
 import Link from "next/link";
-import { CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
-import useDeclineFriendRequest from "@/apis/Friend/useDeclineFriendRequest";
-import useAcceptFriendRequest from "@/apis/Friend/useAcceptFriendRequest";
+import { ztNotification } from "@/Types/Notification";
 
 type props = {
   notification: ztNotification;
 };
-
-export const NotificationGeneral = (props: props) => {
+export const NormalNotification = (props: props) => {
   return (
     <Card className="my-2">
       <CardContent className="flex p-2 gap-2 items-center">
@@ -30,10 +25,16 @@ export const NotificationGeneral = (props: props) => {
             </Avatar>
           </Link>
         </div>
-        <div>
-          <CardTitle className="text-sm md:text-xl"></CardTitle>
-          <CardDescription></CardDescription>
-        </div>
+        <Link href={"/posts/" + props.notification.options.link!}>
+          <div>
+            <CardTitle className="text-sm md:text-xl">
+              {props.notification.notificationHeader}
+            </CardTitle>
+            <CardDescription className="italic  bg-slate-200 p-1">
+              {props.notification.notificationBody}
+            </CardDescription>
+          </div>
+        </Link>
       </CardContent>
     </Card>
   );

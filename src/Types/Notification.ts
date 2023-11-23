@@ -23,10 +23,13 @@ export const zNotification = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   hasSeen: z.boolean(),
+  notificationHeader: z.string(),
+  notificationBody: z.string(),
   notificationType: z.union([
     z.literal("accept-friend"),
     z.literal("friend-request"),
     z.literal("general"),
+    z.literal("post-comment"),
   ]),
 });
 

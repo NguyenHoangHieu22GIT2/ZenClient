@@ -1,34 +1,22 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Zen - Social Media For Everyone.
 
-## Getting Started
+### Modern - Fast - Easy
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+#### 1. First Information
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This is my project of trying to recreate something like Facebook, a Social Media. I want to create a social media website that can do pretty much everything like facebook, from that I can use this project to append more features in the future such as games, 3D model, and more AI features.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+a project with a topic of social media is too broad, which is a very bad thing for **_beginners_** but for me, it's such a great idea since I can improve it along the way. With more knowledge I learnt, I can implement it to my project without knowing it will be off-topic since it's pretty broad. Giving me more time to implement new features instead of creating a new project.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Of course this won't be my last project, I am intending to create something like Notion as well, I think I will name it NoteIt (pretty lame I know), I have learnt a lot with this project, something like get more understanding at looking at the way front-end and back-end works, and I more understanding of using react ( Next.JS ) and Nest.JS knowledge.
 
-## Learn More
+Still I want to create more different topic. I am passionate of new things that I want to accomplish. But this project still has a long way to go and I want to finish it,at least it has to look like facebook.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+List Of things That I will have to implement for now:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. **_AI Recommendation_**
+2.

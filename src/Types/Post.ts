@@ -15,19 +15,28 @@ export type CommentId = Brand<string, "CommentId">;
 export const zReplyType = z.object({
   comment: z.string(),
   userId: z.string(),
-  user: zUserMinimalData.omit({ email: true }),
+  user: zUserMinimalData.omit({ email: true, _id: true }),
   _id: CommentIdTransformed,
 });
 
 export type ztReplyType = z.infer<typeof zReplyType>;
 
+export const zUserMinimalDataOmitEmail = zUserMinimalData.omit({
+  email: true,
+  _id: true,
+});
+
+export type ztUserMinimalDataOmitEmail = z.infer<
+  typeof zUserMinimalDataOmitEmail
+>;
+
 export const zCommentType = z.object({
   comment: z.string(),
   userId: z.string(),
-  user: zUserMinimalData.omit({ email: true }),
+  user: zUserMinimalDataOmitEmail,
   _id: CommentIdTransformed,
   replies: z.array(zReplyType),
-  repliesCount: z.number(),
+  repliesCount: z.number().default(0),
 });
 
 export type ztCommentType = z.infer<typeof zCommentType>;

@@ -1,3 +1,3 @@
-export function Bearer(token: string) {
+export function Bearer(token?: string) {
   return `bearer ${token}`;
 }

@@ -1,13 +1,11 @@
 import { CreatePost } from "@/components/Posts/CreatePost";
 import { Posts } from "@/components/Posts/Posts";
 import { Fragment } from "react";
-import { PropsPage } from "@/Types/PropsPage";
-
-export default async function Home(props: PropsPage) {
+export default async function Home() {
   return (
     <Fragment>
       <CreatePost />
-      <Posts url="posts/get-posts" />
+      <Posts inifiteScroll={true} url="posts/get-posts" />
     </Fragment>
   );
 }

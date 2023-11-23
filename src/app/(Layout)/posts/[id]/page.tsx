@@ -1,12 +1,24 @@
 import { zPost, ztPost } from "@/Types/Post";
-import { Props } from "@/Types/PropsPage";
+import { PropsPage } from "@/Types/PropsPage";
 import { api } from "@/lib/axios.api";
 import React from "react";
+import { cookies } from "next/headers";
+import { Bearer } from "@/utils/Bearer";
+import { Post } from "@/components/Posts/Post";
 
-export default async function PostPage(props: Props) {
+export default async function PostPage(props: PropsPage) {
+  const cookie = cookies().get("jwtToken");
+  console.log(cookie);
   const result = await api.get<ztPost>(`posts/${props.params.id}`, {
-    withCredentials: true,
+    headers: {
+      Authorization: Bearer(cookie && cookie?.value),
+    },
   });
-  const parsedResult = zPost.parse(result.data);
-  return <div>page</div>;
+  console.log(result.data);
+  // const parsedResult = zPost.parse(result.data);
+  return (
+    <div>
+      <Post post={result.data} />
+    </div>
+  );
 }

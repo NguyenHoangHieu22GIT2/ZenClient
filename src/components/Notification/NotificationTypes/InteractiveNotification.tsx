@@ -4,16 +4,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ztNotification } from "@/Types/Notification";
 import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
-import useDeclineFriendRequest from "@/apis/Friend/useDeclineFriendRequest";
-import useAcceptFriendRequest from "@/apis/Friend/useAcceptFriendRequest";
 
 type props = {
   notification: ztNotification;
+  componentCardContent?: React.JSX.Element;
+  componentCardFooter?: React.JSX.Element;
+  notificationHeader: string;
+  notificationBody: string;
 };
-
-export const NotificationGeneral = (props: props) => {
+export const InteractiveNotification = (props: props) => {
   return (
     <Card className="my-2">
       <CardContent className="flex p-2 gap-2 items-center">
@@ -31,10 +31,23 @@ export const NotificationGeneral = (props: props) => {
           </Link>
         </div>
         <div>
-          <CardTitle className="text-sm md:text-xl"></CardTitle>
-          <CardDescription></CardDescription>
+          <CardTitle className="text-sm md:text-xl">
+            {props.notificationHeader}
+          </CardTitle>
+          <CardDescription>
+            <Link
+              href={`users/${props.notification.options.userId!._id}`}
+              className="font-bold"
+            >
+              {props.notificationBody}
+            </Link>
+          </CardDescription>
+          {props.componentCardContent}
         </div>
       </CardContent>
+      <CardFooter className=" flex justify-end  gap-5">
+        {props.componentCardFooter}
+      </CardFooter>
     </Card>
   );
 };

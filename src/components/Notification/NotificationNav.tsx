@@ -5,7 +5,6 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -15,12 +14,7 @@ import { cn } from "@/lib/utils";
 import { Notifications } from "./Notifications";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
-import {
-  zNotifications,
-  ztNotification,
-  ztNotifications,
-} from "@/Types/Notification";
-import { v4 } from "uuid";
+import { zNotifications, ztNotifications } from "@/Types/Notification";
 
 export const NotificationNav = () => {
   //this is for when you click the notification bell
@@ -29,14 +23,10 @@ export const NotificationNav = () => {
   // UPDATE: using socketConversations.io to change the way we receive notifications
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["getnotifications"],
-    enabled: true,
-    staleTime: 0,
     queryFn: async () => {
       return api
         .get<ztNotifications>("notification", { withCredentials: true })
         .then((result) => {
-          // console.log(result.data);
-          // return result.data;
           const parsedData = zNotifications.parse(result.data);
           return parsedData;
         });

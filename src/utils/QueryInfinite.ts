@@ -1,9 +1,8 @@
 import { ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
 import { api } from "@/lib/axios.api";
-import { linkToQueryPosts } from "@/utils/LinkToQuery";
-export async function useQueryInfinite<
+export async function QueryInfinite<
   TCbData,
-  TParams = { skip: number; limit: number }
+  TParams = { skip: number; limit: number },
 >({
   url,
   cb,

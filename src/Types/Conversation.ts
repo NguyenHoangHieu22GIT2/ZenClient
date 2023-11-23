@@ -7,6 +7,7 @@ export const ConversationId = z
   .string()
   .transform((data) => data as ConversationId);
 export const zMessage = z.object({
+  _id: z.string(),
   userId: UserId,
   message: z.string(),
   date: z.string().transform((value) => new Date(value)),

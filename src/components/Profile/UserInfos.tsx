@@ -26,36 +26,26 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios.api";
-import { zUserPage, ztUserPage } from "@/Types/User";
+import { UserId } from "@/Types/User";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import { useUserStore } from "@/lib/useUserStore";
 import Link from "next/link";
 import useAddFriendMutation from "@/apis/Friend/useAddFriendMutation";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
-import { socketConversations } from "@/lib/socket";
+import useFollowUserMutation from "@/apis/Friend/useFollowUserMutation";
+import { useQueryUserInfos } from "@/apis/User/useQueryUserInfos";
 type props = {
-  userId: string;
+  userId: UserId;
 };
 
 export const UserInfos = (props: props) => {
   const { toast } = useToast();
   const addFriendMutate = useAddFriendMutation();
+  const followUserMutate = useFollowUserMutation();
   const [hasSentFriendRequest, setHasSendFriendRequest] = useState(false);
+  const userInfosQuerys = useQueryUserInfos(props.userId);
   const userStore = useUserStore((state) => state.user);
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["queryInfos"],
-    queryFn: async () => {
-      return api
-        .get<ztUserPage>(`users/${props.userId}`, { withCredentials: true })
-        .then((data) => {
-          const parsedData = zUserPage.parse(data.data);
-          return parsedData;
-        });
-    },
-  });
   useEffect(() => {
     if (addFriendMutate.data) {
       setHasSendFriendRequest(addFriendMutate.data.hasSent);
@@ -67,18 +57,22 @@ export const UserInfos = (props: props) => {
         action: <ToastAction altText="Alright">Alright</ToastAction>,
       });
     }
-  }, [addFriendMutate.data]);
-  if (isLoading || !data) {
+  }, [addFriendMutate.data, toast]);
+  if (userInfosQuerys.isLoading || !userInfosQuerys.data) {
     return <h1>Is Loading...</h1>;
   }
 
-  if (error) {
+  if (userInfosQuerys.error) {
     return <h1>Error</h1>;
   }
 
-  const user = data.user;
-  const postsCount = data.postsCount;
-  const friendsInfo = data.friendsInfo;
+  const user = userInfosQuerys.data.user;
+  const postsCount = userInfosQuerys.data.postsCount;
+  const friendsInfo = userInfosQuerys.data.friendsInfo;
+
+  let isFollowed =
+    followUserMutate.data || userInfosQuerys.data.friendsInfo.isFollowing;
+
   return (
     <Card>
       <CardHeader>
@@ -123,21 +117,30 @@ export const UserInfos = (props: props) => {
         </CardDescription>
         <Separator className="my-5" />
         <ul>
-          <li>{friendsInfo.friends.length} Friends</li>
+          <li>{friendsInfo.friends} Friends</li>
           <li>{postsCount} Posts</li>
-          <li>{friendsInfo.followers.length} Followers</li>
-          <li>{friendsInfo.followings.length} Following</li>
+          <li>{friendsInfo.followers} Followers</li>
+          <li>{friendsInfo.followings} Following</li>
         </ul>
       </CardContent>
       <Separator className="my-5" />
       <CardFooter className="flex gap-1 flex-wrap justify-center">
         {userStore._id !== user._id ? (
           <>
-            <Button onClick={() => addFriendMutate.mutate(props.userId)}>
-              {hasSentFriendRequest ? "Cancel" : "Send"} Friend Request
-            </Button>
+            {!friendsInfo.isFriend ? (
+              <Button onClick={() => addFriendMutate.mutate(props.userId)}>
+                {hasSentFriendRequest ? "Cancel" : "Send"} Friend Request
+              </Button>
+            ) : (
+              <Button>Unfriend</Button>
+            )}
             <Button>Message</Button>
-            <Button>Follow</Button>
+            <Button
+              onClick={() => followUserMutate.mutate(props.userId)}
+              disabled={followUserMutate.isLoading}
+            >
+              {isFollowed ? "Unfollow" : "Follow"}
+            </Button>
           </>
         ) : (
           <Button asChild className="md:w-full">

@@ -7,21 +7,24 @@ import { Posts } from "../Posts/Posts";
 import Users from "../Users/Users";
 import { useUserStore } from "@/lib/useUserStore";
 import Information from "./Information";
+import { UserId } from "@/Types/User";
 
 type props = {
-  userId: string;
+  userId: UserId;
 };
 
-export type Tab = "posts" | "friends" | "information"
+export type Tab = "posts" | "friends" | "information";
 export const UserProfile = (props: props) => {
-  const userId = useUserStore(state => state.user._id)
-  const [tab, setTab] = useState<Tab>("posts")
-  let mainElement = <Posts url={`posts/get-user-posts/${props.userId}`} />
+  const userId = useUserStore((state) => state.user._id);
+  const [tab, setTab] = useState<Tab>("posts");
+  let mainElement = (
+    <Posts inifiteScroll={false} url={`posts/get-user-posts/${props.userId}`} />
+  );
 
   if (tab === "friends") {
-    mainElement = <Users url={`friends/${props.userId}`} />
+    mainElement = <Users url={`friends/${props.userId}`} />;
   } else if (tab === "information" && props.userId === userId) {
-    mainElement = <Information />
+    mainElement = <Information />;
   }
   return (
     <>

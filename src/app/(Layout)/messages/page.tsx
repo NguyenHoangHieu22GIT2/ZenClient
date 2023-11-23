@@ -1,19 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Layout } from "@/components/Layout/Layout";
 import { Container } from "@/components/ui/Container";
 import { FriendList } from "@/components/Messages/FriendList";
 import { FriendMessages } from "@/components/Messages/FriendMessages";
-import { SeparatorVertical } from "lucide-react";
-import useCheckAuth from "@/hooks/useCheckAuth";
 import { api } from "@/lib/axios.api";
 import { useQuery } from "@tanstack/react-query";
-import { zChatSystem, ztChatSystem } from "@/Types/ChatSystem";
 import {
   ConversationId,
   zConversation,
   ztConversation,
-  ztMessage,
 } from "@/Types/Conversation";
 import { socketConversations } from "@/lib/socket";
 import { socketNameEmit } from "@/utils/SocketName";
@@ -23,7 +18,7 @@ import { UserId } from "@/Types/User";
 import { v4 } from "uuid";
 import { useChatSystemStore } from "@/lib/useChatSystemStore";
 
-export default function messagesPage() {
+export default function MessagesPage() {
   const user = useUserStore((state) => state.user);
   const [conversation, setConversation] = useState<ztConversation>();
   const [conversations, setConversations] = useState<ztConversation[]>([]);
@@ -37,7 +32,7 @@ export default function messagesPage() {
         "chat-system/get-conversations",
         {
           withCredentials: true,
-        }
+        },
       );
       const parsedResult = z.array(zConversation).parse(result.data);
       setConversations(parsedResult);
@@ -60,10 +55,9 @@ export default function messagesPage() {
           setConversation(data);
           setNotification({ userId: v4() as UserId, conversationId: data._id });
         }
-      }
+      },
     );
   }
-  //ERROR:Tomorrow 11/16 fix :), want to be notified who send messages
   function setNotification({
     conversationId,
     userId,
@@ -86,18 +80,6 @@ export default function messagesPage() {
       return conversations;
     });
   }
-
-  // useEffect(() => {
-  //   if (conversations.length > 0) {
-  //     let isNotified = false;
-  //     conversations.forEach((conversation) => {
-  //       if (conversation.notificationForWho === user._id) {
-  //         isNotified = true;
-  //       }
-  //     });
-  //     setNotified(isNotified);
-  //   }
-  // }, [conversations]);
 
   return (
     <Container className="mt-5">

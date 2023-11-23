@@ -7,11 +7,10 @@ import { CreatePost } from "../Posts/CreatePost";
 import { Tab } from "./UserProfile";
 import { cn } from "@/lib/utils";
 
-
 type props = {
-  onSetTab: React.Dispatch<React.SetStateAction<Tab>>
-  yourActions: boolean
-}
+  onSetTab: React.Dispatch<React.SetStateAction<Tab>>;
+  yourActions: boolean;
+};
 
 export const UserActions = (props: props) => {
   return (
@@ -23,14 +22,16 @@ export const UserActions = (props: props) => {
         <Button onClick={() => props.onSetTab("friends")} variant={"secondary"}>
           Friends
         </Button>
-        <Button onClick={() => props.onSetTab("information")} variant={"secondary"}>
+        <Button
+          onClick={() => props.onSetTab("information")}
+          variant={"secondary"}
+        >
           Information
         </Button>
       </Card>
       <Separator className="my-5" />
       <CreatePost />
       <Separator className="my-5" />
-
     </div>
   );
 };

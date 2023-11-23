@@ -2,7 +2,6 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { GroupFilter } from "@/components/Groups/GroupFilter";
 import { Groups } from "@/components/Groups/Groups";
-import useCheckAuth from "@/hooks/useCheckAuth";
 import { PropsPage } from "@/Types/PropsPage";
 
 export default async function groupsPage(props: PropsPage) {
