@@ -6,18 +6,10 @@ import { ztResultsOfFriendsInfiniteQuery } from "@/Types/resultsOfInfiniteQuery"
 import { QueryInfinite } from "@/utils/QueryInfinite";
 import { FriendGeneral } from "./FriendGeneral";
 
-// This is my approach to make this component low coupling...
-// function test()=>{
-//    return (userId:UserId)=>{ // this is a component function
-//         const use = mutate(userId)
-//         return <>
-//           <Button onClick={use}>Add Friend</Button>
-//         </>
-//       }
-//   }
 type props = {
   params: Record<string, string | number>;
-  actions: (userId: UserId) => React.JSX.Element;
+  actions: (userId: UserId) => (...args: any) => React.JSX.Element;
+  url: string;
 };
 export type apiUrlType =
   | "recommend-user"
@@ -30,7 +22,7 @@ export const FriendsGeneral = (props: props) => {
   const [end, setEnd] = useState(false);
   const fetchNextPage = async () => {
     await QueryInfinite({
-      url: "friends/get-users",
+      url: props.url,
       cb: (result: ztResultsOfFriendsInfiniteQuery) => {
         setUsers((oldUsers) => [...oldUsers, ...result.users]);
         if (skip < result.usersCount) {
@@ -79,7 +71,8 @@ export const FriendsGeneral = (props: props) => {
         <FriendGeneral
           key={index}
           user={user}
-          content={props.actions(user._id)}
+          addons={props.actions(user._id)}
+          onSetUsers={setUsers}
         />
       ))}
     </div>

@@ -11,6 +11,7 @@ import { ToastAction } from "@radix-ui/react-toast";
 type props = {
   filterState: any;
   userId: UserId;
+  args?: any;
 };
 
 export const AcionsForFriendsGeneralComponent = (props: props) => {

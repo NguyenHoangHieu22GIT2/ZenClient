@@ -25,7 +25,7 @@ export interface FilterAction {
 }
 function filterReducer(
   state: filterReducerType,
-  action: FilterAction,
+  action: FilterAction
 ): filterReducerType {
   if (action.type === "SET_USERNAME") {
     return {
@@ -72,7 +72,7 @@ export default function FriendsComponent(props: props) {
       HasSentRequest: props.criteria.usersType === "has-sent-request",
       isNotInterested: props.criteria.usersType === "not-interested",
       usernameFilter: props.criteria.username || "  ",
-    },
+    }
   );
 
   function changeFilter({
@@ -102,21 +102,24 @@ export default function FriendsComponent(props: props) {
       payload: { usernameFilter: "" },
     });
   }
-  const actionForFriendsGeneral: (userId: UserId) => React.JSX.Element = (
-    userId: UserId,
-  ) => {
-    return (
-      <AcionsForFriendsGeneralComponent
-        filterState={filterState}
-        userId={userId}
-      />
-    );
+  const actionForFriendsGeneral: (
+    userId: UserId
+  ) => (args: Record<any, any>) => React.JSX.Element = (userId: UserId) => {
+    return (args) => {
+      return (
+        <AcionsForFriendsGeneralComponent
+          filterState={filterState}
+          userId={userId}
+          args={args}
+        />
+      );
+    };
     //   return function Component(userId: UserId) {
     // return <></>
     //   };
   };
   return (
-    <div className="flex md:flex-row  flex-col gap-2 [&>*:first-child]:basis-1/4 [&>*:last-child]:basis-3/4">
+    <div className="flex md:flex-row  flex-col gap-10 [&>*:first-child]:basis-1/4 [&>*:last-child]:basis-3/4">
       <FriendFilter
         onChangeResetFilter={changeResetFilter}
         onChangeFilter={changeFilter}
@@ -124,6 +127,7 @@ export default function FriendsComponent(props: props) {
         criteria={props.criteria}
       />
       <FriendsGeneral
+        url="friends/get-users"
         actions={actionForFriendsGeneral}
         params={{
           usersType: checkUsersType(filterState),

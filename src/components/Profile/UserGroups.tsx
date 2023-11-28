@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -17,13 +17,15 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useUserStore } from "@/lib/useUserStore";
+import { Skeleton } from "../ui/skeleton";
 
 type props = {
   userId: string;
 };
 
-export const UserGroups = (props: props) => {
+export const UserGroups = React.memo((props: props) => {
   const userStored = useUserStore((state) => state.user);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { data, isLoading, error } = useQuery({
     queryKey: ["get-user-groups"],
     queryFn: () => {
@@ -40,7 +42,7 @@ export const UserGroups = (props: props) => {
   });
 
   if (isLoading || !data) {
-    return <h1>Loading...</h1>;
+    return <Skeleton className="w-3 h-96 rounded-sm basis-4/12" />;
   }
   if (error) {
     console.log("🚀 ~ file: UserGroups.tsx:41 ~ UserGroups ~ error:", error);
@@ -50,37 +52,41 @@ export const UserGroups = (props: props) => {
     userId: props.userId,
   });
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between">
-          <div>
-            <CardTitle>Groups</CardTitle>
-            <CardDescription>See what Shadcn likes</CardDescription>
-          </div>
-          {userStored._id === props.userId && (
+    <div className="basis-4/12">
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between">
             <div>
-              <Button asChild>
-                <Link href={`/groups?${searchParams.toString()}`}>More +</Link>
-              </Button>
+              <CardTitle>Groups</CardTitle>
+              <CardDescription>See what Shadcn likes</CardDescription>
             </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-96 w-full ">
-          {data.map((group, index) => {
-            return (
-              <div key={index}>
-                <UserGroup group={group} />
-                <Separator className="my-2" />
+            {userStored._id === props.userId && (
+              <div>
+                <Button asChild>
+                  <Link href={`/groups?${searchParams.toString()}`}>
+                    More +
+                  </Link>
+                </Button>
               </div>
-            );
-          })}
-        </ScrollArea>
-      </CardContent>
-    </Card>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-96 w-full ">
+            {data!.map((group, index) => {
+              return (
+                <div key={index}>
+                  <UserGroup group={group} />
+                  <Separator className="my-2" />
+                </div>
+              );
+            })}
+          </ScrollArea>
+        </CardContent>
+      </Card>
+    </div>
   );
-};
+});
 
 // Will use this in the future :)
 // const fetchingGroups = useCallback(async () => {

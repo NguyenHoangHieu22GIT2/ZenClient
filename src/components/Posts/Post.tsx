@@ -30,20 +30,21 @@ type props = {
   post: ztPost;
 };
 
-export const Post = (props: props) => {
+export const Post = React.memo((props: props) => {
   const { toast } = useToast();
   const [isLiked, setIsLiked] = useState(
-    props.post.isLiked ? props.post.isLiked : false,
+    props.post.isLiked ? props.post.isLiked : false
   );
-
   const [openImage, setOpenImage] = useState(-1);
   const [reportDialog, setReportDialog] = useState(false);
-  const [likes, setLikes] = useState(props.post.likes.length);
+  const [likes, setLikes] = useState(props.post.likes);
   const [loadMoreComments, setLoadMoreComments] = useState("");
   const [comments, setComments] = useState<ztCommentType[]>(
-    props.post.comments,
+    props.post.comments
   );
-
+  const [isOpenComments, setIsOpenComments] = useState(
+    props.post.comments.length > 0
+  );
   const {
     mutate: likeMutation,
     isLoading: likeIsLoading,
@@ -55,7 +56,7 @@ export const Post = (props: props) => {
         .patch(process.env.NEXT_PUBLIC_SERVER_TOGGLE_LIKE_POST, data, {
           withCredentials: true,
         })
-        .then((data) => data);
+        .then((data) => data.data);
     },
   });
   const { error: commentsIsError, refetch: commentsRefetch } = useQuery({
@@ -80,13 +81,7 @@ export const Post = (props: props) => {
     (comment: ztCommentType) => {
       setComments((oldComments) => [comment, ...oldComments]);
     },
-    [setComments],
-  );
-  useEffect(() => {
-    if (props.post.isLiked) setIsLiked(true);
-  }, [props.post.isLiked]);
-  const [isOpenComments, setIsOpenComments] = useState(
-    props.post.comments.length > 0,
+    [setComments]
   );
 
   const mutateLike = useCallback(() => {
@@ -102,56 +97,44 @@ export const Post = (props: props) => {
       }
       return newBool;
     });
-  }, [props.post._id, isLiked]);
+  }, [props.post._id, setIsLiked]);
   const toggleLike = useCallback(() => {
     const date = DateConverter();
+    const toastInfo = {
+      title: "",
+      actionAltText: "",
+    };
     if (likeIsError) {
-      toast({
-        title: "Something went wrong",
-        description: date,
-        action: <ToastAction altText="LOL">Undo</ToastAction>,
-      });
+      toastInfo.title = "Something went wrong";
+      toastInfo.actionAltText = "LOL";
     }
-
     mutateLike();
-    if (!isLiked)
-      toast({
-        title: "Liked a Post",
-        description: date,
-        action: (
-          <ToastAction onClick={mutateLike} altText="Undo Like">
-            Undo
-          </ToastAction>
-        ),
-      });
-    else
-      toast({
-        title: "Unliked a Post",
-        description: date,
-        action: (
-          <ToastAction onClick={mutateLike} altText="Undo Unlike">
-            Undo
-          </ToastAction>
-        ),
-      });
-  }, [props.post._id]);
+    if (!isLiked) {
+      toastInfo.title = "Liked a Post";
+      toastInfo.actionAltText = "Undo Like";
+    } else {
+      toastInfo.title = "UnLiked a Post";
+      toastInfo.actionAltText = "Undo Unlike";
+    }
+    toast({
+      title: toastInfo.title,
+      action: (
+        <ToastAction onClick={mutateLike} altText={toastInfo.actionAltText}>
+          Undo
+        </ToastAction>
+      ),
+      description: date,
+    });
+  }, [props.post._id, isLiked]);
   const dateOfPublished = DateConverter(new Date(props.post.createdAt));
 
-  const ImagesContainer: string[] = [];
-
-  for (
-    let imageIndex = 0;
-    imageIndex < props.post.images.length;
-    imageIndex++
-  ) {
-    if (imageIndex >= 2) break;
-    const image = props.post.images[imageIndex];
-    ImagesContainer.push(image);
-  }
+  const ImagesContainer: string[] = props.post.images
+    ? props.post.images.slice(0, 2)
+    : [];
 
   const toggleReportDialog = useCallback(
     () => setReportDialog((oldBool) => !oldBool),
-    [reportDialog],
+    [reportDialog]
   );
 
   if (commentsIsError) {
@@ -159,11 +142,13 @@ export const Post = (props: props) => {
   }
   const changeImageIndex = (direction: "LEFT" | "RIGHT") => {
     if (direction === "LEFT") {
-      if (openImage === 0) setOpenImage(props.post.images.length - 1);
-      else setOpenImage((oldIndex) => oldIndex - 1);
+      openImage === 0
+        ? setOpenImage(props.post.images.length - 1)
+        : setOpenImage((oldIndex) => oldIndex - 1);
     } else if (direction === "RIGHT") {
-      if (openImage === props.post.images.length - 1) setOpenImage(0);
-      else setOpenImage((oldIndex) => oldIndex + 1);
+      openImage === props.post.images.length - 1
+        ? setOpenImage(0)
+        : setOpenImage((oldIndex) => oldIndex + 1);
     }
   };
   return (
@@ -211,7 +196,6 @@ export const Post = (props: props) => {
             </div>
           </div>
           <div>
-            {/* <Badge className="mr-3">{props.post.user.badge}</Badge> */}
             <DropDownMenuPost toggleReportDialog={toggleReportDialog} />
             <ReportPostDialog
               toggleReportDialog={toggleReportDialog}
@@ -308,4 +292,4 @@ export const Post = (props: props) => {
       </Card>
     </>
   );
-};
+});

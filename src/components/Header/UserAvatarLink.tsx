@@ -2,9 +2,10 @@
 import Link from "next/link";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { ztUserMinimalDataOmitEmail } from "@/Types/Post";
+import { ztUserMinimalData } from "@/Types/User";
 
 type props = {
-  user: ztUserMinimalDataOmitEmail;
+  user: ztUserMinimalData | ztUserMinimalDataOmitEmail;
 };
 
 export function UserAvatarLink(props: props) {

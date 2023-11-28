@@ -9,10 +9,9 @@ interface props extends PropsClassName {
 export const Heading = (props: props) => {
   return (
     <h1
-      // className={`scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl ${props.className}`}>
       className={cn(
         "scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl",
-        props.className,
+        props.className
       )}
     >
       {props.children}

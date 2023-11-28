@@ -15,10 +15,11 @@ import { imageUrl } from "@/utils/imageUrl";
 
 type props = {
   user: ztUserMinimalData;
-  content?: React.JSX.Element;
+  addons: (args: Record<any, any>) => React.JSX.Element;
+  onSetUsers: React.Dispatch<React.SetStateAction<ztUserMinimalData[]>>;
 };
 
-export const FriendGeneral = (props: props) => {
+export const FriendGeneral = React.memo((props: props) => {
   return (
     <Card className="shadow-lg overflow-hidden rounded-lg">
       <CardHeader className="p-0 mx-auto">
@@ -38,7 +39,9 @@ export const FriendGeneral = (props: props) => {
         <CardTitle>{props.user.username}</CardTitle>
         <CardDescription>{props.user.email}</CardDescription>
       </CardContent>
-      <CardFooter className="grid grid-cols-2">{props.content}</CardFooter>
+      <CardFooter className="grid grid-cols-2">
+        {props.addons(props)}
+      </CardFooter>
     </Card>
   );
-};
+});

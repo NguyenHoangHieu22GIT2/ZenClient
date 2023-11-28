@@ -13,7 +13,7 @@ type props = {
   groupId?: GroupId;
 };
 
-export const CreatePost = (props: props) => {
+export function CreatePost(props: props) {
   return (
     <Card className="m-2 mx-auto w-full lg:max-w-[800px]">
       <CardHeader>
@@ -25,4 +25,4 @@ export const CreatePost = (props: props) => {
       </CardContent>
     </Card>
   );
-};
+}

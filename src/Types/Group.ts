@@ -9,17 +9,17 @@ export const GroupId = z.string().transform((data) => data as GroupId);
 export const zGroup = z.object({
   _id: GroupId,
   groupName: z.string().min(5),
-  groupDescription: z.string().min(10),
+  groupDescription: z.string().min(50),
   userId: UserId,
   groupAvatar: z.string().nullable(),
   groupAvatarFile:
     typeof window === "undefined"
       ? z.null()
       : z
-        .instanceof(File, {
-          message: "You have to input a image here",
-        })
-        .optional(),
+          .instanceof(File, {
+            message: "You have to input a image here",
+          })
+          .optional(),
   postIds: z.array(z.string()),
   userIds: z.array(UserId),
   isPrivate: z.boolean().default(true),
@@ -61,10 +61,10 @@ export type ztResultsOfGroupsInfiniteQuery = z.infer<
 
 export const zOutGroup = z.object({
   groupId: GroupId,
-  userId: UserId
-})
+  userId: UserId,
+});
 
-export type ztOutGroup = z.infer<typeof zOutGroup>
+export type ztOutGroup = z.infer<typeof zOutGroup>;
 
 export type ztGroup = z.infer<typeof zGroup>;
 

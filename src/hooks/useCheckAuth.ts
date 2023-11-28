@@ -43,7 +43,7 @@ const useCheckAuth = () => {
               break;
             }
           }
-        },
+        }
       );
 
     return () => {

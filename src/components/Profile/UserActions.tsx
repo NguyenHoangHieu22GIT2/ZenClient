@@ -14,8 +14,8 @@ type props = {
 
 export const UserActions = (props: props) => {
   return (
-    <div>
-      <Card className={"p-3 flex justify-stretch gap-3 [&>*]:basis-1/3 "}>
+    <div className="basis-5/12">
+      <Card className="p-3 flex justify-stretch gap-3 [&>*]:basis-1/3 ">
         <Button onClick={() => props.onSetTab("posts")} variant={"secondary"}>
           Posts
         </Button>
@@ -31,7 +31,6 @@ export const UserActions = (props: props) => {
       </Card>
       <Separator className="my-5" />
       <CreatePost />
-      <Separator className="my-5" />
     </div>
   );
 };

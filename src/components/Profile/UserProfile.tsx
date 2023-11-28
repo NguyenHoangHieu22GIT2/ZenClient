@@ -7,7 +7,10 @@ import { Posts } from "../Posts/Posts";
 import Users from "../Users/Users";
 import { useUserStore } from "@/lib/useUserStore";
 import Information from "./Information";
-import { UserId } from "@/Types/User";
+import { UserId, ztUserMinimalData } from "@/Types/User";
+import { Separator } from "../ui/separator";
+import { FriendsGeneral } from "../Friends/FriendsGeneral";
+import { FriendsAction } from "./FriendsAction";
 
 type props = {
   userId: UserId;
@@ -20,20 +23,32 @@ export const UserProfile = (props: props) => {
   let mainElement = (
     <Posts inifiteScroll={false} url={`posts/get-user-posts/${props.userId}`} />
   );
-
+  const friendsAction: (
+    userId: UserId
+  ) => (args: {
+    onSetUser: React.Dispatch<React.SetStateAction<ztUserMinimalData[]>>;
+  }) => React.JSX.Element = (userId: UserId) => (args) =>
+    <FriendsAction onSetUser={args.onSetUser} userId={userId} />;
   if (tab === "friends") {
-    mainElement = <Users url={`friends/${props.userId}`} />;
+    mainElement = (
+      <FriendsGeneral
+        url="friends/get-users"
+        params={{ userId: props.userId }}
+        actions={friendsAction}
+      />
+    );
   } else if (tab === "information" && props.userId === userId) {
     mainElement = <Information />;
   }
   return (
     <>
-      <section className="md:flex md:items-start  mt-5 gap-2 [&>*:first-child]:basis-3/12  [&>*:nth-child(2)]:basis-5/12 [&>*:last-child]:basis-4/12">
+      <section className="md:flex md:justify-center  mt-5 gap-2 ">
         <UserInfos userId={props.userId} />
         <UserActions onSetTab={setTab} yourActions={userId === props.userId} />
         <UserGroups userId={props.userId} />
       </section>
-      {/* <Posts url={`posts/get-user-posts/${props.userId}`} /> */}
+      <Separator className="my-5" />
+
       {mainElement}
     </>
   );

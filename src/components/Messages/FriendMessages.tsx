@@ -38,7 +38,7 @@ export function FriendMessages(props: props) {
   const [end, setEnd] = useState(false);
   const [skip, setSkip] = useState(props.conversation.messages.length);
   const [messages, setMessages] = useState<ztMessage[]>(
-    props.conversation.messages,
+    props.conversation.messages
   );
   const friend =
     props.conversation.userIds[0]._id === userId
@@ -117,7 +117,6 @@ export function FriendMessages(props: props) {
       if (test.current) {
         const { scrollTop } = test.current!;
         if (!fetching && scrollTop <= 0) {
-          console.log("Hello Top");
           fetching = true;
           if (fetching && !end) {
             await fetchingMessages();

@@ -4,6 +4,7 @@ import { ztPost, ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
 import { Post } from "./Post";
 import { QueryInfinite } from "@/utils/QueryInfinite";
 import { POSTS_LIMIT } from "@/data/pageLimiter";
+import { v4 } from "uuid";
 
 type props = {
   url: string;
@@ -11,7 +12,7 @@ type props = {
   inifiteScroll: boolean;
 };
 
-export const Posts = (props: props) => {
+export const Posts = React.memo((props: props) => {
   const [posts, setPosts] = useState<ztPost[]>([]);
   const [skip, setSkip] = useState(0);
   const [end, setEnd] = useState(false);
@@ -21,7 +22,6 @@ export const Posts = (props: props) => {
       cb: (result: ztResultsOfPostsInfiniteQuery) => {
         setPosts((oldPosts) => [...oldPosts, ...result.posts]);
         const lastPageNumber = Math.ceil(result.postsCount / POSTS_LIMIT);
-        console.log(props.inifiteScroll);
         if (skip / POSTS_LIMIT < lastPageNumber) {
           setSkip(skip + POSTS_LIMIT);
         } else if (!props.inifiteScroll) {
@@ -34,7 +34,7 @@ export const Posts = (props: props) => {
 
   useEffect(() => {
     fetchingPosts();
-  }, [fetchingPosts]);
+  }, []);
 
   useEffect(() => {
     let fetching = false;
@@ -59,4 +59,4 @@ export const Posts = (props: props) => {
       })}
     </div>
   );
-};
+});

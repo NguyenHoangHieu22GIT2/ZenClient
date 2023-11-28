@@ -35,11 +35,12 @@ import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
 import useFollowUserMutation from "@/apis/Friend/useFollowUserMutation";
 import { useQueryUserInfos } from "@/apis/User/useQueryUserInfos";
+import { Skeleton } from "../ui/skeleton";
 type props = {
   userId: UserId;
 };
 
-export const UserInfos = (props: props) => {
+export const UserInfos = React.memo((props: props) => {
   const { toast } = useToast();
   const addFriendMutate = useAddFriendMutation();
   const followUserMutate = useFollowUserMutation();
@@ -59,7 +60,7 @@ export const UserInfos = (props: props) => {
     }
   }, [addFriendMutate.data, toast]);
   if (userInfosQuerys.isLoading || !userInfosQuerys.data) {
-    return <h1>Is Loading...</h1>;
+    return <Skeleton className="w-3 h-96 rounded-sm basis-3/12"></Skeleton>;
   }
 
   if (userInfosQuerys.error) {
@@ -74,7 +75,7 @@ export const UserInfos = (props: props) => {
     followUserMutate.data || userInfosQuerys.data.friendsInfo.isFollowing;
 
   return (
-    <Card>
+    <Card className="basis-3/12">
       <CardHeader>
         <ContextMenu>
           <ContextMenuTrigger>
@@ -150,4 +151,4 @@ export const UserInfos = (props: props) => {
       </CardFooter>
     </Card>
   );
-};
+});

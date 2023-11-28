@@ -18,9 +18,12 @@ export const AvatarHoverCard = (props: props) => {
     <HoverCard>
       <HoverCardTrigger asChild>
         <Avatar>
-          <AvatarImage
+          <Image
             className={props.className}
             src={CheckImageUrl(props.avatarUrl)}
+            width={50}
+            height={50}
+            alt={"Hello"}
           />
           <h1>{props.username}</h1>
         </Avatar>
@@ -29,7 +32,7 @@ export const AvatarHoverCard = (props: props) => {
         <div className="flex justify-center items-center gap-5">
           <Image
             src={CheckImageUrl(props.avatarUrl)}
-            alt={props.username}
+            alt={"Hello"}
             width={150}
             height={150}
             className="rounded-full aspect-square"
