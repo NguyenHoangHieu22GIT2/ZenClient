@@ -1,10 +1,6 @@
 "use client";
 import { AvatarHoverCard } from "../ui/AvatarHoverCard";
-import { cookies } from "next/headers";
-import jwt from "jwt-decode";
-import { useUserStore } from "@/lib/useUserStore";
-import { ztUser, ztUserMinimalData } from "@/Types/User";
-import { CheckImageUrl } from "@/utils/CheckImageUrl";
+import { ztUserMinimalData } from "@/Types/User";
 
 type props = {
   user: ztUserMinimalData;

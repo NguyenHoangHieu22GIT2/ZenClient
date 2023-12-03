@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AvatarHoverCard } from "../ui/AvatarHoverCard";
 import { Button } from "../ui/button";
 import { AiOutlinePhone, AiOutlineSend } from "react-icons/ai";
 import { BsCameraVideo } from "react-icons/bs";
@@ -15,9 +14,6 @@ import { socketConversations } from "@/lib/socket";
 import { socketNameEmit, socketNameOn } from "@/utils/SocketName";
 import { useUserStore } from "@/lib/useUserStore";
 import { UserAvatarLink } from "../Header/UserAvatarLink";
-import { ScrollArea } from "../ui/scroll-area";
-import { DateConverter } from "@/utils/DateConverter";
-import { useQuery } from "@tanstack/react-query";
 import { QueryInfinite } from "@/utils/QueryInfinite";
 import { UserId } from "@/Types/User";
 import { Message } from "./Message";
@@ -158,10 +154,11 @@ export function FriendMessages(props: props) {
           {messages.map((msg) => {
             return (
               <Message
-                msg={msg.message}
-                isYourMessage={msg.userId === userId}
-                date={msg.date}
                 key={msg._id}
+                message={msg}
+                isYourMessage={msg.userId === userId}
+                conversationId={props.conversation._id}
+                onSetMessages={setMessages}
               />
             );
           })}

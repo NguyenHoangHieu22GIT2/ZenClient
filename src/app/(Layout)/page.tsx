@@ -1,8 +1,7 @@
 "use client";
 import { CreatePost } from "@/components/Posts/CreatePost";
 import { Posts } from "@/components/Posts/Posts";
-
-import { Fragment, Suspense, lazy } from "react";
+import { Fragment } from "react";
 export default function Home() {
   return (
     <Fragment>

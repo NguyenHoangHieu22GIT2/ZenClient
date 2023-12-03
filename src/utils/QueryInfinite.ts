@@ -1,4 +1,3 @@
-import { ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
 import { api } from "@/lib/axios.api";
 export async function QueryInfinite<
   TCbData,

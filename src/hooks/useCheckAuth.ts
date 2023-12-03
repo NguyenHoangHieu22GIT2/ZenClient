@@ -1,5 +1,4 @@
 "use client";
-// THIS IS DEPRECATED, Not GOING TO USE THIS ANYMORE. CHANGE TO MIDDLEWARE
 import { api } from "@/lib/axios.api";
 
 import { useRouter, usePathname } from "next/navigation";
@@ -10,6 +9,7 @@ import { socketConversations } from "@/lib/socket";
 import { socketNameEmit } from "@/utils/SocketName";
 import { ztConversation } from "@/Types/Conversation";
 import { useChatSystemStore } from "@/lib/useChatSystemStore";
+import { zUserMinimalData, ztUserMinimalData } from "@/Types/User";
 const useCheckAuth = () => {
   const changeUser = useUserStore((state) => state.changeUser);
   const router = useRouter();
@@ -20,7 +20,10 @@ const useCheckAuth = () => {
       api
         .get("auth/validate-jwt-token", { withCredentials: true })
         .then((result) => {
-          changeUser(result.data);
+          console.log(result.data);
+          const user: ztUserMinimalData = result.data.user;
+          const isAdmin: boolean = result.data.isAdmin;
+          changeUser(user, isAdmin);
         })
         .catch((err) => {
           jsCookie.remove("userId");

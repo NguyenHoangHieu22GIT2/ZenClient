@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Notification } from "./Notification";
 import { Separator } from "../ui/separator";
 import { ztNotification } from "@/Types/Notification";
@@ -10,9 +10,12 @@ import { NormalNotification } from "./NotificationTypes/NormalNotification";
 type props = { notifications: ztNotification[] };
 
 export const Notifications = (props: props) => {
+  const [notifications, setNotifications] = useState<ztNotification[]>(
+    props.notifications
+  );
   return (
     <div className="mt-5">
-      {props.notifications.map((notification) => {
+      {notifications.map((notification) => {
         if (notification.notificationType === "friend-request") {
           return (
             <NotificationFriendRequest
@@ -20,16 +23,10 @@ export const Notifications = (props: props) => {
               key={notification._id}
             />
           );
-        } else if (notification.notificationType === "accept-friend") {
-          return (
-            <NotificationAcceptFriend
-              notification={notification}
-              key={notification._id}
-            />
-          );
         } else {
           return (
             <NormalNotification
+              onSetNotification={setNotifications}
               notification={notification}
               key={notification._id}
             />

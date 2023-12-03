@@ -12,8 +12,6 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFormCreatePost } from "@/hooks/useFormCreatePost";
 import { GroupId } from "@/Types/Group";
-import { useEffect } from "react";
-import { socketConversations } from "@/lib/socket";
 
 type props = {
   groupId?: GroupId;

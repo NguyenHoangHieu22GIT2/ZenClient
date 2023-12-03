@@ -10,10 +10,12 @@ import {
 import { useRouter } from "next/navigation";
 import jsCookie from "js-cookie";
 import { api } from "@/lib/axios.api";
+import { useUserStore } from "@/lib/useUserStore";
 type props = {
   userId: string;
 };
 export const NavsComputer = (props: props) => {
+  const isAdmin = useUserStore((state) => state.isAdmin);
   const userId = jsCookie.get("userId");
   const router = useRouter();
   const logoutFn = useCallback(() => {
@@ -47,6 +49,16 @@ export const NavsComputer = (props: props) => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
+      {isAdmin && (
+        <>
+          <DropdownMenuItem>
+            <Link className="text-xl" href="/reports">
+              reports
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+        </>
+      )}
       {userId ? (
         <DropdownMenuItem>
           <Button onClick={logoutFn} className="text-xl" variant={"link"}>

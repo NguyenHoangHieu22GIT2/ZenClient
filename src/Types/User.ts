@@ -15,7 +15,7 @@ export const zUser = z.object({
   // Question: should we put password in here ?
   password: z.string(),
   avatar: z.string(),
-  avatarFile: typeof window === "undefined" ? z.null() : z.instanceof(File),
+  avatarFile: z.any(),
   username: z.string(),
   gender: z.union([z.literal("male"), z.literal("female")]),
   description: z.string().optional(),

@@ -1,13 +1,10 @@
 import { create } from "zustand";
-import { Cookies } from "react-cookie";
-import jwt from "jwt-decode";
 import { UserId, ztUserMinimalData } from "@/Types/User";
-const cookie = new Cookies();
 
 type authStoreType = {
   user: ztUserMinimalData;
-
-  changeUser: (ztUserMinimalData: ztUserMinimalData) => void;
+  isAdmin: boolean
+  changeUser: (ztUserMinimalData: ztUserMinimalData, isAuth?: boolean) => void;
   clearUser: () => void;
 };
 
@@ -19,7 +16,7 @@ export const useUserStore = create<authStoreType>()((set) => ({
     avatar: "",
   } as ztUserMinimalData,
 
-  changeUser: (user) =>
+  changeUser: (user, isAdmin = false) =>
     set(() => {
       const result = {
         avatar: user.avatar,
@@ -28,7 +25,7 @@ export const useUserStore = create<authStoreType>()((set) => ({
         _id: user._id,
       };
 
-      return { user: result };
+      return { user: result, isAdmin };
     }),
   clearUser: () =>
     set(() => ({
@@ -38,5 +35,7 @@ export const useUserStore = create<authStoreType>()((set) => ({
         username: "",
         _id: "" as UserId,
       },
+      isAdmin: false
     })),
+  isAdmin: false
 }));

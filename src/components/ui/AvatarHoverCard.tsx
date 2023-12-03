@@ -37,13 +37,6 @@ export const AvatarHoverCard = (props: props) => {
             height={150}
             className="rounded-full aspect-square"
           />
-          {/* <Avatar>
-            <AvatarImage
-              className="w-96"
-              src={CheckImageUrl(props.avatarUrl)}
-            />
-            <AvatarFallback>{props.username}</AvatarFallback>
-          </Avatar> */}
           <div className="">
             <h4 className="font-bold">{props.username}</h4>
             <p className="text-sm text-gray-500">

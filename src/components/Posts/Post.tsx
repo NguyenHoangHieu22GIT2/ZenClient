@@ -26,11 +26,22 @@ import Modal from "../uiOwnCreation/Modal";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import { UserAvatarLink } from "../Header/UserAvatarLink";
+import { useCreateReport } from "@/apis/Report/useCreateReport";
+import { useToggleLike } from "@/apis/Post/useCreateLike";
+import { UserId } from "@/Types/User";
 type props = {
   post: ztPost;
 };
 
 export const Post = React.memo((props: props) => {
+  const [readMore, setReadMore] = useState(props.post.postBody.length < 20);
+  let postBody = props.post.postBody.slice(0, 20);
+  if (readMore) {
+    postBody = props.post.postBody;
+  }
+  const changeToReadMore = useCallback(() => {
+    setReadMore(true);
+  }, []);
   const { toast } = useToast();
   const [isLiked, setIsLiked] = useState(
     props.post.isLiked ? props.post.isLiked : false
@@ -45,20 +56,7 @@ export const Post = React.memo((props: props) => {
   const [isOpenComments, setIsOpenComments] = useState(
     props.post.comments.length > 0
   );
-  const {
-    mutate: likeMutation,
-    isLoading: likeIsLoading,
-    error: likeIsError,
-  } = useMutation({
-    mutationKey: ["post/like"],
-    mutationFn: async (data: { postId: string }) => {
-      return api
-        .patch(process.env.NEXT_PUBLIC_SERVER_TOGGLE_LIKE_POST, data, {
-          withCredentials: true,
-        })
-        .then((data) => data.data);
-    },
-  });
+  const toggleLikeMutation = useToggleLike();
   const { error: commentsIsError, refetch: commentsRefetch } = useQuery({
     queryKey: ["post/comments", loadMoreComments],
     queryFn: async () => {
@@ -85,7 +83,7 @@ export const Post = React.memo((props: props) => {
   );
 
   const mutateLike = useCallback(() => {
-    likeMutation({
+    toggleLikeMutation.mutate({
       postId: props.post._id,
     });
     setIsLiked((oldBool) => {
@@ -104,7 +102,7 @@ export const Post = React.memo((props: props) => {
       title: "",
       actionAltText: "",
     };
-    if (likeIsError) {
+    if (toggleLikeMutation.error) {
       toastInfo.title = "Something went wrong";
       toastInfo.actionAltText = "LOL";
     }
@@ -198,15 +196,22 @@ export const Post = React.memo((props: props) => {
           <div>
             <DropDownMenuPost toggleReportDialog={toggleReportDialog} />
             <ReportPostDialog
+              userId={props.post.userId as UserId}
               toggleReportDialog={toggleReportDialog}
               reportDialogOpen={reportDialog}
+              postId={props.post._id}
             />
           </div>
         </CardHeader>
         <CardContent>
           <Separator className="my-2" />
           <Heading>{props.post.postHeading}</Heading>
-          <Paragraph>{props.post.postBody}</Paragraph>
+          <Paragraph>{postBody}</Paragraph>
+          {!readMore && (
+            <Button onClick={changeToReadMore} variant={"outline"}>
+              Read more...
+            </Button>
+          )}
           <div className="flex [&>*]:flex-1 gap-1 ">
             {ImagesContainer.map((image, index) => (
               <button
@@ -243,7 +248,7 @@ export const Post = React.memo((props: props) => {
               className={`${isLiked && "text-blue-700 hover:text-blue-700"} `}
               variant={"ghost"}
               onClick={toggleLike}
-              disabled={likeIsLoading ? true : false}
+              disabled={toggleLikeMutation.isLoading ? true : false}
             >
               <ThumbsUp className="w-4 h-4 mr-2"></ThumbsUp>
               {likes} Like

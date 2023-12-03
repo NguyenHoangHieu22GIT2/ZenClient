@@ -15,6 +15,7 @@ import { Notifications } from "./Notifications";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { zNotifications, ztNotifications } from "@/Types/Notification";
+import { propagateServerField } from "next/dist/server/lib/render-server";
 
 export const NotificationNav = () => {
   //this is for when you click the notification bell
@@ -25,7 +26,7 @@ export const NotificationNav = () => {
     queryKey: ["getnotifications"],
     queryFn: async () => {
       return api
-        .get<ztNotifications>("notification", { withCredentials: true })
+        .get<ztNotifications>("notifications", { withCredentials: true })
         .then((result) => {
           const parsedData = zNotifications.parse(result.data);
           return parsedData;
@@ -35,6 +36,8 @@ export const NotificationNav = () => {
 
   if (isLoading || !data) {
     return <h1>Loading...</h1>;
+  } else if (error) {
+    return <h1>Error Going on </h1>;
   }
 
   let notificationBubble = "";
@@ -66,9 +69,11 @@ export const NotificationNav = () => {
           </SheetDescription>
         </SheetHeader>
         {/*This is new for me, Using object tag to ship SVG*/}
-        {/* <object type="image/svg+xml" data="/Notification.svg"> */}
-        {/*   Notification */}
-        {/* </object> */}
+        {data.length === 0 && (
+          <object type="image/svg+xml" data="/Notification.svg">
+            Notification
+          </object>
+        )}
         <Notifications notifications={data || []} />
       </SheetContent>
     </Sheet>

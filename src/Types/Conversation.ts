@@ -12,6 +12,7 @@ export const zMessage = z.object({
   message: z.string(),
   date: z.string().transform((value) => new Date(value)),
   conversationId: z.string().optional(),
+  messageHidden: z.array(UserId).min(0).nullable()
 });
 
 export type ztMessage = z.infer<typeof zMessage>;

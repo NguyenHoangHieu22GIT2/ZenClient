@@ -7,20 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Button } from "../ui/button";
 import { UserId, zUserId, ztUserId, ztUserMinimalData } from "@/Types/User";
 import Image from "next/image";
 import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 

@@ -36,7 +36,10 @@ export default function MessagesPage() {
       );
       const parsedResult = z.array(zConversation).parse(result.data);
       setConversations(parsedResult);
-      joinChatRoom(parsedResult[0]._id);
+      if (parsedResult.length > 0) {
+
+        joinChatRoom(parsedResult[0]._id);
+      }
       return parsedResult;
     },
   });
