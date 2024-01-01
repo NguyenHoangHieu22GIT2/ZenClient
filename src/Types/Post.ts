@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Brand } from "./Brand";
 
-import { zUser, zUserMinimalData } from "./User";
+import { UserId, zUser, zUserMinimalData } from "./User";
 
 const PostIdTransformed = z.string().transform((data) => data as PostId);
 const CommentIdTransformed = z.string().transform((data) => data as CommentId);
@@ -44,7 +44,7 @@ export const zPost = z.object({
   _id: PostIdTransformed,
   postHeading: z.string(),
   postBody: z.string(),
-  userId: z.string(),
+  userId: UserId,
   files: z.array(z.string()),
   images: z.array(z.string()),
   likes: z.number(),

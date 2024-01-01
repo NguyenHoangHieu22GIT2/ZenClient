@@ -1,8 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AvatarHoverCard } from "@/components/ui/AvatarHoverCard";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/Heading";
-import { Paragraph } from "@/components/ui/Paragraph";
 import { Username } from "@/components/ui/Username";
 import {
   CommentId,
@@ -18,21 +14,18 @@ import { PostComment } from "./PostComment";
 import { Replies } from "./Replies";
 import { api } from "@/lib/axios.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Bearer } from "@/utils/Bearer";
 import { v4 } from "uuid";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { UserAvatarLink } from "@/components/Header/UserAvatarLink";
-import { UserId, ztUserMinimalData } from "@/Types/User";
+import { useUserStore } from "@/lib/useUserStore";
 
 type props = {
   postId: PostId;
@@ -40,6 +33,7 @@ type props = {
   changeComments: React.Dispatch<React.SetStateAction<ztCommentType[]>>;
 };
 export const Comment = (props: props) => {
+  const userId = useUserStore(state => state.user._id)
   const [replies, setReplies] = useState(props.comment.replies || []);
 
   const {
@@ -57,32 +51,28 @@ export const Comment = (props: props) => {
       commentId: CommentId;
       replyId?: CommentId;
     }) => {
-      return api
+      // Make it easier to write the endpoint
+      const endpoint = replyId ? "reply" : 'comment'
+      const result = await api
         .delete(
-          `/posts/delete-comment?postId=${postId}&commentId=${commentId}${
-            replyId ? `&replyId=${replyId}` : ""
-          }`,
-          {
-            withCredentials: true,
-          }
+          `/posts/delete-${endpoint}?postId=${postId}&commentId=${commentId}${replyId ? `&replyId=${replyId}` : ""
+          }`
         )
-        .then((data) => {
-          const parsedData = zCommentType.parse(data.data);
-          if (replyId) {
-            setReplies((oldReplies) => {
-              return oldReplies.filter((reply) => {
-                return reply._id !== parsedData._id;
-              });
-            });
-          } else {
-            props.changeComments((oldComments) => {
-              return oldComments.filter(
-                (comment) => comment._id !== parsedData._id
-              );
-            });
-          }
-          return parsedData;
+      const parsedData = zCommentType.parse(result.data);
+      if (replyId) {
+        setReplies((oldReplies) => {
+          return oldReplies.filter((reply) => {
+            return reply._id !== parsedData._id;
+          });
         });
+      } else {
+        props.changeComments((oldComments) => {
+          return oldComments.filter(
+            (comment) => comment._id !== parsedData._id
+          );
+        });
+      }
+      return parsedData;
     },
   });
   const deleteCommentHandler = useCallback(
@@ -142,9 +132,12 @@ export const Comment = (props: props) => {
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteCommentHandler()}>
-                  Delete
-                </DropdownMenuItem>
+                {props.comment.user._id === userId &&
+                  <DropdownMenuItem onClick={() => deleteCommentHandler()}>
+                    Delete
+                  </DropdownMenuItem>
+                }
+
                 <DropdownMenuItem>See old Edits</DropdownMenuItem>
                 <DropdownMenuItem>Report</DropdownMenuItem>
               </DropdownMenuContent>

@@ -4,7 +4,6 @@ import { UserInfos } from "./UserInfos";
 import { UserActions } from "./UserActions";
 import { UserGroups } from "./UserGroups";
 import { Posts } from "../Posts/Posts";
-import Users from "../Users/Users";
 import { useUserStore } from "@/lib/useUserStore";
 import Information from "./Information";
 import { UserId, ztUserMinimalData } from "@/Types/User";
@@ -33,7 +32,7 @@ export const UserProfile = (props: props) => {
     mainElement = (
       <FriendsGeneral
         url="friends/get-users"
-        params={{ userId: props.userId }}
+        params={{ userId: props.userId, username: "" }}
         actions={friendsAction}
       />
     );

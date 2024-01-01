@@ -35,10 +35,9 @@ export const FriendFilter = (props: props) => {
     window.history.pushState(
       null,
       "Friends",
-      `/friends?searchInput=${filter}&usersType=${
-        notInterested
-          ? "not-interested"
-          : hasSentRequest
+      `/friends?searchInput=${filter}&usersType=${notInterested
+        ? "not-interested"
+        : hasSentRequest
           ? "has-sent-request"
           : "normal-users"
       }`
@@ -124,20 +123,20 @@ export const FriendFilter = (props: props) => {
               Friends that have sent the request.
             </Label>
           </div>
-          <div className="flex items-center gap-3">
-            <Checkbox
-              checked={hasSentRequest}
-              onCheckedChange={(checked: boolean) => {
-                setHasSentRequest(checked);
-                setNotInterested(false);
-              }}
-              id="hasSentRequest"
-              title="Friends that have sent the request"
-            />
-            <Label htmlFor="hasSentRequest">
-              Friends that sent you a request.
-            </Label>
-          </div>
+          {/* <div className="flex items-center gap-3"> */}
+          {/*   <Checkbox */}
+          {/*     checked={hasSentRequest} */}
+          {/*     onCheckedChange={(checked: boolean) => { */}
+          {/*       setHasSentRequest(checked); */}
+          {/*       setNotInterested(false); */}
+          {/*     }} */}
+          {/*     id="hasSentRequest" */}
+          {/*     title="Friends that have sent the request" */}
+          {/*   /> */}
+          {/*   <Label htmlFor="hasSentRequest"> */}
+          {/*     Friends that sent you a request. */}
+          {/*   </Label> */}
+          {/* </div> */}
         </div>
       </div>
       <Button

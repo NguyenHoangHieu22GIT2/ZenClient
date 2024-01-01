@@ -25,9 +25,9 @@ export const FriendGeneral = React.memo((props: props) => {
       <CardHeader className="p-0 mx-auto">
         <Link href={`/users/${props.user._id}`}>
           <Image
-            className="mx-auto"
+            className="mx-auto aspect-square"
             src={
-              props.user.avatar ? imageUrl(props.user.avatar) : "/avatar.jpg"
+              props.user.avatar ? imageUrl(props.user.avatar) : "/avatar.jpeg"
             }
             alt={props.user.username}
             width={500}

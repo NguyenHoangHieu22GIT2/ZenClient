@@ -20,7 +20,6 @@ const useCheckAuth = () => {
       api
         .get("auth/validate-jwt-token", { withCredentials: true })
         .then((result) => {
-          console.log(result.data);
           const user: ztUserMinimalData = result.data.user;
           const isAdmin: boolean = result.data.isAdmin;
           changeUser(user, isAdmin);

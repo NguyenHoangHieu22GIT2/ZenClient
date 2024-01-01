@@ -1,22 +1,20 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Label } from "../ui/label";
-import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { Eye, MessageSquare, Share2, ThumbsUp } from "lucide-react";
 import { PostComment } from "./Comments/PostComment";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "../ui/toast";
-import { CommentId, ztCommentType, PostId } from "@/Types/Post";
+import { ztCommentType, PostId } from "@/Types/Post";
 import { Paragraph } from "../ui/Paragraph";
 import { Heading } from "../ui/Heading";
 import Image from "next/image";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios.api";
 import { ztPost } from "@/Types/Post";
-
 import { DateConverter } from "@/utils/DateConverter";
 import { v4 } from "uuid";
 import { Comment } from "./Comments/Comment";
@@ -24,18 +22,17 @@ import { ReportPostDialog } from "./UI/ReportPostDialog";
 import { DropDownMenuPost } from "./UI/DropDownMenuPost";
 import Modal from "../uiOwnCreation/Modal";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
-import { CheckImageUrl } from "@/utils/CheckImageUrl";
 import { UserAvatarLink } from "../Header/UserAvatarLink";
-import { useCreateReport } from "@/apis/Report/useCreateReport";
 import { useToggleLike } from "@/apis/Post/useCreateLike";
 import { UserId } from "@/Types/User";
 type props = {
   post: ztPost;
+  setPosts: React.Dispatch<React.SetStateAction<ztPost[]>>
 };
 
 export const Post = React.memo((props: props) => {
-  const [readMore, setReadMore] = useState(props.post.postBody.length < 20);
-  let postBody = props.post.postBody.slice(0, 20);
+  const [readMore, setReadMore] = useState(props.post.postBody.length < 500);
+  let postBody = props.post.postBody.slice(0, 500);
   if (readMore) {
     postBody = props.post.postBody;
   }
@@ -110,7 +107,7 @@ export const Post = React.memo((props: props) => {
     if (!isLiked) {
       toastInfo.title = "Liked a Post";
       toastInfo.actionAltText = "Undo Like";
-    } else {
+    } else if (isLiked) {
       toastInfo.title = "UnLiked a Post";
       toastInfo.actionAltText = "Undo Unlike";
     }
@@ -134,6 +131,16 @@ export const Post = React.memo((props: props) => {
     () => setReportDialog((oldBool) => !oldBool),
     [reportDialog]
   );
+
+  const deletePost = useCallback(async (postId: PostId) => {
+    const result = await api.delete<ztPost>(`posts/${postId}`)
+    if (result.data._id) {
+      props.setPosts((posts) => {
+        return posts.filter(post => post._id !== postId)
+      })
+    }
+  }, [props.post])
+
 
   if (commentsIsError) {
     return <h1>Something went wrong</h1>;
@@ -194,7 +201,7 @@ export const Post = React.memo((props: props) => {
             </div>
           </div>
           <div>
-            <DropDownMenuPost toggleReportDialog={toggleReportDialog} />
+            <DropDownMenuPost userPostId={props.post.userId} onDeletePost={deletePost} postId={props.post._id} toggleReportDialog={toggleReportDialog} />
             <ReportPostDialog
               userId={props.post.userId as UserId}
               toggleReportDialog={toggleReportDialog}
@@ -237,6 +244,15 @@ export const Post = React.memo((props: props) => {
               </button>
             ))}
           </div>
+          {
+            props.post.files.length > 0 &&
+            <div className="mt-5 border-black border-2 p-5">
+              <h1 className="font-bold text-xl mb-5">File to download:</h1>
+              {props.post.files.map((file, index) => {
+                return <a key={index} className="border-2 border-gray-200 p-2 rounded-lg" href={`http://localhost:3001/uploads/${file}`}>{file}</a>
+              })}
+            </div>
+          }
         </CardContent>
         <CardFooter className="block ">
           <div className="flex gap-2 mb-3">

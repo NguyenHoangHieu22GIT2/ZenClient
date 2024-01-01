@@ -1,9 +1,6 @@
 "use client";
 import { ChangeAvatar } from "@/components/Settings/ChangeAvatar";
-import { ChangeEmail } from "@/components/Settings/ChangeEmail_Depracated";
 import { ChangeInformation } from "@/components/Settings/ChangeInformation";
-import { ChangePassword } from "@/components/Settings/ChangePassword_Depracated";
-import { ChangeUsername } from "@/components/Settings/ChangeUsername_Depracated";
 import { SettingsList } from "@/components/Settings/SettingsList";
 import { Container } from "@/components/ui/Container";
 import { ChangeEmailDto } from "@/dtos/user/change-email.dto";
@@ -12,6 +9,7 @@ import { ChangeUsernameDto } from "@/dtos/user/change-user.dto";
 import React, { useCallback } from "react";
 
 export type SettingsPane = "EMAIL" | "PASSWORD" | "USERNAME" | "AVATAR";
+
 
 export default function settingPage() {
   const [settingPane, setSettingPane] = React.useState<SettingsPane>("EMAIL");

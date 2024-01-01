@@ -1,4 +1,3 @@
-import { ztGroup } from "@/Types/Group";
 import { PropsPage } from "@/Types/PropsPage";
 import GroupSetting from "@/components/Groups/Group/GroupSetting";
 import { Container } from "@/components/ui/Container";

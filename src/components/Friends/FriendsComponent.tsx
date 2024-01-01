@@ -6,7 +6,8 @@ import { findUsersType } from "@/utils/LinkToQuery";
 import { FriendsGeneral } from "./FriendsGeneral";
 import { checkUsersType } from "@/utils/CheckUsersType";
 import { useUserStore } from "@/lib/useUserStore";
-import { AcionsForFriendsGeneralComponent } from "./AcionsForFriendsGeneralComponent";
+import { ActionsForFriendsPageGeneralComponent } from "./ActionsForFriendsPageGeneralComponent";
+import { ActivityIcon } from "lucide-react";
 export type FilterActionType =
   | "SET_USERNAME"
   | "SET_NOT_INTERESTED"
@@ -107,16 +108,13 @@ export default function FriendsComponent(props: props) {
   ) => (args: Record<any, any>) => React.JSX.Element = (userId: UserId) => {
     return (args) => {
       return (
-        <AcionsForFriendsGeneralComponent
+        <ActionsForFriendsPageGeneralComponent
           filterState={filterState}
           userId={userId}
           args={args}
         />
       );
     };
-    //   return function Component(userId: UserId) {
-    // return <></>
-    //   };
   };
   return (
     <div className="flex md:flex-row  flex-col gap-10 [&>*:first-child]:basis-1/4 [&>*:last-child]:basis-3/4">

@@ -1,3 +1,5 @@
+import { PostId } from "@/Types/Post";
+import { UserId } from "@/Types/User";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -6,14 +8,18 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUserStore } from "@/lib/useUserStore";
 import { BsThreeDotsVertical } from "react-icons/bs";
 type props = {
   toggleReportDialog: () => void;
+  onDeletePost: (postId: PostId) => void
+  postId: PostId,
+  userPostId: UserId
 };
 export function DropDownMenuPost(props: props) {
+  const userId = useUserStore(state => state.user._id)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,6 +42,11 @@ export function DropDownMenuPost(props: props) {
           <DropdownMenuItem>
             <span>Share</span>
           </DropdownMenuItem>
+          {props.userPostId === userId &&
+            <DropdownMenuItem onClick={props.onDeletePost.bind(null, props.postId)}>
+              <span>Delete</span>
+            </DropdownMenuItem>
+          }
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

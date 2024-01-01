@@ -17,6 +17,7 @@ import { z } from "zod";
 import { UserId } from "@/Types/User";
 import { v4 } from "uuid";
 import { useChatSystemStore } from "@/lib/useChatSystemStore";
+import Image from "next/image";
 
 export default function MessagesPage() {
   const user = useUserStore((state) => state.user);
@@ -92,15 +93,24 @@ export default function MessagesPage() {
           friendList={conversations}
           onJoinChatRoom={joinChatRoom}
         />
-        {conversation ? (
-          <FriendMessages
-            onHearNotification={setNotification}
-            key={conversation._id}
-            conversation={conversation}
-          />
-        ) : (
-          <h1>Loading...</h1>
-        )}
+        {
+          conversations.length > 0 ?
+
+            conversation ? (
+              <FriendMessages
+                onHearNotification={setNotification}
+                key={conversation._id}
+                conversation={conversation}
+              />
+            ) : (
+              <h1>Loading...</h1>
+            ) :
+            <>
+              <h1 className="font-bold text-sky-900 text-3xl flex justify-center items-center">Add Friend to talk to them!!!! :)</h1>
+              <Image src={"/Messaging_Default.jpg"} width={300} height={300} alt="Messaging" />
+            </>
+        }
+
       </main>
     </Container>
   );

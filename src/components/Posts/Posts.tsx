@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { ztPost, ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
+import { PostId, ztPost, ztResultsOfPostsInfiniteQuery } from "@/Types/Post";
 import { Post } from "./Post";
 import { QueryInfinite } from "@/utils/QueryInfinite";
 import { POSTS_LIMIT } from "@/data/pageLimiter";
@@ -55,7 +55,7 @@ export const Posts = React.memo((props: props) => {
   return (
     <div className="">
       {posts.map((post, index) => {
-        return <Post key={index} post={post} />;
+        return <Post key={index} post={post} setPosts={setPosts} />;
       })}
     </div>
   );

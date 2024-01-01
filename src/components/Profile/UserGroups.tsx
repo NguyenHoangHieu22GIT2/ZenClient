@@ -74,6 +74,7 @@ export const UserGroups = React.memo((props: props) => {
         <CardContent>
           <ScrollArea className="h-96 w-full ">
             {data!.map((group, index) => {
+              console.log(data)
               return (
                 <div key={index}>
                   <UserGroup group={group} />

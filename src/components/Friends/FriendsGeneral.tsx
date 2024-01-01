@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UserId, ztUserMinimalData } from "@/Types/User";
 import { FRIENDS_LIMIT } from "@/data/pageLimiter";
 import { ztResultsOfFriendsInfiniteQuery } from "@/Types/resultsOfInfiniteQuery";
@@ -7,7 +7,11 @@ import { QueryInfinite } from "@/utils/QueryInfinite";
 import { FriendGeneral } from "./FriendGeneral";
 
 type props = {
-  params: Record<string, string | number>;
+  params: {
+    usersType?: string,
+    username?: string
+    userId?: string
+  }
   actions: (userId: UserId) => (...args: any) => React.JSX.Element;
   url: string;
 };
@@ -15,21 +19,35 @@ export type apiUrlType =
   | "recommend-user"
   | "not-interested"
   | "has-sent-request";
-
+const useDidMountEffect = (func: Function, deps: any[]) => {
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (didMount.current) {
+      func();
+    } else {
+      didMount.current = true;
+    }
+  }, deps);
+};
 export const FriendsGeneral = (props: props) => {
   const [users, setUsers] = useState<ztUserMinimalData[]>([]);
   let [skip, setSkip] = useState(0);
   const [end, setEnd] = useState(false);
+  let change = true;
+  console.log(change)
   const fetchNextPage = async () => {
     await QueryInfinite({
       url: props.url,
       cb: (result: ztResultsOfFriendsInfiniteQuery) => {
         setUsers((oldUsers) => [...oldUsers, ...result.users]);
-        if (skip < result.usersCount) {
-          setSkip(skip + FRIENDS_LIMIT);
-        } else {
-          setSkip(result.usersCount);
-          setEnd(true);
+        console.log(change)
+        if (change === true) {
+          if (skip < result.usersCount) {
+            setSkip(skip + FRIENDS_LIMIT);
+          } else {
+            setSkip(result.usersCount);
+            setEnd(true);
+          }
         }
       },
       params: {
@@ -39,10 +57,14 @@ export const FriendsGeneral = (props: props) => {
       },
     });
   };
-  useEffect(() => {
+  useEffect(() => { fetchNextPage() }, [])
+  useDidMountEffect(() => {
+    change = false;
+    fetchNextPage()
     setUsers([]);
-    fetchNextPage();
-  }, []);
+    setEnd(false)
+    setSkip(0)
+  }, [props.params.username, props.params.usersType]);
   useEffect(() => {
     let fetching = false;
     const onScroll = async (e: Event) => {
